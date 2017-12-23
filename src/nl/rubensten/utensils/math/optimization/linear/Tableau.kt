@@ -128,11 +128,23 @@ class Tableau<T : Comparable<T>> private constructor(private val matrix: Mutable
         val basis = identity.columns().toSet()
 
         if (isFeasible()) {
-            return Tableau(op, A.glueRight(identity), b().toVector(op), c.toVector(op).append(GenericVector(op, identity.width()) { op.zero }), d())
+            return Tableau(
+                    op,
+                    A.glueRight(identity),
+                    b().toVector(op),
+                    c.toVector(op).append(GenericVector(op, identity.width()) { op.zero }),
+                    d()
+            )
         }
 
         // Solve auxiliary problem to find a basic feasible tableau
-        val auxiliary = Tableau(op, A.glueRight(identity).glueRight(GenericVector(op, A.height()) { op.negate(op.unit) }.toMatrix()), b().toVector(op), GenericVector(op, A.width() + identity.width(), { op.zero }).append(op.negate(op.unit)), op.zero)
+        val auxiliary = Tableau(
+                op,
+                A.glueRight(identity).glueRight(GenericVector(op, A.height()) { op.negate(op.unit) }.toMatrix()),
+                b().toVector(op),
+                GenericVector(op, A.width() + identity.width(), { op.zero }).append(op.negate(op.unit)),
+                op.zero
+        )
 
         auxiliary.apply {
             val j = A.width() + identity.width()
@@ -148,7 +160,13 @@ class Tableau<T : Comparable<T>> private constructor(private val matrix: Mutable
 
         val auxA = auxiliary.A()
 
-        val basicFeasible = Tableau(op, auxA.subMatrix(0, 0, auxA.width() - 1, auxA.height()), auxiliary.b().toVector(op), c.toVector(op).append(GenericVector(op, identity.width()) { op.zero }), d())
+        val basicFeasible = Tableau(
+                op,
+                auxA.subMatrix(0, 0, auxA.width() - 1, auxA.height()),
+                auxiliary.b().toVector(op),
+                c.toVector(op).append(GenericVector(op, identity.width()) { op.zero }),
+                d()
+        )
 
         // Modify such that the first row has zeros above the basis columns
         basicFeasible.apply {
