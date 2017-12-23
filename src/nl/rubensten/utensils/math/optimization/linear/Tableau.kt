@@ -35,11 +35,10 @@ class Tableau<T : Comparable<T>> private constructor(private val matrix: Mutable
     fun nextPivot(): Pair<Int, Int>? {
         val op = operations()
 
-        c().mapIndexed { j, c -> j to c }.filter { (_, c) -> c > op.zero && !isZero(c) }.forEach { (j, _) ->
-            return nextPivot(j) ?: return@forEach
-        }
-
-        return null
+        return c().mapIndexed { j, c -> j to c }
+                .filter { (_, c) -> c > op.zero && !isZero(c) }
+                .mapNotNull { (j, _) -> nextPivot(j) }
+                .firstOrNull()
     }
 
     private fun nextPivot(j: Int): Pair<Int, Int>? {
@@ -50,10 +49,9 @@ class Tableau<T : Comparable<T>> private constructor(private val matrix: Mutable
         }
 
         val (i, _) = getColumn(j).mapIndexed { i, a -> i to a }.drop(1)
-                .filter { (_, a) -> !isZero(a) }
-                .map { (i, a) -> i to op.division(b()[i - 1], a) }
                 .filter { (_, a) -> a > op.zero && !isZero(a) }
-                .minBy { (_, a) -> a } ?: return null
+                .map { (i, a) -> i to op.division(b()[i - 1], a) }
+                .minBy { (_, div) -> div } ?: return null
 
         return i to j
     }
