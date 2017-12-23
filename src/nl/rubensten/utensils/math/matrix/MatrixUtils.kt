@@ -83,31 +83,6 @@ object MatrixUtils {
     fun doubleIdentity(size: Int): Matrix<Double> = identity(size, 0.0, 1.0, DoubleOperations)
 
     /**
-     * Takes an amount of vectors and combines them to a matrix using a given major.
-     *
-     * @param major
-     *         How to order the vectors. [Major.ROW] will put all the vectors below each other
-     *         and [Major.COLUMN] (default) will put them to the sides of each other.
-     * @param vectors
-     *         The vectors to combine into a matrix.
-     * @return The matrix with the given vectors. An empty array returns an empty matrix.
-     * @throws DimensionMismatchException
-     *         When the vectors don't all have the same dimension.
-     */
-    @JvmStatic
-    fun <T> matrixFromVectors(major: Major = Major.COLUMN, vararg vectors: Vector<T>): Matrix<T> {
-        TODO("Implement matrixFromVectors")
-    }
-
-    /**
-     * See [matrixFromVectors].
-     */
-    @JvmStatic
-    fun <T> matrixFromVectors(major: Major = Major.COLUMN, vectors: Collection<Vector<T>>): Matrix<T> {
-        return matrixFromVectors(major, *(vectors.toTypedArray()))
-    }
-
-    /**
      * Finds a basis for the dimension of the vectors supplied. It finds the basis with the sifting
      * algorithm.
      * <p>
