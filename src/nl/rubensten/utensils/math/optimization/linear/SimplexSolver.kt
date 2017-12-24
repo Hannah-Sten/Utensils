@@ -12,18 +12,13 @@ class SimplexSolver<T : Comparable<T>>(private val linearProgram: LinearProgram<
 
     private val op = linearProgram.operationSet
 
-    override fun solve(): T {
+    override fun solve(): LPSolution<T> {
         val standard = computeStandardForm()
 
         val tableau = Tableau(op, standard.A, standard.b, standard.c, standard.d).computeBasicFeasible()
         tableau.makeOptimal()
 
-        println(tableau.isOptimal())
-        println(tableau)
-        println(if (linearProgram.negated) op.negate(tableau.value) else tableau.value)
-        println(tableau.basicSolution())
-
-        return if (linearProgram.negated) op.negate(tableau.value) else tableau.value
+        return LPSolution(if (linearProgram.negated) op.negate(tableau.value) else tableau.value, tableau.basicSolution()!!.toList().subList(0, linearProgram.variables.map { it.size() }.sum()).toVector(op))
     }
 
     private fun computeStandardForm(): StandardLP<T> {

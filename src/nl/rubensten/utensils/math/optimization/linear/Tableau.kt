@@ -107,7 +107,7 @@ class Tableau<T : Comparable<T>> private constructor(private val matrix: Mutable
     }
 
     fun makeOptimal() {
-        check(isBasicFeasible()) { "Cannot make optimal when not basic or feasible." }
+        check(isBasicFeasible()) { "Cannot make optimal when not basic (${!isBasic()}) or feasible (${!isFeasible()})." }
 
         while (!isOptimal()) {
             val (i, j) = nextPivot() ?: break
@@ -137,20 +137,31 @@ class Tableau<T : Comparable<T>> private constructor(private val matrix: Mutable
             )
         }
 
+        // Add missing basic vectors
+        val extraBasic = identity
+
         // Solve auxiliary problem to find a basic feasible tableau
         val auxiliary = Tableau(
                 op,
-                A.glueRight(identity).glueRight(GenericVector(op, A.height()) { op.negate(op.unit) }.toMatrix()),
+                A.glueRight(extraBasic).glueRight(GenericVector(op, A.height()) { op.negate(op.unit) }.toMatrix()),
                 b().toVector(op),
-                GenericVector(op, A.width() + identity.width(), { op.zero }).append(op.negate(op.unit)),
+                GenericVector(op, A.width() + extraBasic.width(), { op.zero }).append(op.negate(op.unit)),
                 op.zero
         )
 
         auxiliary.apply {
-            val j = A.width() + identity.width()
+            val j = A.width() + extraBasic.width()
             val i = b().mapIndexed { i, x -> (i + 1) to x }.minBy { (_, x) -> x }!!.first
             pivot(i, j)
             makeOptimal()
+
+            // Pivot once more when last column is basic (by assumption, only when the value of c above is zero)
+            if (isZero(c()[j])) {
+                val row = getColumn(j).indexOf(op.unit)
+                val col = getRow(row).indexOfFirst { !isZero(it) }
+                if (col == -1) throw IllegalStateException("Problem is infeasible.")
+                pivot(row, col)
+            }
 
             if (!isZero(value)) {
                 throw IllegalStateException("Problem is infeasible.")
@@ -164,7 +175,7 @@ class Tableau<T : Comparable<T>> private constructor(private val matrix: Mutable
                 op,
                 auxA.subMatrix(0, 0, auxA.width() - 1, auxA.height()),
                 auxiliary.b().toVector(op),
-                c.toVector(op).append(GenericVector(op, identity.width()) { op.zero }),
+                c.toVector(op).append(GenericVector(op, extraBasic.width()) { op.zero }),
                 d()
         )
 
