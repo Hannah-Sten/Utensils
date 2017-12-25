@@ -1,4 +1,4 @@
-package nl.rubensten.utensils.arithmetic
+package nl.rubensten.utensils.math.arithmetic
 
 /**
  * The extended euclidian algorithm for two integers.

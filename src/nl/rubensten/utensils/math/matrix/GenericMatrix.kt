@@ -170,7 +170,7 @@ open class GenericMatrix<T> : MutableMatrix<T> {
 
     override fun swapRow(row0: Int, row1: Int): Matrix<T> {
         val clone = clone().toMutableMatrix()
-        clone.swapRow(row0, row1)
+        clone.swapRowModify(row0, row1)
         return clone
     }
 
@@ -181,7 +181,7 @@ open class GenericMatrix<T> : MutableMatrix<T> {
 
     override fun swapColumn(col0: Int, col1: Int): Matrix<T> {
         val clone = mutableClone()
-        clone.swapRow(col0, col1)
+        clone.swapColumnModify(col0, col1)
         return clone
     }
 
@@ -629,7 +629,6 @@ open class GenericMatrix<T> : MutableMatrix<T> {
 
     // Extension functions/operator for OperationSet operations.
     private fun T.toDouble() = op.toDouble(this)
-
     private fun T.isZero() = toDouble().isZero()
     private fun T.isUnit() = (this - op.unit).isZero()
     private fun T.isNotUnit() = !isUnit()

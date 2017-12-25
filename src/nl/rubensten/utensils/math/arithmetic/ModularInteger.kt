@@ -1,4 +1,4 @@
-package nl.rubensten.utensils.arithmetic
+package nl.rubensten.utensils.math.arithmetic
 
 /**
  * An integer in `Z/pZ` where `p` is prime.
@@ -21,7 +21,7 @@ data class ModularInteger(
          */
         val modulus: Long
 
-) : Number() {
+) : Number(), Comparable<ModularInteger> {
 
     companion object {
 
@@ -132,6 +132,8 @@ data class ModularInteger(
             ModularInteger(x, modulus)
         }
     }
+
+    override fun compareTo(other: ModularInteger) = value.compareTo(other.value)
 
     /**
      * @return `value`

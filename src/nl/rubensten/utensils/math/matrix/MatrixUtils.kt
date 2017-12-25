@@ -1,5 +1,7 @@
 package nl.rubensten.utensils.math.matrix
 
+import nl.rubensten.utensils.math.optimization.HungarianAlgorithm
+
 /**
  * @author Ruben Schellekens, Sten Wessel
  */
@@ -196,6 +198,23 @@ object MatrixUtils {
             radius * Math.sin(inclination)
     )
 }
+
+/**
+ * Assigns each worker to a single unique job with a minimum cost given a `n`&times;`n` cost matrix.
+ *
+ * The cost of worker `i` performing job `j` must be on row `i`, column `j` in the cost matrix.
+ *
+ * Uses the Hungarian Algorithm, see [HungarianAlgorithm].
+ *
+ * @param workers
+ *          The workers that need to be assigned to the jobs. Each worker represents 1 row in the matrix
+ *          in order from top to bottom (index `0` to index `n`).
+ * @param jobs
+ *          The jobs that the workers need to be assigned to. Each job represents 1 column in the matrix
+ *          in order from left to right (index `0` to index `n`).
+ * @return A mapping where each worker is mapped to the job in the optimal solution.
+ */
+fun <T, W, J> Matrix<T>.assignJobs(workers: List<W>, jobs: List<J>) = HungarianAlgorithm(this, workers, jobs).minimize()
 
 /**
  * Calls [MathUtil.isZero] with a default margin of *1E-9*.

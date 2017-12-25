@@ -1,4 +1,4 @@
-package nl.rubensten.utensils.arithmetic
+package nl.rubensten.utensils.math.arithmetic
 
 import nl.rubensten.utensils.math.matrix.*
 
@@ -55,5 +55,6 @@ class ModularIntegerOperations(val modulus: Long) : OperationSet<ModularInteger>
         { it.inverse() },
         { it },
         { it.toDouble() },
-        { ModularInteger.reduce(it.toLong(), modulus) }
+        { ModularInteger.reduce(it.toLong(), modulus) },
+        { i, j -> i.compareTo(j) }
 )
