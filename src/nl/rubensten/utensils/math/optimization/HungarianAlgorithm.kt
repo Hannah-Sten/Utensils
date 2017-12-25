@@ -321,9 +321,6 @@ class HungarianAlgorithm<T, W, J>(
      * Interpret the resulting matrix and create the optimal worker-job assignment. `O(n^3)`
      */
     private fun createResult(): Map<W, J> {
-//        println("Find result of matrix:\n$matrix\n")
-//        println("RowCover: $rowCovers\nColCover: $columnCovers\n")
-
         // Required data structures.
         val result = (0 until size).map<Int, Int?> { null }.toMutableList()
         val original: MutableList<MutableVector<T>?> = matrix.rows().map { it.toMutableVector() }.toMutableList()
@@ -337,12 +334,7 @@ class HungarianAlgorithm<T, W, J>(
 
         // Keep on picking rows until all rows are moved to the result array.
         outer@ while (result.any { it == null }) {
-//            println("Previously updated: $updatedColumns")
             updatedColumns.clear()
-//            println("Original: $original")
-//            println("Orig.Idx: ${original.mapIndexed { index, obj -> if (obj == null) null else index }}")
-//            println("  Result: $result\n")
-//            Thread.sleep(500)
 
             // Scan all columns for lonely zeroes.
             for (col in 0 until size) {
@@ -370,7 +362,6 @@ class HungarianAlgorithm<T, W, J>(
                 result[columnIndex] = row
                 original[row] = null
                 updatedColumns += columnIndex
-//                println("2 Updated: $columnIndex")
             }
 
             if (updatedColumns.size > 0) {
@@ -390,7 +381,6 @@ class HungarianAlgorithm<T, W, J>(
                         result[col] = rowIndex
                         original[rowIndex] = null
                         updatedColumns += col
-//                        println("3 Updated: $col")
                         updateColumns()
                         continue@outer
                     }
