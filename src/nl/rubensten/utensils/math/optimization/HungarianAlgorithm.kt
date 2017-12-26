@@ -347,7 +347,6 @@ class HungarianAlgorithm<T, W, J>(
                 result[col] = rowIndex
                 original[rowIndex] = null
                 updatedColumns += col
-//                println("1 Updated: $rowIndex")
             }
 
             // Scan all rows for lonely zeroes.
