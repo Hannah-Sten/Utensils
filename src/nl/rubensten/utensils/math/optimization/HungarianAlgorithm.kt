@@ -74,7 +74,44 @@ class HungarianAlgorithm<T, W, J>(
      */
     fun minimize(): Map<W, J> {
         matrix = costMatrix.toMutableMatrix().mutableClone()
+        return executeAlgorithm()
+    }
 
+    /**
+     * Maximises the cost of assigning all workers to exactly one job. `O(kn^3)`
+     *
+     * @return A mapping where each worker is mapped to the job in the optimal solution.
+     */
+    fun maximize(): Map<W, J> {
+        matrix = costMatrix.toMutableMatrix().mutableClone()
+
+        // Negate all values.
+        var maximum: T? = null
+        for (row in 0 until size) {
+            for (col in 0 until size) {
+                val value = matrix[row, col]
+                matrix[row, col] = -value
+
+                if (maximum == null || value > maximum) {
+                    maximum = value
+                }
+            }
+        }
+
+        // Make nonnegative, i.e. add the negated minimum to all elements.
+        for (row in 0 until size) {
+            for (col in 0 until size) {
+                matrix[row, col] = matrix[row, col] + maximum!!
+            }
+        }
+
+        return executeAlgorithm()
+    }
+
+    /**
+     * Executes the meat of the algorithm, after eventual preparation steps.
+     */
+    private fun executeAlgorithm(): Map<W, J> {
         subtractRowMinima()
         subtractColumnMinima()
 
@@ -433,8 +470,9 @@ class HungarianAlgorithm<T, W, J>(
 
     // Extension functions/operator for OperationSet operations.
     private fun T.toDouble() = op.toDouble(this)
-
     private fun T.isZero() = toDouble().isZero()
     private operator fun T.plus(other: T) = op.add(this, other)
     private operator fun T.minus(other: T) = op.subtract(this, other)
+    private operator fun T.unaryMinus() = op.negate(this)
+    private operator fun T.compareTo(other: T) = op.compare(this, other)
 }
