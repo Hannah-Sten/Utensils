@@ -13,4 +13,4 @@ fun Any?.printlnln() {
 }
 
 /** Prints `this` in a formatted string (`%s` to represent `this`). **/
-fun Any?.printf(format: String) = format.format(this)
+fun Any?.printf(format: String) = format.format(this).print()
