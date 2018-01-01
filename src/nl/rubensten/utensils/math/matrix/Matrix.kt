@@ -286,6 +286,13 @@ interface Matrix<T> : Iterable<Vector<T>> {
     fun inverse(): Matrix<T>?
 
     /**
+     * Negates all aelements of the matrix.
+     *
+     * @return A new matrix with all elements negated according to the [OperationSet].
+     */
+    fun negate(): Matrix<T>
+
+    /**
      * Get the order of the matrix.
      *
      * I.e. the value of `n` for which `A^n = I`.
@@ -381,6 +388,12 @@ interface Matrix<T> : Iterable<Vector<T>> {
 
     /** See [multiply(Vector)] **/
     operator fun times(other: Vector<T>) = multiply(other)
+
+    /** See [negate] **/
+    operator fun unaryMinus() = negate()
+
+    /** Does nothing with the matrix, just returns `this` **/
+    operator fun unaryPlus() = this
 }
 
 /**
@@ -475,6 +488,13 @@ interface MutableMatrix<T> : Matrix<T> {
     fun scalarColumnModify(column: Int, scalar: T): MutableMatrix<T>
 
     /**
+     * See [negate], but then modifies the matrix instead of returning a new one.
+     *
+     * @return The modified matrix with all elements negated according to the [OperationSet].
+     */
+    fun negateModify(): MutableMatrix<T>
+
+    /**
      * Creates a copy of the matrix. Results in an immutable matrix.
      */
     fun clone(): Matrix<T> = mutableClone()
@@ -519,3 +539,23 @@ enum class Major {
      */
     ROW
 }
+
+// Convert arrays of vectors to matrices.
+fun Array<Vector<Byte>>.toMatrix(major: Major = Major.ROW) = ByteMatrix(*this, major = major)
+fun Array<Vector<Short>>.toMatrix(major: Major = Major.ROW) = ShortMatrix(*this, major = major)
+fun Array<Vector<Int>>.toMatrix(major: Major = Major.ROW) = IntMatrix(*this, major = major)
+fun Array<Vector<Long>>.toMatrix(major: Major = Major.ROW) = LongMatrix(*this, major = major)
+fun Array<Vector<Float>>.toMatrix(major: Major = Major.ROW) = FloatMatrix(*this, major = major)
+fun Array<Vector<Double>>.toMatrix(major: Major = Major.ROW) = DoubleMatrix(*this, major = major)
+fun Array<Vector<String>>.toMatrix(major: Major = Major.ROW) = StringMatrix(*this, major = major)
+fun <T> Array<Vector<T>>.toMatrix(operations: OperationSet<T>, major: Major = Major.ROW) = GenericMatrix(operations, toMutableList(), major = major)
+
+// Convert collections of vectors to matrices.
+fun List<Vector<Byte>>.toMatrix(major: Major = Major.ROW) = ByteMatrix(this, major = major)
+fun List<Vector<Short>>.toMatrix(major: Major = Major.ROW) = ShortMatrix(this, major = major)
+fun List<Vector<Int>>.toMatrix(major: Major = Major.ROW) = IntMatrix(this, major = major)
+fun List<Vector<Long>>.toMatrix(major: Major = Major.ROW) = LongMatrix(this, major = major)
+fun List<Vector<Float>>.toMatrix(major: Major = Major.ROW) = FloatMatrix(this, major = major)
+fun List<Vector<Double>>.toMatrix(major: Major = Major.ROW) = DoubleMatrix(this, major = major)
+fun List<Vector<String>>.toMatrix(major: Major = Major.ROW) = StringMatrix(this, major = major)
+fun <T> List<Vector<T>>.toMatrix(operations: OperationSet<T>, major: Major = Major.ROW) = GenericMatrix(operations, this, major = major)

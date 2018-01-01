@@ -100,6 +100,13 @@ interface Vector<T>: Iterable<T> {
     infix fun scalar(value: T): Vector<T>
 
     /**
+     * Negates all aelements of the vector.
+     *
+     * @return A new vector with all elements negated according to the [OperationSet].
+     */
+    fun negate(): Vector<T>
+
+    /**
      * Calculates the pythagorean length of the vector.
      *
      * @return The length of the vector.
@@ -219,6 +226,12 @@ interface Vector<T>: Iterable<T> {
 
     /** See [scalar] **/
     operator fun times(scalar: T) = scalar(scalar)
+
+    /** See [negate] **/
+    operator fun unaryMinus() = negate()
+
+    /** Returns this vector **/
+    operator fun unaryPlus() = this
 }
 
 /**
@@ -230,23 +243,38 @@ interface MutableVector<T> : Vector<T> {
 
     /**
      * See [add], but then modifies the vector instead of returning a new one.
+     *
+     * @return This (modified) vector.
      */
-    fun addModify(other: Vector<T>)
+    fun addModify(other: Vector<T>): MutableVector<T>
 
     /**
      * See [subtract], but then modifies the vector instead of returning a new one.
+     *
+     * @return This (modified) vector.
      */
-    fun subtractModify(other: Vector<T>)
+    fun subtractModify(other: Vector<T>): MutableVector<T>
 
     /**
      * See [scalar], but the modifies the vector instead of returning a new one.
+     *
+     * @return This (modified) vector.
      */
-    fun scalarModify(scalar: T)
+    fun scalarModify(scalar: T): MutableVector<T>
+
+    /**
+     * See [negate], but then modifies the vector instead of returning a new one.
+     *
+     * @return The modified vector with all elements negated according to the [OperationSet].
+     */
+    fun negateModify(): MutableVector<T>
 
     /**
      * See [normalize], but then modifies the vector instead of returning a new one.
+     *
+     * @return This (modified) vector.
      */
-    fun normalizeModify()
+    fun normalizeModify(): MutableVector<T>
 
     /**
      * Create a clone of this vector.

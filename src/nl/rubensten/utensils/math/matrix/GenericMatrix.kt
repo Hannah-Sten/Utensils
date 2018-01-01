@@ -418,6 +418,21 @@ open class GenericMatrix<T> : MutableMatrix<T> {
         return solve.subMatrix(0, width(), width(), height())
     }
 
+    override fun negate() = when (major) {
+        // Switch on major to improve performance.
+        Major.ROW -> rows().map { it.negate() }.toMatrix(op)
+        Major.COLUMN -> columns().map { it.negate() }.toMatrix(op)
+    }
+
+    override fun negateModify(): MutableMatrix<T> {
+        for (row in 0 until height()) {
+            for (col in 0 until width()) {
+                this[row, col] = -this[row, col]
+            }
+        }
+        return this
+    }
+
     /**
      * Looks for rows below the given row with a non-zero value at the specified column and swaps it
      * with the given row.
