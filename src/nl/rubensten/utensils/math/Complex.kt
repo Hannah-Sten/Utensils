@@ -1,3 +1,5 @@
+package nl.rubensten.utensils.math
+
 import nl.rubensten.utensils.math.matrix.isZero
 import java.io.Serializable
 import kotlin.math.atan2
@@ -16,6 +18,8 @@ class Complex(val a: Double, val b: Double) : Serializable {
 
         private val serialVersionUID = 96062259058757105L
 
+        /** 0 **/
+        @JvmField val ZERO = Complex(0.0, 0.0)
         /** 1+0i  */
         @JvmField val ONE = Complex(1.0, 0.0)
         /** 1+1i  */
@@ -171,6 +175,14 @@ class Complex(val a: Double, val b: Double) : Serializable {
     }
 
     /**
+     * Calculates the inverse of the complex number (`1/z`).
+     */
+    fun inverse(): Complex {
+        val squared = a * a + b * b
+        return Complex(a / squared, -b / squared)
+    }
+
+    /**
      * Get the conjucated Complex number (a-bi).
      */
     fun conj() = Complex(a, -b)
@@ -273,3 +285,6 @@ class Complex(val a: Double, val b: Double) : Serializable {
 
 /** See [Complex.parse]. **/
 fun String.toComplex() = Complex.parse(this)
+
+/** Creates imaginary number `this+other*i` **/
+infix fun Number.i(imaginary: Number) = Complex(this.toDouble(), imaginary.toDouble())
