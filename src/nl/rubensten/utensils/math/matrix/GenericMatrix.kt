@@ -663,14 +663,11 @@ open class GenericMatrix<T> : MutableMatrix<T> {
     private operator fun T.unaryMinus() = op.negate(this)
 
     override fun toString() = buildString {
-        for (row in 0 until height()) {
-            for (col in 0 until width()) {
-                append(get(row, col))
-                append("\t")
-            }
-            append("\n")
-        }
-    }.trim()
+        val maxLength = elements.flatMap { it }.map { it.toString().length }.max() ?: return@buildString
+        val format = ("%${maxLength}s ".repeat(width()).trim() + "\n").repeat(height()).trim()
+        val strings = rows().flatMap { it }.map { it.toString() }.toTypedArray()
+        append(format.format(*strings))
+    }.trimEnd()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
