@@ -322,3 +322,12 @@ infix fun String.`&`(other: String) = GenericVector(StringOperations, this, othe
 
 infix fun <T> Vector<T>.`&`(other: T) = append(other)
 infix fun <T> Vector<T>.`&`(other: Vector<T>) = append(other)
+
+fun byteVectorOf(vararg bytes: Byte) = ByteVector(*bytes)
+fun shortVectorOf(vararg shorts: Short) = ShortVector(*shorts)
+fun intVectorOf(vararg ints: Int) = IntVector(*ints)
+fun longVectorOf(vararg longs: Long) = LongVector(*longs)
+fun floatVectorOf(vararg floats: Float) = FloatVector(*floats)
+fun doubleVectorOf(vararg doubles: Double) = DoubleVector(*doubles)
+fun stringVectorOf(vararg strings: String) = StringVector(*strings)
+fun <T> vectorOf(operations: OperationSet<T>, vararg elements: T) = GenericVector(operations, *elements)

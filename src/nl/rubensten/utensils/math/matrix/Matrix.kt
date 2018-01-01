@@ -559,3 +559,13 @@ fun List<Vector<Float>>.toMatrix(major: Major = Major.ROW) = FloatMatrix(this, m
 fun List<Vector<Double>>.toMatrix(major: Major = Major.ROW) = DoubleMatrix(this, major = major)
 fun List<Vector<String>>.toMatrix(major: Major = Major.ROW) = StringMatrix(this, major = major)
 fun <T> List<Vector<T>>.toMatrix(operations: OperationSet<T>, major: Major = Major.ROW) = GenericMatrix(operations, this, major = major)
+
+// Creation functions.
+fun byteMatrixOf(width: Int, vararg bytes: Byte) = ByteMatrix(*bytes, width = width)
+fun shortMatrixOf(width: Int, vararg shorts: Short) = ShortMatrix(*shorts, width = width)
+fun intMatrixOf(width: Int, vararg ints: Int) = IntMatrix(*ints, width = width)
+fun longMatrixOf(width: Int, vararg longs: Long) = LongMatrix(*longs, width = width)
+fun floatMatrixOf(width: Int, vararg floats: Float) = FloatMatrix(*floats, width = width)
+fun doubleMatrixOf(width: Int, vararg doubles: Double) = DoubleMatrix(*doubles, width = width)
+fun stringMatrixOf(width: Int, vararg strings: String) = StringMatrix(*strings, width = width)
+fun <T> matrixOf(operations: OperationSet<T>, width: Int, vararg elements: T) = GenericMatrix(operations, width = width, elements = *elements)
