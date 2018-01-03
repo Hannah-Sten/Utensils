@@ -44,7 +44,7 @@ object ComplexOperations : OperationSet<Complex>(Complex.ZERO, Complex.ONE,
         { i, j -> i / j },
         { it.inverse() },
         { -it },
-        { if (it.a.isZero() && it.b.isZero()) 0.0 else Double.NaN },
+        { if (it.b.isZero()) it.a else Double.NaN },
         { Complex(it, 0.0) },
         { _, _ -> throw OperationNotSupportedException() }
 )
