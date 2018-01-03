@@ -27,13 +27,11 @@ open class ComplexMatrix : GenericMatrix<Complex> {
             : super(ComplexOperations, builder)
 }
 
-/**
- * @author Ruben Schellekens
- */
-open class ComplexVector : GenericVector<Complex> {
+/** @author Ruben Schellekens **/
+open class ComplexVector(vararg complex: Complex) : GenericVector<Complex>(ComplexOperations, complex.toMutableList()) {
 
-    constructor(complexNumbers: Collection<Complex>) : super(ComplexOperations, complexNumbers.toMutableList())
-    constructor(size: Int, populator: (Int) -> Complex) : super(ComplexOperations, (0 until size).map(populator).toMutableList())
+    constructor(ints: Collection<Complex>) : this(*ints.toTypedArray())
+    constructor(size: Int, populator: (Int) -> Complex) : this(*(0 until size).map(populator).toTypedArray())
 }
 
 /** @author Ruben Schellekens **/
@@ -48,3 +46,18 @@ object ComplexOperations : OperationSet<Complex>(Complex.ZERO, Complex.ONE,
         { Complex(it, 0.0) },
         { _, _ -> throw OperationNotSupportedException() }
 )
+
+//
+//  Extension functions
+//
+
+// Vectors
+fun Array<Complex>.toVector() = ComplexVector(*this)
+fun Collection<Complex>.toVector() = ComplexVector(*toTypedArray())
+infix fun Complex.`&`(other: Complex) = ComplexVector(this, other)
+fun complexVectorOf(vararg complex: Complex) = ComplexVector(*complex)
+
+// Matrices
+fun Array<Vector<Complex>>.toMatrix(major: Major = Major.ROW) = ComplexMatrix(*this, major = major)
+fun List<Vector<Complex>>.toMatrix(major: Major = Major.ROW) = ComplexMatrix(this, major = major)
+fun complexMatrixOf(width: Int, vararg complex: Complex) = ComplexMatrix(*complex, width = width)
