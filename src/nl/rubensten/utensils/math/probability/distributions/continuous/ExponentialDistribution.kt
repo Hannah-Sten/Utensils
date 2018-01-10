@@ -12,7 +12,7 @@ import kotlin.math.pow
 class ExponentialDistribution(val lambda: Double) : ProbabilityDistribution<Double> {
 
     init {
-        require(lambda > 0) { "Parameter lambda must be positive." }
+        require(lambda > 0) { "Parameter λ must be positive." }
     }
 
     override val supportLowerBound = 0.0
@@ -37,4 +37,38 @@ class ExponentialDistribution(val lambda: Double) : ProbabilityDistribution<Doub
 
         return -ln(1 - p) / lambda
     }
+
+    operator fun times(k: Double) = ExponentialDistribution(k * lambda)
+
+    operator fun div(k: Double) = ExponentialDistribution(lambda / k)
+
+    operator fun plus(other: ExponentialDistribution): ErlangDistribution {
+        require(lambda == other.lambda) { "Distributions must be i.i.d." }
+
+        return ErlangDistribution(2, lambda)
+    }
+
+    operator fun plus(other: ErlangDistribution): ErlangDistribution {
+        require(lambda == other.lambda) { "Distributions must have the same rate (λ)." }
+
+        return ErlangDistribution(other.k + 1, lambda)
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ExponentialDistribution
+
+        if (lambda != other.lambda) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return lambda.hashCode()
+    }
+
 }
+
+fun min(vararg exps: ExponentialDistribution) = ExponentialDistribution(exps.map { it.lambda }.sum())
