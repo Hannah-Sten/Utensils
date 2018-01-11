@@ -49,9 +49,9 @@ class ExponentialDistribution(val lambda: Double) : ProbabilityDistribution<Doub
     }
 
     operator fun plus(other: ErlangDistribution): ErlangDistribution {
-        require(lambda == other.lambda) { "Distributions must have the same rate (λ)." }
+        require(lambda == other.rate) { "Distributions must have the same rate (λ)." }
 
-        return ErlangDistribution(other.k + 1, lambda)
+        return ErlangDistribution(other.shape + 1, lambda)
     }
 
     override fun equals(other: Any?): Boolean {
@@ -72,3 +72,5 @@ class ExponentialDistribution(val lambda: Double) : ProbabilityDistribution<Doub
 }
 
 fun min(vararg exps: ExponentialDistribution) = ExponentialDistribution(exps.map { it.lambda }.sum())
+
+fun iidSum(exp: ExponentialDistribution, times: Int) = ErlangDistribution(times, exp.lambda)
