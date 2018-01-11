@@ -8,9 +8,9 @@ package nl.rubensten.utensils.general
  *
  * @author Sten Wessel
  */
-fun <T : Comparable<T>> LongRange.lowerBinarySearchBy(element: T, comparator: (Long) -> T): Long {
-    var lower = this.start
-    var upper = this.endInclusive
+fun <T : Comparable<T>> IntRange.lowerBinarySearchBy(element: T, comparator: (Int) -> T): Int {
+    var lower = this.first
+    var upper = this.last
 
     var estimation: T
 

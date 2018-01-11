@@ -106,3 +106,33 @@ fun inverseRegularizedGammaP(
     TODO("Implement according to DiDonato article.")
 
 }
+
+/**
+ * Computes the binomial coefficient with [k].
+ */
+infix fun Long.choose(k: Long): Long {
+    val newK = min(k, this - k)
+
+    var result: Long = 1
+
+    for (i in 1..newK) {
+        result *= (this - i + 1) / i
+    }
+
+    return result
+}
+
+/**
+ * Computes the binomial coefficient with [k].
+ */
+infix fun Long.choose(k: Int) = this choose k.toLong()
+
+/**
+ * Computes the binomial coefficient with [k].
+ */
+infix fun Int.choose(k: Int) = this.toLong() choose k.toLong()
+
+/**
+ * Computes the binomial coefficient with [k].
+ */
+infix fun Int.choose(k: Long) = this.toLong() choose k

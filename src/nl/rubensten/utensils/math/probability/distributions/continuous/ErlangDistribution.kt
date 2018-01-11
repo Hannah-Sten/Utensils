@@ -10,8 +10,10 @@ import nl.rubensten.utensils.math.probability.distributions.ContinuousDistributi
  *
  * @author Sten Wessel
  */
-class ErlangDistribution(val shape: Int, val rate: Double) :
-    ContinuousDistribution by GammaDistribution(shape.toDouble(), 1 / rate) {
+class ErlangDistribution private constructor(val shape: Int, val rate: Double, private val gamma: GammaDistribution) :
+    ContinuousDistribution by gamma {
+
+    constructor(shape: Int, rate: Double) : this(shape, rate, GammaDistribution(shape.toDouble(), 1 / rate))
 
     operator fun times(a: Double) = ErlangDistribution(shape, rate / a)
 
@@ -21,11 +23,9 @@ class ErlangDistribution(val shape: Int, val rate: Double) :
         return ErlangDistribution(shape + other.shape, rate)
     }
 
-    operator fun plus(exp: ExponentialDistribution): ErlangDistribution {
-        require(rate == exp.lambda) { "Rate parameters must be equal." }
+    operator fun plus(exp: ExponentialDistribution) = this + exp.toErlangDistribution()
 
-        return ErlangDistribution(shape + 1, rate)
-    }
+    fun toGammaDistribution() = gamma
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

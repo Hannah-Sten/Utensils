@@ -42,17 +42,11 @@ class ExponentialDistribution(val lambda: Double) : ContinuousDistribution {
 
     operator fun div(k: Double) = ExponentialDistribution(lambda / k)
 
-    operator fun plus(other: ExponentialDistribution): ErlangDistribution {
-        require(lambda == other.lambda) { "Distributions must be i.i.d." }
+    operator fun plus(other: ExponentialDistribution) = this.toErlangDistribution() + other.toErlangDistribution()
 
-        return ErlangDistribution(2, lambda)
-    }
+    operator fun plus(erlang: ErlangDistribution) = erlang + this.toErlangDistribution()
 
-    operator fun plus(other: ErlangDistribution): ErlangDistribution {
-        require(lambda == other.rate) { "Distributions must have the same rate (λ)." }
-
-        return ErlangDistribution(other.shape + 1, lambda)
-    }
+    fun toErlangDistribution() = ErlangDistribution(1, lambda)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
