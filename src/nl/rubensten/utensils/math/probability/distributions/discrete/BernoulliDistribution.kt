@@ -12,6 +12,9 @@ import java.util.*
  */
 class BernoulliDistribution(val p: Double) : DiscreteDistribution {
 
+    override val supportLowerBound = 0L
+    override val supportUpperBound = 1L
+
     override val mean by lazy { p }
 
     override val variance by lazy { p * (1 - p) }

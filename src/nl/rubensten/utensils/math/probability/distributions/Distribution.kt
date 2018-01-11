@@ -29,8 +29,20 @@ interface Distribution<N : Number> {
     fun cumulativeProbability(x: N): Double
 
     /**
-     * Generates a sample from this distribution based on a random sample from [generator].
+     * Returns the value _x_ for which _CDF(x) = [p]_.
+     *
+     * @param p a probability within the range _`[`0, 1`]`_.
+     *
+     * @see cumulativeProbability
      */
-    fun sample(generator: Random = Random()): N
+    fun inverseCumulativeProbability(p: Double): N
+
+    /**
+     * Generates a sample from this distribution based on a random sample from [generator].
+     *
+     * The default implementation uses the
+     * [inverse transform sampling](https://en.wikipedia.org/wiki/Inverse_transform_sampling) method.
+     */
+    fun sample(generator: Random = Random()): N = inverseCumulativeProbability(generator.nextDouble())
 
 }
