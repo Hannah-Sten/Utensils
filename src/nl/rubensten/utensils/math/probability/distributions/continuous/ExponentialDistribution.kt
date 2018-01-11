@@ -6,13 +6,16 @@ import kotlin.math.ln
 import kotlin.math.pow
 
 /**
+ * Exponential (continuous) probability distribution.
+ *
+ * @property lambda rate parameter (also known as the _inverse scale_ parameter). Must be strictly positive.
  *
  * @author Sten Wessel
  */
 class ExponentialDistribution(val lambda: Double) : ProbabilityDistribution<Double> {
 
     init {
-        require(lambda > 0) { "Parameter λ must be positive." }
+        require(lambda > 0) { "Parameter λ must be strictly positive." }
     }
 
     override val supportLowerBound = 0.0
@@ -69,8 +72,17 @@ class ExponentialDistribution(val lambda: Double) : ProbabilityDistribution<Doub
         return lambda.hashCode()
     }
 
+    override fun toString() = "ExponentialDistribution($lambda)"
+
 }
 
+/**
+ * The minimum of multiple [ExponentialDistribution]s gives a new [ExponentialDistribution] with rate the sum of the
+ * rates of the given distributions.
+ */
 fun min(vararg exps: ExponentialDistribution) = ExponentialDistribution(exps.map { it.lambda }.sum())
 
+/**
+ * Returns the sum of [times] i.i.d. [ExponentialDistribution]s.
+ */
 fun iidSum(exp: ExponentialDistribution, times: Int) = ErlangDistribution(times, exp.lambda)

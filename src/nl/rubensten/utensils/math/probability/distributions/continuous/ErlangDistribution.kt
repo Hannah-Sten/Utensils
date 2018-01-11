@@ -3,6 +3,11 @@ package nl.rubensten.utensils.math.probability.distributions.continuous
 import nl.rubensten.utensils.math.probability.ProbabilityDistribution
 
 /**
+ * Erlang (continuous) probability distribution.
+ *
+ * @property shape the shape parameter. Must be positive.
+ * @property rate the rate parameter. Must be positive.
+ *
  * @author Sten Wessel
  */
 class ErlangDistribution(val shape: Int, val rate: Double) :
@@ -21,4 +26,24 @@ class ErlangDistribution(val shape: Int, val rate: Double) :
 
         return ErlangDistribution(shape + 1, rate)
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ErlangDistribution
+
+        if (shape != other.shape) return false
+        if (rate != other.rate) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = shape
+        result = 31 * result + rate.hashCode()
+        return result
+    }
+
+    override fun toString() = "ErlangDistribution(shape=$shape, rate=$rate)"
 }

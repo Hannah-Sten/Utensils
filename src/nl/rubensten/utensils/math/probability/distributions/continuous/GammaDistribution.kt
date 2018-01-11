@@ -8,6 +8,11 @@ import kotlin.math.exp
 import kotlin.math.pow
 
 /**
+ * Gamma (continuous) probability distribution.
+ *
+ * @property shape the shape parameter. Must be positive.
+ * @property rate the rate parameter. Must be positive.
+ *
  * @author Sten Wessel
  */
 class GammaDistribution(val shape: Double, val scale: Double) : ProbabilityDistribution<Double> {
@@ -17,6 +22,9 @@ class GammaDistribution(val shape: Double, val scale: Double) : ProbabilityDistr
         require(scale > 0) { "Scale parameter must be positive." }
     }
 
+    /**
+     * Rate parameter.
+     */
     val rate by lazy { 1 / scale }
 
     override val supportLowerBound = 0.0
@@ -34,4 +42,13 @@ class GammaDistribution(val shape: Double, val scale: Double) : ProbabilityDistr
     override fun cumulativeProbability(x: Double) = regularizedGammaP(shape, x / scale)
 
     override fun inverseCumulativeProbability(p: Double) = inverseRegularizedGammaP(shape, p)
+
+    operator fun times(c: Double) = GammaDistribution(shape, c * scale)
+
+    operator fun plus(other: GammaDistribution): GammaDistribution {
+        require(this.scale == other.scale) { "Scale parameters must be equal." }
+
+        return GammaDistribution(this.shape + other.shape, scale)
+    }
+
 }

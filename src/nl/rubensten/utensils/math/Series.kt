@@ -3,7 +3,11 @@ package nl.rubensten.utensils.math
 import kotlin.math.abs
 
 /**
- * @author Sten Wessel
+ * Approximate an infinite series _Σ`_`{n=[start]}^∞ [term]`(`n`)`_ with the series
+ * _Σ`_`{n=[start]}^{[maxIndex]} [term]`(`n`)`_.
+ *
+ * It will stop the approximation when the ratio of the current sum term _[term]`(`n`)`_ over the current partial sum is
+ * has reached the desired [precision].
  */
 inline fun approximateInfiniteSeries(
         start: Int = 1, maxIndex: Int = Integer.MAX_VALUE, precision: Double = DEFAULT_EPSILON,
@@ -19,11 +23,4 @@ inline fun approximateInfiniteSeries(
     }
 
     return sum
-}
-
-inline fun approximateContinuedFraction(
-        a: (Int) -> Double, b: (Int) -> Double,
-        maxIndex: Int = Integer.MAX_VALUE, precision: Double = DEFAULT_EPSILON
-): Double {
-    return 0.0
 }

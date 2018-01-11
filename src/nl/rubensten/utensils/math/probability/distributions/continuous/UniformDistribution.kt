@@ -4,6 +4,10 @@ import nl.rubensten.utensils.math.probability.ProbabilityDistribution
 import kotlin.math.pow
 
 /**
+ * Continuous uniform probability distribution.
+ *
+ * @property a the support lower bound.
+ * @property b the support upper bound.
  *
  * @author Sten Wessel
  */
@@ -18,7 +22,7 @@ class UniformDistribution(val a: Double = 0.0, val b: Double = 1.0) : Probabilit
 
     override val mean by lazy { 0.5 * (a + b) }
 
-    override val variance by lazy { 1 / 12 * (b - a).pow(2) }
+    override val variance by lazy { (b - a).pow(2) / 12 }
 
     override fun density(x: Double) = when (x) {
         in a..b -> 1 / (b - a)
@@ -36,5 +40,25 @@ class UniformDistribution(val a: Double = 0.0, val b: Double = 1.0) : Probabilit
 
         return a + p * (b - a)
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as UniformDistribution
+
+        if (a != other.a) return false
+        if (b != other.b) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = a.hashCode()
+        result = 31 * result + b.hashCode()
+        return result
+    }
+
+    override fun toString() = "UniformDistribution[$a, $b]"
 
 }
