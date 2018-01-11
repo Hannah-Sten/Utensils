@@ -14,6 +14,11 @@ import kotlin.math.pow
  */
 class BinomialDistribution(val n: Int, val p: Double) : DiscreteDistribution {
 
+    init {
+        require(n >= 0) { "The number of trials may not be negative." }
+        require(p in 0.0..1.0) { "The parameter p must be a probability." }
+    }
+
     override val supportLowerBound = 0
     override val supportUpperBound = n
 

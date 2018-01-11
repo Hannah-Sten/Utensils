@@ -15,6 +15,7 @@ class UniformDistribution(val a: Double = 0.0, val b: Double = 1.0) : Continuous
 
     init {
         require(a.isFinite() && b.isFinite()) { "Parameters a and b must be finite." }
+        require(b >= a) { "Interval has a negative length." }
     }
 
     override val mean by lazy { 0.5 * (a + b) }

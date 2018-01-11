@@ -13,6 +13,10 @@ import kotlin.math.pow
  */
 class DiscreteUniformDistribution(val a: Int, val b: Int) : DiscreteDistribution {
 
+    init {
+        require(b >= a) { "Interval has a negative length." }
+    }
+
     override val supportLowerBound = a
     override val supportUpperBound = b
 

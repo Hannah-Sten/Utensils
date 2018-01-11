@@ -12,6 +12,10 @@ import java.util.*
  */
 class BernoulliDistribution(val p: Double) : DiscreteDistribution {
 
+    init {
+        require(p in 0.0..1.0) { "The parameter p must be a probability." }
+    }
+
     override val supportLowerBound = 0
     override val supportUpperBound = 1
 
