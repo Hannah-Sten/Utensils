@@ -1,6 +1,6 @@
 package nl.rubensten.utensils.math.probability.distributions.continuous
 
-import nl.rubensten.utensils.math.probability.ProbabilityDistribution
+import nl.rubensten.utensils.math.probability.distributions.ContinuousDistribution
 import kotlin.math.pow
 
 /**
@@ -11,14 +11,11 @@ import kotlin.math.pow
  *
  * @author Sten Wessel
  */
-class UniformDistribution(val a: Double = 0.0, val b: Double = 1.0) : ProbabilityDistribution<Double> {
+class UniformDistribution(val a: Double = 0.0, val b: Double = 1.0) : ContinuousDistribution {
 
     init {
         require(a.isFinite() && b.isFinite()) { "Parameters a and b must be finite." }
     }
-
-    override val supportLowerBound = a
-    override val supportUpperBound = b
 
     override val mean by lazy { 0.5 * (a + b) }
 

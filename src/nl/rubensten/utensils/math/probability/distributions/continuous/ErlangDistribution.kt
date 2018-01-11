@@ -1,6 +1,6 @@
 package nl.rubensten.utensils.math.probability.distributions.continuous
 
-import nl.rubensten.utensils.math.probability.ProbabilityDistribution
+import nl.rubensten.utensils.math.probability.distributions.ContinuousDistribution
 
 /**
  * Erlang (continuous) probability distribution.
@@ -11,7 +11,7 @@ import nl.rubensten.utensils.math.probability.ProbabilityDistribution
  * @author Sten Wessel
  */
 class ErlangDistribution(val shape: Int, val rate: Double) :
-        ProbabilityDistribution<Double> by GammaDistribution(shape.toDouble(), 1 / rate) {
+    ContinuousDistribution by GammaDistribution(shape.toDouble(), 1 / rate) {
 
     operator fun times(a: Double) = ErlangDistribution(shape, rate / a)
 

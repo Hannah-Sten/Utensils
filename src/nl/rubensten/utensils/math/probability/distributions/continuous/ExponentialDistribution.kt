@@ -1,6 +1,6 @@
 package nl.rubensten.utensils.math.probability.distributions.continuous
 
-import nl.rubensten.utensils.math.probability.ProbabilityDistribution
+import nl.rubensten.utensils.math.probability.distributions.ContinuousDistribution
 import kotlin.math.exp
 import kotlin.math.ln
 import kotlin.math.pow
@@ -12,14 +12,11 @@ import kotlin.math.pow
  *
  * @author Sten Wessel
  */
-class ExponentialDistribution(val lambda: Double) : ProbabilityDistribution<Double> {
+class ExponentialDistribution(val lambda: Double) : ContinuousDistribution {
 
     init {
         require(lambda > 0) { "Parameter λ must be strictly positive." }
     }
-
-    override val supportLowerBound = 0.0
-    override val supportUpperBound = Double.POSITIVE_INFINITY
 
     override val mean by lazy { 1 / lambda }
 

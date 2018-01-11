@@ -2,7 +2,7 @@ package nl.rubensten.utensils.math.probability.distributions.continuous
 
 import nl.rubensten.utensils.math.gamma
 import nl.rubensten.utensils.math.inverseRegularizedGammaP
-import nl.rubensten.utensils.math.probability.ProbabilityDistribution
+import nl.rubensten.utensils.math.probability.distributions.ContinuousDistribution
 import nl.rubensten.utensils.math.regularizedGammaP
 import kotlin.math.exp
 import kotlin.math.pow
@@ -15,7 +15,7 @@ import kotlin.math.pow
  *
  * @author Sten Wessel
  */
-class GammaDistribution(val shape: Double, val scale: Double) : ProbabilityDistribution<Double> {
+class GammaDistribution(val shape: Double, val scale: Double) : ContinuousDistribution {
 
     init {
         require(shape > 0) { "Shape parameter must be positive." }
@@ -26,9 +26,6 @@ class GammaDistribution(val shape: Double, val scale: Double) : ProbabilityDistr
      * Rate parameter.
      */
     val rate by lazy { 1 / scale }
-
-    override val supportLowerBound = 0.0
-    override val supportUpperBound = Double.POSITIVE_INFINITY
 
     override val mean by lazy { shape * scale }
 
