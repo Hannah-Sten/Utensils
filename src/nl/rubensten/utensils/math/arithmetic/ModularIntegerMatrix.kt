@@ -30,16 +30,14 @@ open class ModularIntegerMatrix : GenericMatrix<ModularInteger> {
     )
 }
 
-/**
- * @author Ruben Schellekens
- */
-open class ModularIntegerVector : NumberVector<ModularInteger> {
+/** @author Ruben Schellekens **/
+open class ModularIntegerVector(modulus: Long, vararg modInts: ModularInteger) : GenericVector<ModularInteger>(
+        ModularIntegerOperations(modulus),
+        modInts.toMutableList()
+) {
 
-    constructor(modulus: Long, modularIntegers: Collection<ModularInteger>)
-            : super(ModularIntegerOperations(modulus), modularIntegers.toMutableList())
-
-    constructor(modulus: Long, size: Int, populator: (Int) -> ModularInteger)
-            : super(ModularIntegerOperations(modulus), (0 until size).map(populator).toMutableList())
+    constructor(modulus: Long, ints: Collection<ModularInteger>) : this(modulus, *ints.toTypedArray())
+    constructor(modulus: Long, size: Int, populator: (Int) -> ModularInteger) : this(modulus, *(0 until size).map(populator).toTypedArray())
 }
 
 /**
@@ -58,3 +56,21 @@ class ModularIntegerOperations(val modulus: Long) : OperationSet<ModularInteger>
         { ModularInteger.reduce(it.toLong(), modulus) },
         { i, j -> i.compareTo(j) }
 )
+
+//
+//  Extension functions
+//
+
+// Vectors
+fun Array<ModularInteger>.toVector(modulus: Long) = ModularIntegerVector(modulus, *this)
+fun Collection<ModularInteger>.toVector(modulus: Long) = ModularIntegerVector(modulus, *toTypedArray())
+infix fun ModularInteger.`&`(other: ModularInteger): ModularIntegerVector {
+    require(modulus == other.modulus) { "Moduli must be equal, got $modulus vs ${other.modulus}"}
+    return ModularIntegerVector(modulus, this, other)
+}
+fun modIntVectorOf(modulus: Long, vararg modInts: ModularInteger) = ModularIntegerVector(modulus, *modInts)
+
+// Matrices
+fun Array<Vector<ModularInteger>>.toMatrix(modulus: Long, major: Major = Major.ROW) = ModularIntegerMatrix(modulus, *this, major = major)
+fun List<Vector<ModularInteger>>.toMatrix(modulus: Long, major: Major = Major.ROW) = ModularIntegerMatrix(modulus, this, major = major)
+fun modIntMatrixOf(modulus: Long, width: Int, vararg modInts: ModularInteger) = ModularIntegerMatrix(modulus, *modInts, width = width)

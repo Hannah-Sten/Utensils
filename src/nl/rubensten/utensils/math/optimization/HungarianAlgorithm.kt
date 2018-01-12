@@ -208,7 +208,6 @@ class HungarianAlgorithm<T, W, J>(
         }
 
         fun Pair<Int, Int>.isAssigned() = assignedZeroes.contains(this)
-        fun Pair<Int, Int>.isCrossedOut() = crossedZeroes.contains(this)
 
         // Step 1:
         // Assign as many tasks as possible.
@@ -443,16 +442,6 @@ class HungarianAlgorithm<T, W, J>(
                 .mapIndexed { job, worker -> costMatrix[worker!!, job] }
                 .reduce { acc, t -> acc + t }
     }
-
-    /**
-     * Counts the amount of zeroes in the given row. `O(n)`
-     */
-    private fun countRowZeroes(rowIndex: Int) = matrix.getRow(rowIndex).count { it.isZero() }
-
-    /**
-     * Counts the amount of zeroes in the given column. `O(n)`
-     */
-    private fun countColumnZeroes(columnIndex: Int) = matrix.getColumn(columnIndex).count { it.isZero() }
 
     /**
      * Finds all the zeroes in the given row. `O(n)`
