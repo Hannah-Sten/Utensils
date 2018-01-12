@@ -286,5 +286,21 @@ class Complex(val a: Double, val b: Double) : Serializable {
 /** See [Complex.parse]. **/
 fun String.toComplex() = Complex.parse(this)
 
+/** Complex number `this*i`. **/
+val Number.i
+    get() = Complex(0.0, this.toDouble())
+
 /** Creates imaginary number `this+other*i` **/
 infix fun Number.i(imaginary: Number) = Complex(this.toDouble(), imaginary.toDouble())
+
+/** See [Complex.add] **/
+operator fun Number.plus(complex: Complex) = complex.add(toDouble())
+
+/** See [Complex.subtract] **/
+operator fun Number.minus(complex: Complex) = complex.subtract(toDouble())
+
+/** See [Complex.multiply] **/
+operator fun Number.times(complex: Complex) = complex.multiply(toDouble())
+
+/** See [Complex.divide] **/
+operator fun Number.div(complex: Complex) = Complex(toDouble(), 0.0) / complex
