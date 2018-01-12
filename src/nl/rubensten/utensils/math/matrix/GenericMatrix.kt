@@ -5,6 +5,15 @@ package nl.rubensten.utensils.math.matrix
  */
 open class GenericMatrix<T> : MutableMatrix<T> {
 
+    companion object {
+
+        /**
+         * Creates an empty matrix, i.e. of size 0.
+         */
+        @JvmStatic
+        fun <T> empty(operations: OperationSet<T>) = GenericMatrix(operations, emptyList())
+    }
+
     /**
      * The rows or columns in the matrix (all the same size) ordered as determined by [major].
      */
@@ -58,7 +67,6 @@ open class GenericMatrix<T> : MutableMatrix<T> {
         this.op = op
         this.major = major
         this.elements = elements
-        check(elements.isNotEmpty()) { "Matrix must not be empty!" }
     }
 
     /**
@@ -153,12 +161,12 @@ open class GenericMatrix<T> : MutableMatrix<T> {
 
     override fun major() = major
 
-    override fun width() = when (major) {
+    override fun width() = if (elements.isEmpty()) 0 else when (major) {
         Major.ROW -> elements[0].size()
         Major.COLUMN -> elements.size
     }
 
-    override fun height() = when (major) {
+    override fun height() = if (elements.isEmpty()) 0 else when (major) {
         Major.ROW -> elements.size
         Major.COLUMN -> elements[0].size()
     }
@@ -418,6 +426,21 @@ open class GenericMatrix<T> : MutableMatrix<T> {
         return solve.subMatrix(0, width(), width(), height())
     }
 
+    override fun negate() = when (major) {
+        // Switch on major to improve performance.
+        Major.ROW -> rows().map { it.negate() }.toMatrix(op)
+        Major.COLUMN -> columns().map { it.negate() }.toMatrix(op)
+    }
+
+    override fun negateModify(): MutableMatrix<T> {
+        for (row in 0 until height()) {
+            for (col in 0 until width()) {
+                this[row, col] = -this[row, col]
+            }
+        }
+        return this
+    }
+
     /**
      * Looks for rows below the given row with a non-zero value at the specified column and swaps it
      * with the given row.
@@ -640,14 +663,11 @@ open class GenericMatrix<T> : MutableMatrix<T> {
     private operator fun T.unaryMinus() = op.negate(this)
 
     override fun toString() = buildString {
-        for (row in 0 until height()) {
-            for (col in 0 until width()) {
-                append(get(row, col))
-                append("\t")
-            }
-            append("\n")
-        }
-    }.trim()
+        val maxLength = elements.flatMap { it }.map { it.toString().length }.max() ?: return@buildString
+        val format = ("%${maxLength}s ".repeat(width()).trim() + "\n").repeat(height()).trim()
+        val strings = rows().flatMap { it }.map { it.toString() }.toTypedArray()
+        append(format.format(*strings))
+    }.trimEnd()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -713,6 +733,18 @@ abstract class NumberMatrix<T : Number> : GenericMatrix<T> {
  */
 open class ByteMatrix : NumberMatrix<Byte> {
 
+    companion object {
+
+        /** A 0x0 byte matrix with 0 elements. **/
+        private val emptyByteMatrix = ByteMatrix(0, 0) { _, _ -> 0 }
+
+        /**
+         * Returns a 0x0 byte matrix with 0 elements.
+         */
+        @JvmStatic
+        fun empty(): Matrix<Byte> = emptyByteMatrix
+    }
+
     constructor(major: Major = Major.ROW, vararg vectors: MutableVector<Byte>)
             : super(ByteOperations, major, vectors.toMutableList())
 
@@ -736,6 +768,18 @@ open class ByteMatrix : NumberMatrix<Byte> {
  * @author Ruben Schellekens
  */
 open class ShortMatrix : NumberMatrix<Short> {
+
+    companion object {
+
+        /** A 0x0 short matrix with 0 elements. **/
+        private val emptyShortMatrix = ShortMatrix(0, 0) { _, _ -> 0 }
+
+        /**
+         * Returns a 0x0 short matrix with 0 elements.
+         */
+        @JvmStatic
+        fun empty(): Matrix<Short> = emptyShortMatrix
+    }
 
     constructor(major: Major = Major.ROW, vararg vectors: MutableVector<Short>)
             : super(ShortOperations, major, vectors.toMutableList())
@@ -761,6 +805,18 @@ open class ShortMatrix : NumberMatrix<Short> {
  */
 open class IntMatrix : NumberMatrix<Int> {
 
+    companion object {
+
+        /** A 0x0 int matrix with 0 elements. **/
+        private val emptyIntMatrix = IntMatrix(0, 0) { _, _ -> 0 }
+
+        /**
+         * Returns a 0x0 int matrix with 0 elements.
+         */
+        @JvmStatic
+        fun empty(): Matrix<Int> = emptyIntMatrix
+    }
+
     constructor(major: Major = Major.ROW, vararg vectors: MutableVector<Int>)
             : super(IntOperations, major, vectors.toMutableList())
 
@@ -784,6 +840,18 @@ open class IntMatrix : NumberMatrix<Int> {
  * @author Ruben Schellekens
  */
 open class LongMatrix : NumberMatrix<Long> {
+
+    companion object {
+
+        /** A 0x0 long matrix with 0 elements. **/
+        private val emptyLongMatrix = LongMatrix(0, 0) { _, _ -> 0 }
+
+        /**
+         * Returns a 0x0 long matrix with 0 elements.
+         */
+        @JvmStatic
+        fun empty(): Matrix<Long> = emptyLongMatrix
+    }
 
     constructor(major: Major = Major.ROW, vararg vectors: MutableVector<Long>)
             : super(LongOperations, major, vectors.toMutableList())
@@ -809,6 +877,18 @@ open class LongMatrix : NumberMatrix<Long> {
  */
 open class FloatMatrix : NumberMatrix<Float> {
 
+    companion object {
+
+        /** A 0x0 float matrix with 0 elements. **/
+        private val emptyFloatMatrix = FloatMatrix(0, 0) { _, _ -> 0f }
+
+        /**
+         * Returns a 0x0 float matrix with 0 elements.
+         */
+        @JvmStatic
+        fun empty(): Matrix<Float> = emptyFloatMatrix
+    }
+
     constructor(major: Major = Major.ROW, vararg vectors: MutableVector<Float>)
             : super(FloatOperations, major, vectors.toMutableList())
 
@@ -833,6 +913,18 @@ open class FloatMatrix : NumberMatrix<Float> {
  */
 open class DoubleMatrix : NumberMatrix<Double> {
 
+    companion object {
+
+        /** A 0x0 double matrix with 0 elements. **/
+        private val emptyDoubleMatrix = DoubleMatrix(0, 0) { _, _ -> 0.0 }
+
+        /**
+         * Returns a 0x0 double matrix with 0 elements.
+         */
+        @JvmStatic
+        fun empty(): Matrix<Double> = emptyDoubleMatrix
+    }
+
     constructor(major: Major = Major.ROW, vararg vectors: MutableVector<Double>)
             : super(DoubleOperations, major, vectors.toMutableList())
 
@@ -856,6 +948,18 @@ open class DoubleMatrix : NumberMatrix<Double> {
  * @author Ruben Schellekens
  */
 open class StringMatrix : GenericMatrix<String> {
+
+    companion object {
+
+        /** A 0x0 string matrix with 0 elements. **/
+        private val emptyStringMatrix = StringMatrix(0, 0) { _, _ -> "" }
+
+        /**
+         * Returns a 0x0 string matrix with 0 elements.
+         */
+        @JvmStatic
+        fun empty(): Matrix<String> = emptyStringMatrix
+    }
 
     constructor(major: Major = Major.ROW, vararg vectors: MutableVector<String>)
             : super(StringOperations, major, vectors.toMutableList())
