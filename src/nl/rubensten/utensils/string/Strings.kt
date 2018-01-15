@@ -75,7 +75,6 @@ fun String.toCamelCase(): String {
     TODO("Camel case")
 }
 
-
 /**
  * Turns a camelCase or PascalCase string into snake case with words in lowercase separated by underscores.
  */
