@@ -152,7 +152,7 @@ else emptyMultiset()
  */
 fun <T> mutableMultisetOf(vararg elements: T): MutableMultiset<T> {
     val result = HashMultiset<T>()
-    result.addAll(result)
+    result.addAll(elements)
     return result
 }
 
@@ -166,7 +166,14 @@ fun <T> Iterable<T>.toMultiset(): Multiset<T> = toMutableMultiset()
  */
 fun <T> Iterable<T>.toMutableMultiset(): MutableMultiset<T> {
     val result = HashMultiset<T>()
-    result.addAll(this)
+    when (this) {
+        is Multiset<T> -> {
+            for ((element, count) in this.valueIterator()) {
+                result.add(element, count)
+            }
+        }
+        else -> result.addAll(this)
+    }
     return result
 }
 
