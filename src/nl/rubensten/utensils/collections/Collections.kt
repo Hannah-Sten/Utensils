@@ -1,4 +1,4 @@
-package nl.rubensten.utensils.general
+package nl.rubensten.utensils.collections
 
 import java.util.*
 
