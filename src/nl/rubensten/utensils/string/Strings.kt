@@ -15,7 +15,27 @@ import java.util.*
 @Throws(IllegalArgumentException::class)
 fun String.count(fragment: String): Int {
     require(fragment.isNotEmpty()) { "Fragment must not be the empty string. " }
-    TODO("Implement count")
+
+    val targetLength = fragment.length
+    var count = 0
+
+    // When fragment is larger than whatever of the string is left: quit.
+    var i = 0
+    while (i + targetLength <= this.length) {
+        // Scans all characters for the characters in the fragment.
+        val allCharactersMatch = fragment.indices.none { this[i + it] != fragment[it] }
+
+        // When all are found, advance 1 extra.
+        if (allCharactersMatch) {
+            count++
+            i += fragment.length
+        }
+        else {
+            i++
+        }
+    }
+
+    return count
 }
 
 /**
