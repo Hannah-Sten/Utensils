@@ -17,7 +17,7 @@ inline fun approximateInfiniteSeries(
     var a_n = term(n)
     var sum = a_n
 
-    while (abs(a_n / sum) > precision && n < maxIndex && sum < Double.POSITIVE_INFINITY) {
+    while (abs(a_n / sum) > precision && n < maxIndex && sum < Double.POSITIVE_INFINITY && sum > Double.NEGATIVE_INFINITY) {
         a_n = term(++n)
         sum += a_n
     }
