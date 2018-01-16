@@ -163,6 +163,12 @@ fun String.shuffle(random: Random = Random()): String {
 @Throws(IllegalArgumentException::class)
 fun String.Companion.random(length: Int, charset: Charset = Charset.LETTERS_LOWER, random: Random = Random()): String {
     require(length >= 0) { "Length must be nonnegative, got $length" }
-    require(charset.size == 0) { "Charset must not be empty!" }
-    TODO("Random string")
+    require(charset.size > 0) { "Charset must not be empty!" }
+
+    return buildString(length) {
+        for (i in 1..length) {
+            val index = random.nextInt(charset.size)
+            append(charset.characters[index])
+        }
+    }
 }
