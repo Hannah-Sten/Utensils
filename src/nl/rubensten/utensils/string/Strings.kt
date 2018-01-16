@@ -88,13 +88,19 @@ fun String.randomCapitals(random: Random = Random()): String = buildString {
 fun String.splitInTwo(lengthFirstWord: Int): Pair<String, String> {
     require(lengthFirstWord <= length) { "length must be <= string length, got $lengthFirstWord" }
     require(lengthFirstWord >= 0) { "length must be nonnegative, got $lengthFirstWord" }
-    TODO("Split half")
+
+    val part0 = substring(0, lengthFirstWord)
+    val part1 = substring(lengthFirstWord)
+    return Pair(part0, part1)
 }
 
 /**
  * [splitInTwo] but then splits at the middle of the string.
  */
-fun String.splitInHalf() = splitInTwo(length / 2)
+fun String.splitInHalf(): Pair<String, String> {
+    val index = length / 2 + length % 2
+    return splitInTwo(index)
+}
 
 /**
  * Decapitalises the first character of a string.

@@ -55,7 +55,7 @@ class StringsTest {
 
         testCases.entries.forEach {
             val toggled = it.key.toggleCase()
-            assertEquals(it.value, toggled)
+            assertEquals(it.value, toggled, "${it.key} -> ${it.value}")
         }
     }
 
