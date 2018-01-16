@@ -47,10 +47,6 @@ fun File.checksum(algorithm: String = "SHA-256"): String {
     }
 
     val mdbytes = messageDigest.digest()
-    val stringBuilder = StringBuilder("")
-    for (byte in mdbytes) {
-        stringBuilder.append(byte.toHexString())
-    }
     inputStream.close()
-    return stringBuilder.toString()
+    return mdbytes.toHexString()
 }

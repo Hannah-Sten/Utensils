@@ -209,7 +209,7 @@ fun String.toCharList(): List<Char> {
 /**
  * Converts the byte array to a string in hexadecimal representation.
  */
-fun ByteArray.toHexString(): String = map { it.toHexString() }.joinToString("")
+fun ByteArray.toHexString(): String = joinToString("") { it.toHexString() }
 
 /**
  * Converts the byte to a 2 digit hexadecimal string.
