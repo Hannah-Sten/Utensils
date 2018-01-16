@@ -207,6 +207,31 @@ fun String.toCharList(): List<Char> {
 }
 
 /**
+ * Converts the byte array to a string in hexadecimal representation.
+ */
+fun ByteArray.toHexString(): String = map { it.toHexString() }.joinToString("")
+
+/**
+ * Converts the byte to a 2 digit hexadecimal string.
+ */
+fun Byte.toHexString(): String = String.format("%02x", this)
+
+/**
+ * Converts the int to a 4 digit hexadecimal string.
+ */
+fun Short.toHexString(): String = String.format("%04x", this)
+
+/**
+ * Converts the int into an 8 digit hexadecimal string.
+ */
+fun Int.toHexString(): String = String.format("%08x", this)
+
+/**
+ * Converts the long into a 16 digit hexadecimal string.
+ */
+fun Long.toHexString(): String = String.format("%16x", this)
+
+/**
  * Generate a random string of a certain length from a given charset (default charsets can be found in [Charset]).
  *
  * @param length
