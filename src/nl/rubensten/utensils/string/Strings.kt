@@ -30,7 +30,8 @@ fun String.count(fragment: String): Int {
         if (allCharactersMatch) {
             count++
             i += fragment.length
-        } else {
+        }
+        else {
             i++
         }
     }
@@ -124,17 +125,63 @@ fun String.firstUpper(): String {
 /**
  * Removes spaces and underscores and capitalises every single word except the first one.
  */
-fun String.toCamelCase(): String {
-    TODO("Camel case")
+fun String.toCamelCase(): String = buildString(length) {
+    var newWord = false
+    var previousCapital = false
+    charLoop@ for ((index, char) in this@toCamelCase.withIndex()) {
+        when (char) {
+            ' ', '_' -> {
+                newWord = true
+                previousCapital = false
+                continue@charLoop
+            }
+            in 'A'..'Z' -> {
+                newWord = true && index > 0 && !previousCapital
+                previousCapital = true
+            }
+            else -> previousCapital = false
+        }
+
+        append(if (newWord) char.toUpperCase() else char.toLowerCase())
+        newWord = false
+    }
 }
 
 /**
- * Turns a camelCase or PascalCase string into snake case with words in lowercase separated by underscores.
+ * Turns a camelCase or PascalCase string into snake_case with words in lowercase separated by underscores.
  */
 @Suppress("FunctionName")
-fun String.to_snake_case(): String {
-    TODO("Snake case")
+fun String.to_snake_case(): String = buildString(length) {
+    var newWord = false
+    var previousCapitalOrUnderscore = false
+    charLoop@ for ((index, char) in this@to_snake_case.withIndex()) {
+        when (char) {
+            ' ' -> {
+                append("_")
+                previousCapitalOrUnderscore = true
+                continue@charLoop
+            }
+            in 'A'..'Z' -> {
+                newWord = true && index > 0 && !previousCapitalOrUnderscore
+                previousCapitalOrUnderscore = true
+            }
+            '_' -> previousCapitalOrUnderscore = true
+            else -> previousCapitalOrUnderscore = false
+        }
+
+        if (newWord) {
+            append("_")
+        }
+        append(char.toLowerCase())
+        newWord = false
+    }
 }
+
+/**
+ * Turns a camelCase/PascalCase string into SCREAMING_SNAKE_CASE with words in uppercase separated by underscores.
+ */
+@Suppress("FunctionName")
+fun String.TO_SCREAMING_SNAKE_CASE(): String = to_snake_case().toUpperCase()
 
 /**
  * Removes spaces and underscores and capitalises every single word.

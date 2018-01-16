@@ -165,6 +165,7 @@ class StringsTest {
                 "some_snake_Case" to "someSnakeCase",
                 "LoveForPascalCase" to "loveForPascalCase",
                 "regularCamelCase" to "regularCamelCase",
+                "HIHI HAHA" to "hihiHaha",
                 "" to "",
                 "A" to "a",
                 "AndA_mixed Bag of Stuffs" to "andAMixedBagOfStuffs"
@@ -183,6 +184,7 @@ class StringsTest {
                 "also_with_only_lower" to "also_with_only_lower",
                 "LoveForPascalCase" to "love_for_pascal_case",
                 "regularCamelCase" to "regular_camel_case",
+                "HIHI HAHA" to "hihi_haha",
                 "" to "",
                 "A" to "a",
                 "AndA_mixed Bag of Stuffs" to "and_a_mixed_bag_of_stuffs"
@@ -194,12 +196,32 @@ class StringsTest {
     }
 
     @Test
+    fun `String#TO_SCREAMING_SNAKE_CASE`() {
+        val testCases = mapOf(
+                "hihi haha" to "HIHI_HAHA",
+                "some_snake_Case" to "SOME_SNAKE_CASE",
+                "also_with_only_lower" to "ALSO_WITH_ONLY_LOWER",
+                "LoveForPascalCase" to "LOVE_FOR_PASCAL_CASE",
+                "regularCamelCase" to "REGULAR_CAMEL_CASE",
+                "HIHI HAHA" to "HIHI_HAHA",
+                "" to "",
+                "A" to "A",
+                "AndA_mixed Bag of Stuffs" to "AND_A_MIXED_BAG_OF_STUFFS"
+        )
+
+        testCases.entries.forEach {
+            assertEquals(it.value, it.key.TO_SCREAMING_SNAKE_CASE())
+        }
+    }
+
+    @Test
     fun `String#ToPascalCase`() {
         val testCases = mapOf(
                 "hihi haha" to "HihiHaha",
                 "some_snake_Case" to "SomeSnakeCase",
                 "LoveForPascalCase" to "LoveForPascalCase",
                 "regularCamelCase" to "RegularCamelCase",
+                "HIHI HAHA" to "HihiHaha",
                 "" to "",
                 "A" to "A",
                 "AndA_mixed Bag of Stuffs" to "AndAMixedBagOfStuffs"
