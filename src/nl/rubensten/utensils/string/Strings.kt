@@ -42,8 +42,20 @@ fun String.count(fragment: String): Int {
  * Turns all lowercase letters to uppercase, and turns all uppercase letters to lowercase.
  * Characters without a case are ignored.
  */
-fun String.toggleCase(): String {
-    TODO("Toggle case")
+fun String.toggleCase(): String = buildString(length) {
+    for (char in this@toggleCase) {
+        append(char.toggleCase())
+    }
+}
+
+/**
+ * Turns the character to lowercase if it's uppercase and vice versa.
+ * Ignores characters without case.
+ */
+fun Char.toggleCase(): Char = when (this) {
+    this.toUpperCase() -> this.toLowerCase()
+    this.toLowerCase() -> this.toUpperCase()
+    else -> this
 }
 
 /**
