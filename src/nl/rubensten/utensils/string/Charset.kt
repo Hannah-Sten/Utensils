@@ -102,12 +102,12 @@ open class Charset(
     /**
      * String containing all the characters in the character set.
      */
-    val string: String by lazy { characters.joinToString() }
+    val string: String by lazy { characters.joinToString("") }
 
     /**
      * The amount of characters (including duplicates) in the charset.
      */
-    val size: Int by lazy { string.length }
+    val size: Int by lazy { characters.size }
 
     /**
      * Set containing all the characters in the character set.
@@ -131,4 +131,8 @@ open class Charset(
 
     /** See [join]. **/
     operator fun plus(other: Charset) = join(other)
+
+    override fun toString(): String {
+        return string
+    }
 }

@@ -154,7 +154,7 @@ class StringsTest {
         )
 
         testCases.entries.forEach {
-            assertEquals(it.value, it.key.firstLower())
+            assertEquals(it.value, it.key.firstUpper())
         }
     }
 

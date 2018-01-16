@@ -1,6 +1,7 @@
 package nl.rubensten.utensils.string
 
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Counts how many times the given fragment occurs in the given string without overlaps.
@@ -145,8 +146,17 @@ fun String.ToPascalCase() = toCamelCase().firstUpper()
  * Shuffles the letters, i.e. results in a string with a random permutation of the original characters.
  */
 @JvmOverloads
-fun String.shuffle(random: Random = Random()): String {
-    TODO("Shuffle")
+fun String.shuffle(random: Random = Random()): String = toCharList().shuffled(random).joinToString("")
+
+/**
+ * Creates a new list containing all the characters in the string in order.
+ */
+fun String.toCharList(): List<Char> {
+    val result = ArrayList<Char>()
+    for (char in this) {
+        result += char
+    }
+    return result
 }
 
 /**
