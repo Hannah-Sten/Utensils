@@ -29,8 +29,7 @@ fun String.count(fragment: String): Int {
         if (allCharactersMatch) {
             count++
             i += fragment.length
-        }
-        else {
+        } else {
             i++
         }
     }
@@ -63,8 +62,11 @@ fun Char.toggleCase(): Char = when (this) {
  * determined by fate.
  */
 @JvmOverloads
-fun String.randomCapitals(random: Random = Random()): String {
-    TODO("Random capitals")
+fun String.randomCapitals(random: Random = Random()): String = buildString {
+    for (char in this@randomCapitals) {
+        val result = if (random.nextBoolean()) char.toUpperCase() else char.toLowerCase()
+        append(result)
+    }
 }
 
 /**
@@ -85,7 +87,7 @@ fun String.randomCapitals(random: Random = Random()): String {
 @Throws(IndexOutOfBoundsException::class)
 fun String.splitInTwo(lengthFirstWord: Int): Pair<String, String> {
     require(lengthFirstWord <= length) { "length must be <= string length, got $lengthFirstWord" }
-    require(lengthFirstWord >=0) { "length must be nonnegative, got $lengthFirstWord" }
+    require(lengthFirstWord >= 0) { "length must be nonnegative, got $lengthFirstWord" }
     TODO("Split half")
 }
 
