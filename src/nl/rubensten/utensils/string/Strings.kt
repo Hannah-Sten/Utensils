@@ -98,6 +98,14 @@ fun String.to_snake_case(): String {
 fun String.ToPascalCase() = toCamelCase().firstUpper()
 
 /**
+ * Shuffles the letters, i.e. results in a string with a random permutation of the original characters.
+ */
+@JvmOverloads
+fun String.shuffle(random: Random = Random()): String {
+    TODO("Shuffle")
+}
+
+/**
  * Generate a random string of a certain length from a given charset (default charsets can be found in [Charset]).
  *
  * @param length

@@ -1,5 +1,6 @@
 package nl.rubensten.utensils.string
 
+import nl.rubensten.utensils.collections.toMultiset
 import org.junit.Test
 import java.util.*
 import kotlin.test.assertEquals
@@ -233,6 +234,19 @@ class StringsTest {
         // Check empty charset.
         assertFailsWith(IllegalArgumentException::class) {
             String.random(10, Charset.EMPTY, random)
+        }
+    }
+
+    @Test
+    fun `String#shuffle`() {
+        val random = Random(0xCAFEBABE)
+        val string = String.random(16, Charset.LETTERS_NUMBERS_SPECIAL, random)
+        val expected = string.toCharArray().toTypedArray().toMultiset()
+
+        for (i in 1..5) {
+            val shuffled = string.shuffle(random)
+            val chars = shuffled.toCharArray().toTypedArray().toMultiset()
+            assertEquals(expected, chars)
         }
     }
 }
