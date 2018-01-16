@@ -16,6 +16,12 @@ open class Charset(
     companion object {
 
         /**
+         * No characters.
+         */
+        @JvmField
+        val EMPTY = Charset("")
+
+        /**
          * All lowercase letters (a-z).
          */
         @JvmField
@@ -99,9 +105,29 @@ open class Charset(
     val string: String by lazy { characters.joinToString() }
 
     /**
+     * The amount of characters (including duplicates) in the charset.
+     */
+    val size: Int by lazy { string.length }
+
+    /**
+     * Set containing all the characters in the character set.
+     */
+    val charSet: Set<Char> by lazy { characters.toSet() }
+
+    /**
+     * The amount of distinct characters in the charset.
+     */
+    val distinctSize: Int by lazy { charSet.size }
+
+    /**
      * Joins all characters in both charsets, allows duplicates.
      */
     fun join(other: Charset) = Charset(string + other.string)
+
+    /**
+     * Checks if the given character is in the charset.
+     */
+    operator fun contains(char: Char) = charSet.contains(char)
 
     /** See [join]. **/
     operator fun plus(other: Charset) = join(other)

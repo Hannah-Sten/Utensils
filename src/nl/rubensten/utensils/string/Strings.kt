@@ -8,10 +8,13 @@ import java.util.*
  * E.g. `"cbabbabababc".count("bab")` returns `3`.
  *
  * @param fragment
- *          The fragment to count in the source string.
+ *          The fragment to count in the source string, must not be empty.
  * @return The amount of times the fragment occurs in the given string without overlapping letters.
+ * @throws IllegalArgumentException When the fragment is the empty string.
  */
+@Throws(IllegalArgumentException::class)
 fun String.count(fragment: String): Int {
+    require(fragment.isNotEmpty()) { "Fragment must not be the empty string. " }
     TODO("Implement count")
 }
 
@@ -27,6 +30,7 @@ fun String.toggleCase(): String {
  * Create a string where every letter will either be lowercase or uppercase. The case is
  * determined by fate.
  */
+@JvmOverloads
 fun String.randomCapitals(random: Random = Random()): String {
     TODO("Random capitals")
 }
@@ -35,7 +39,7 @@ fun String.randomCapitals(random: Random = Random()): String {
  * Cuts a string in half and puts the two parts in a [Pair].
  *
  * For example:
- * <code>"sauce".splitHalf(3)</code> will result in a Couple containing the String "sau" and the
+ * `"sauce".splitInTwo(3)` will result in a Couple containing the String "sau" and the
  * string "ce".
  *
  * @param lengthFirstWord
@@ -43,9 +47,13 @@ fun String.randomCapitals(random: Random = Random()): String {
  *         length of the string, otherwise an [IndexOutOfBoundsException] will be thrown.
  * @return A [Pair] containing the split string.
  * @throws IndexOutOfBoundsException
- *         when the length of the first word is greater than the actual length of the string.
+ *         when the length of the first word is greater than the actual length of the string,
+ *         or when the length is smaller than zero.
  */
+@Throws(IndexOutOfBoundsException::class)
 fun String.splitInTwo(lengthFirstWord: Int): Pair<String, String> {
+    require(lengthFirstWord <= length) { "length must be <= string length, got $lengthFirstWord" }
+    require(lengthFirstWord >=0) { "length must be nonnegative, got $lengthFirstWord" }
     TODO("Split half")
 }
 
@@ -93,11 +101,16 @@ fun String.ToPascalCase() = toCamelCase().firstUpper()
  * Generate a random string of a certain length from a given charset (default charsets can be found in [Charset]).
  *
  * @param length
- *         The amount of characters in the random string.
+ *         The amount of characters in the random string, nonnegative.
  * @param charset
- *         The characters the string can contain. Defaults to [Charset.LETTERS_LOWER].
+ *         The characters the string can contain. Defaults to [Charset.LETTERS_LOWER]. Must not be empty.
  * @return A random string of length `length` consisting of only characters in `charset`.
+ * @throws IllegalArgumentException When the length is negative or when the charset is empty.
  */
+@JvmOverloads
+@Throws(IllegalArgumentException::class)
 fun String.Companion.random(length: Int, charset: Charset = Charset.LETTERS_LOWER, random: Random = Random()): String {
+    require(length >= 0) { "Length must be nonnegative, got $length" }
+    require(charset.size == 0) { "Charset must not be empty!" }
     TODO("Random string")
 }
