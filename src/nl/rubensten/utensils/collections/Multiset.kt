@@ -1,5 +1,7 @@
 package nl.rubensten.utensils.collections
 
+import nl.rubensten.utensils.string.toCharList
+
 /**
  * A generic unordered collection of elements that supports duplicate elements.
  * Methods in this interface support only read-only access to the set;
@@ -214,3 +216,21 @@ fun <T> Map<T, Int>.toMutableMultiset(): MutableMultiset<T> {
  */
 @Throws(IllegalArgumentException::class)
 fun <T> Map<T, Int>.toMultiset(): Multiset<T> = toMutableMultiset()
+
+// Primitive arrays & strings.
+fun ByteArray.toMultiset() = toTypedArray().toMultiset()
+fun ShortArray.toMultiset() = toTypedArray().toMultiset()
+fun IntArray.toMultiset() = toTypedArray().toMultiset()
+fun LongArray.toMultiset() = toTypedArray().toMultiset()
+fun FloatArray.toMultiset() = toTypedArray().toMultiset()
+fun DoubleArray.toMultiset() = toTypedArray().toMultiset()
+fun CharArray.toMultiset() = toTypedArray().toMultiset()
+fun String.toMultiset() = toCharList().toMultiset()
+fun ByteArray.toMutableMultiset() = toTypedArray().toMutableMultiset()
+fun ShortArray.toMutableMultiset() = toTypedArray().toMutableMultiset()
+fun IntArray.toMutableMultiset() = toTypedArray().toMutableMultiset()
+fun LongArray.toMutableMultiset() = toTypedArray().toMutableMultiset()
+fun FloatArray.toMutableMultiset() = toTypedArray().toMutableMultiset()
+fun DoubleArray.toMutableMultiset() = toTypedArray().toMutableMultiset()
+fun CharArray.toMutableMultiset() = toTypedArray().toMutableMultiset()
+fun String.toMutableMultiset() = toCharList().toMutableMultiset()

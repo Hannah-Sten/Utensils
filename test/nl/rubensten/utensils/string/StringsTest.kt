@@ -263,11 +263,11 @@ class StringsTest {
     fun `String#shuffle`() {
         val random = Random(0xCAFEBABE)
         val string = String.random(16, Charset.LETTERS_NUMBERS_SPECIAL, random)
-        val expected = string.toCharArray().toTypedArray().toMultiset()
+        val expected = string.toMultiset()
 
         for (i in 1..5) {
             val shuffled = string.shuffle(random)
-            val chars = shuffled.toCharArray().toTypedArray().toMultiset()
+            val chars = shuffled.toMultiset()
             assertEquals(expected, chars)
         }
     }
