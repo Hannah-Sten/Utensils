@@ -86,7 +86,7 @@ object MatrixUtils {
 
     /**
      * Finds a basis for the dimension of the vectors supplied. It finds the basis with the sifting
-     * algorithm.
+     * graph.
      * <p>
      * If the number of vectors that are linearly independent is greater than the dimension, the
      * last vectors will be truncated from the basis.

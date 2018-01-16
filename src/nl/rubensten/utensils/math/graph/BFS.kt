@@ -1,4 +1,4 @@
-package nl.rubensten.utensils.algorithm
+package nl.rubensten.utensils.math.graph
 
 import java.util.*
 
@@ -6,7 +6,7 @@ typealias IterationAction<N> = (N) -> BFSAction
 typealias AdjacencyFunction<N> = (N) -> List<N>
 
 /**
- * A generic implementation of the breadth first search algorithm.
+ * A generic implementation of the breadth first search graph.
  *
  * If you want to...
  * * Find the shortest path, use `BFS#BFS(Object, Object, Function)`.
@@ -21,7 +21,7 @@ class BFS<N>  {
     companion object {
 
         /**
-         * Iteration action that literally does nothing and lets the algorithm continue.
+         * Iteration action that literally does nothing and lets the graph continue.
          */
         @JvmStatic
         fun <N> noIterationAction(): IterationAction<N> = { _ -> BFSAction.CONTINUE }
@@ -30,7 +30,7 @@ class BFS<N>  {
     /**
      * The node where the pathfinding should end.
      *
-     * Or `null` when the algorithm should branch over all nodes.
+     * Or `null` when the graph should branch over all nodes.
      */
     private val end: N?
 
@@ -47,7 +47,7 @@ class BFS<N>  {
     private val start: BFSNode<N>
 
     /**
-     * Set containing all the nodes that have been visited by the algorithm.
+     * Set containing all the nodes that have been visited by the graph.
      */
     private var visited: MutableSet<N>? = null
 
@@ -59,9 +59,9 @@ class BFS<N>  {
     private var shortestPath: List<N>? = null
 
     /**
-     * The action that will be executed for every node that the algorithm visits.
+     * The action that will be executed for every node that the graph visits.
      *
-     * The function returns how the algorithm should continue.
+     * The function returns how the graph should continue.
      */
     private var iterationAction: IterationAction<N>? = null
 
@@ -71,7 +71,7 @@ class BFS<N>  {
      * This method requires that the BFS ran in goal-oriented mode. This means that the BFS will
      * actively search for a path ([BFS.BFS] constructor used).
      *
-     * Also, [BFS.execute] must have been called, otherwise the algorithm didn't even
+     * Also, [BFS.execute] must have been called, otherwise the graph didn't even
      * have a chance of calculating it.
      *
      * @return The shortest path from the start node to the end node.
@@ -92,7 +92,7 @@ class BFS<N>  {
     /**
      * Creates a new BFS that will branch until it finds the end node.
      *
-     * By default, the algorithm will not fire an action for each visited node (including the
+     * By default, the graph will not fire an action for each visited node (including the
      * starting node). You can alter this by setting an iteration action
      * ([BFS.setIterationAction]).
      *
@@ -113,7 +113,7 @@ class BFS<N>  {
     /**
      * Creates a new BFS that will keep on branching.
      *
-     * By default, the algorithm will not fire an action for each visited node (including the
+     * By default, the graph will not fire an action for each visited node (including the
      * starting node). You can alter this by setting an iteration action ([BFS.setIterationAction]).
      *
      * @param startNode
@@ -131,10 +131,10 @@ class BFS<N>  {
     }
 
     /**
-     * Executes the BFS algorithm.
+     * Executes the BFS graph.
      */
     fun execute() {
-        // Terminate when the end is also the start node, but only if the algorithm
+        // Terminate when the end is also the start node, but only if the graph
         // has a goal (aka end-node) in mind.
         if (!hasGoal()) {
             if (start.node == end) {
@@ -150,7 +150,7 @@ class BFS<N>  {
         visited!!.add(start.node)
         toCover.add(start)
 
-        // Execute iteration action for the starting node. Abort algorithm if needed.
+        // Execute iteration action for the starting node. Abort graph if needed.
         val startAction = iterationAction!!(start.node)
         if (startAction == BFSAction.ABORT) {
             return
@@ -173,7 +173,7 @@ class BFS<N>  {
                 val newNode = BFSNode(adjacentNode, current.distance + 1)
                 newNode.predecessor = current
 
-                // Execute iteration action for every node visited. Abort algorithm if needed.
+                // Execute iteration action for every node visited. Abort graph if needed.
                 val action = iterationAction!!(adjacentNode)
                 if (action == BFSAction.ABORT) {
                     return
@@ -198,7 +198,7 @@ class BFS<N>  {
      * @param iterationAction
      *          The action to execute each node or [BFS.NO_ITERATION_ACTION] if you want to
      *          execute nothing. The result of the function (a [BFSAction]) determines if the
-     *          algorithm should continue or not.
+     *          graph should continue or not.
      */
     fun setIterationAction(iterationAction: IterationAction<N>) {
         this.iterationAction = iterationAction
@@ -215,7 +215,7 @@ class BFS<N>  {
     }
 
     /**
-     * Checks if the given node has already been visited by the algorithm.
+     * Checks if the given node has already been visited by the graph.
      *
      * @param node
      *          The node to check for if it's been visited already.
@@ -256,12 +256,12 @@ class BFS<N>  {
     }
 
     /**
-     * Checks if the BFS algorithm will visit all nodes.
+     * Checks if the BFS graph will visit all nodes.
      *
      * In other words: if the BFS will stop at a target node or not.
      *
-     * @return `true` if the algorithm stop only when all nodes are covered: the algorithm
-     * executes without a goal in mind, `false` if the algorithm stops when the target has
+     * @return `true` if the graph stop only when all nodes are covered: the graph
+     * executes without a goal in mind, `false` if the graph stops when the target has
      * been found.
      */
     fun hasGoal(): Boolean {
@@ -270,7 +270,7 @@ class BFS<N>  {
 }
 
 /**
- * Class used by the BFS algorithm to keep track of augmented values.
+ * Class used by the BFS graph to keep track of augmented values.
  *
  * @author Ruben Schellekens, Dylan ter Veen
  */

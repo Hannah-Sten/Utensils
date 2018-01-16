@@ -43,7 +43,7 @@ class HungarianAlgorithm<T, W, J>(
     private val op = costMatrix.operations()
 
     /**
-     * The matrix used by the algorithm, can be modified during the execution steps.
+     * The matrix used by the graph, can be modified during the execution steps.
      */
     private lateinit var matrix: MutableMatrix<T>
 
@@ -109,7 +109,7 @@ class HungarianAlgorithm<T, W, J>(
     }
 
     /**
-     * Executes the meat of the algorithm, after eventual preparation steps.
+     * Executes the meat of the graph, after eventual preparation steps.
      */
     private fun executeAlgorithm(): Map<W, J> {
         subtractRowMinima()
@@ -132,7 +132,7 @@ class HungarianAlgorithm<T, W, J>(
      *
      * This value is available only after executing [minimize] or [maximize].
      *
-     * @throws IllegalStateException When the algorithm hasn't been run yet.
+     * @throws IllegalStateException When the graph hasn't been run yet.
      */
     @Throws(IllegalStateException::class)
     fun cost(): T {
