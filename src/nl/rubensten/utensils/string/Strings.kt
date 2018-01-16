@@ -106,14 +106,18 @@ fun String.splitInHalf(): Pair<String, String> {
  * Decapitalises the first character of a string.
  */
 fun String.firstLower(): String {
-    TODO("First lower")
+    if (this == "") return ""
+    val first = substring(0, 1)
+    return first.toLowerCase() + substring(1)
 }
 
 /**
  * Capitalises the first character of a string.
  */
 fun String.firstUpper(): String {
-    TODO("First upper")
+    if (this == "") return ""
+    val first = substring(0, 1)
+    return first.toUpperCase() + substring(1)
 }
 
 /**
