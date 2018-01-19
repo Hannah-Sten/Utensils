@@ -688,3 +688,5 @@ object Colour {
         return FloatVector(ran.nextFloat(), ran.nextFloat(), ran.nextFloat(), alpha)
     }
 }
+
+typealias Color = Colour
