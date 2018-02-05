@@ -5,14 +5,17 @@ import java.util.*
 /**
  * XOR Shift 1024* Pseudo Random Number Generator implementation with period `2^1024-1`.
  *
- * When not given a seed, it will use the current time in nanoseconds as seed.
- *
  * @author Ruben Schellekens
  */
 open class XorShift1024Star(seed: Long = System.nanoTime()) : Random(seed) {
 
-    private val seed = LongArray(16) { seed }
+    private val seed: LongArray
     private var pointer = 0
+
+    init {
+        val random = Random(seed)
+        this.seed = LongArray(16) { random.nextLong() }
+    }
 
     override fun next(bits: Int): Int {
         val s0 = seed[pointer]
