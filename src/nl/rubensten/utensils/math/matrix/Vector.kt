@@ -246,21 +246,21 @@ interface MutableVector<T> : Vector<T> {
      *
      * @return This (modified) vector.
      */
-    fun addModify(other: Vector<T>): MutableVector<T>
+    infix fun addModify(other: Vector<T>): MutableVector<T>
 
     /**
      * See [subtract], but then modifies the vector instead of returning a new one.
      *
      * @return This (modified) vector.
      */
-    fun subtractModify(other: Vector<T>): MutableVector<T>
+    infix fun subtractModify(other: Vector<T>): MutableVector<T>
 
     /**
      * See [scalar], but the modifies the vector instead of returning a new one.
      *
      * @return This (modified) vector.
      */
-    fun scalarModify(scalar: T): MutableVector<T>
+    infix fun scalarModify(scalar: T): MutableVector<T>
 
     /**
      * See [negate], but then modifies the vector instead of returning a new one.

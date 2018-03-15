@@ -111,13 +111,42 @@ object MatrixUtils {
      * @param vectors
      *         The vectors the basis should contain.
      * @return A list of vectors all with length 1 and perpendicular to each other.
-     * @throws DimensionMismatchException
-     *         When the vectors do not have the same size. IllegalArgumentException When the
-     *         vectorarray is either null or empty.
+     * @throws DimensionMismatchException When the vectors do not have the same size.
+     * @throws IllegalArgumentException When the vectorarray is empty.
      */
     @JvmStatic
     fun <T> orthonormalBasisContaining(vararg vectors: Vector<T>): List<Vector<T>> {
-        TODO("Implement orthonormalBasisContaining")
+        require(vectors.isNotEmpty()) { "Vector array must not be empty" }
+
+        // Check if the dimensions of the vectors are the same.
+        val dimension = vectors[0].size()
+        for (vector in vectors) {
+            require(dimension == vector.size()) { "All vectors must have the same size" }
+        }
+
+        // Get a basis from the vectors.
+        val basis = extendToBasis(*vectors).toMutableList()
+
+        // Normalise the first vector.
+        basis[0] = basis[0].normalize()
+        val op = basis[0].operations()
+
+        // Do the Gram-Schmidt precedure.
+        for (i in 1 until basis.size) {
+            val vector = basis[i]
+
+            // Calculate the projection of the vector on the already finisihed part of the basis.
+            val projection = GenericVector(op, dimension) { op.zero } // Null vector
+            for (j in 0 until i) {
+                val dot = vector dot basis[j]
+                projection addModify (basis[j] scalar dot)
+            }
+
+            // Get the vector to be perpendicular and normalised to the finished part of the basis.
+            basis[i] = (vector subtract projection).normalize()
+        }
+
+        return basis
     }
 
     /**
