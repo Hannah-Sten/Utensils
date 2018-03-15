@@ -94,12 +94,46 @@ object MatrixUtils {
      * @param vectors
      *         The vectors to form a basis with.
      * @return A list of vectors that form a basis for the dimension of the vectors.
-     * @throws DimensionMismatchException
-     *         When the vectors have not the same dimension.
+     * @throws IllegalArgumentException When the vectors have not the same dimension, or when there are no vectors.
      */
     @JvmStatic
     fun <T> extendToBasis(vararg vectors: Vector<T>): List<Vector<T>> {
-        TODO("Implement extendToBasis")
+        require(vectors.isNotEmpty()) { "Vector array must not be empty" }
+
+        // Check if the dimensions of the vectors are the same.
+        val dimension = vectors[0].size()
+        for (vector in vectors) {
+            require(dimension == vector.size()) { "All vectors must have the same size" }
+        }
+
+        // Add the argument vectors to a premature basis first.
+        val basis = vectors.toMutableList()
+        val op = basis.first().operations()
+
+        // Add all unit vectors to the premature basis.
+        for (i in 0 until dimension) {
+            val unitVector = GenericVector(op, dimension) { if (it == i) op.unit else op.zero }
+            basis += unitVector
+        }
+
+        // Start the sifting algorithm
+        val iterator = basis.iterator()
+        while (iterator.hasNext()) {
+            val vector = iterator.next()
+
+            // Remove vector from basis when it is the null vector.
+            if (vector.isNullVector()) {
+                iterator.remove()
+            }
+
+            // Remove vector if it is a linear combination of the preceding vectors.
+            val prevAndCurrent = basis.subList(0, basis.indexOf(vector) + 1).toTypedArray()
+            if (!isLinearlyIndependent(*prevAndCurrent)) {
+                iterator.remove()
+            }
+        }
+
+        return basis
     }
 
     /**
@@ -111,8 +145,7 @@ object MatrixUtils {
      * @param vectors
      *         The vectors the basis should contain.
      * @return A list of vectors all with length 1 and perpendicular to each other.
-     * @throws DimensionMismatchException When the vectors do not have the same size.
-     * @throws IllegalArgumentException When the vectorarray is empty.
+     * @throws IllegalArgumentException When the vectorarray is empty or when the vectors do not have the same size.
      */
     @JvmStatic
     fun <T> orthonormalBasisContaining(vararg vectors: Vector<T>): List<Vector<T>> {
