@@ -188,12 +188,26 @@ object MatrixUtils {
      * @param vectors
      *         The vectors to check.
      * @return Whether the vectors are linearly independent.
-     * @throws DimensionMismatchException
+     * @throws IllegalArgumentException
      *         When the vectors do not have the same dimension.
      */
     @JvmStatic
     fun <T> isLinearlyIndependent(vararg vectors: Vector<T>): Boolean {
-        TODO("Implement isLinearlyIndependent")
+        if (vectors.isEmpty()) return true
+
+        // Check if the dimensions of the vectors are the same.
+        val dimension = vectors[0].size()
+        for (vector in vectors) {
+            require(dimension == vector.size()) { "All vectors must have the same size" }
+        }
+
+        // Check if the vectors are linearly independent.
+        val op = vectors[0].operations()
+        val matrix = vectors.toMatrix(op, major = Major.COLUMN)
+
+        // Make matrix square but with keeping the same rank (when 0).
+        val squareMatrix = matrix.transpose().multiply(matrix)
+        return !op.toDouble(squareMatrix.determinant()).isZero()
     }
 
     /**

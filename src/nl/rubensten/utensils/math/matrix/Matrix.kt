@@ -541,14 +541,14 @@ enum class Major {
 }
 
 // Convert arrays of vectors to matrices.
-fun Array<Vector<Byte>>.toMatrix(major: Major = Major.ROW) = ByteMatrix(*this, major = major)
-fun Array<Vector<Short>>.toMatrix(major: Major = Major.ROW) = ShortMatrix(*this, major = major)
-fun Array<Vector<Int>>.toMatrix(major: Major = Major.ROW) = IntMatrix(*this, major = major)
-fun Array<Vector<Long>>.toMatrix(major: Major = Major.ROW) = LongMatrix(*this, major = major)
-fun Array<Vector<Float>>.toMatrix(major: Major = Major.ROW) = FloatMatrix(*this, major = major)
-fun Array<Vector<Double>>.toMatrix(major: Major = Major.ROW) = DoubleMatrix(*this, major = major)
-fun Array<Vector<String>>.toMatrix(major: Major = Major.ROW) = StringMatrix(*this, major = major)
-fun <T> Array<Vector<T>>.toMatrix(operations: OperationSet<T>, major: Major = Major.ROW) = GenericMatrix(operations, toMutableList(), major = major)
+fun Array<out Vector<Byte>>.toMatrix(major: Major = Major.ROW) = ByteMatrix(*this, major = major)
+fun Array<out Vector<Short>>.toMatrix(major: Major = Major.ROW) = ShortMatrix(*this, major = major)
+fun Array<out Vector<Int>>.toMatrix(major: Major = Major.ROW) = IntMatrix(*this, major = major)
+fun Array<out Vector<Long>>.toMatrix(major: Major = Major.ROW) = LongMatrix(*this, major = major)
+fun Array<out Vector<Float>>.toMatrix(major: Major = Major.ROW) = FloatMatrix(*this, major = major)
+fun Array<out Vector<Double>>.toMatrix(major: Major = Major.ROW) = DoubleMatrix(*this, major = major)
+fun Array<out Vector<String>>.toMatrix(major: Major = Major.ROW) = StringMatrix(*this, major = major)
+fun <T> Array<out Vector<T>>.toMatrix(operations: OperationSet<T>, major: Major = Major.ROW) = GenericMatrix(operations, toMutableList(), major = major)
 
 // Convert collections of vectors to matrices.
 fun List<Vector<Byte>>.toMatrix(major: Major = Major.ROW) = ByteMatrix(this, major = major)
