@@ -18,7 +18,19 @@ interface Matrix<T> : Iterable<Vector<T>> {
     /**
      * The amount of columns the matrix has.
      */
+    val width: Int
+        get() = width()
+
+    /**
+     * The amount of columns the matrix has.
+     */
     fun width(): Int
+
+    /**
+     * The amount of rows the matrix has.
+     */
+    val height: Int
+        get() = height()
 
     /**
      * The amount of rows the matrix has.
@@ -26,9 +38,21 @@ interface Matrix<T> : Iterable<Vector<T>> {
     fun height(): Int
 
     /**
+     * The total amount of elements in the matrix.
+     */
+    val size: Int
+        get() = count()
+
+    /**
      * The amount of elements in the Matrix.
      */
     fun count() = width() * height()
+
+    /**
+     * The operations of T.
+     */
+    val operations: OperationSet<T>
+        get() = operations()
 
     /**
      * Get the operations of T.
@@ -38,7 +62,21 @@ interface Matrix<T> : Iterable<Vector<T>> {
     /**
      * The ordening of the matrix.
      */
+    val major: Major
+        get() = major()
+
+    /**
+     * The ordening of the matrix.
+     */
     fun major(): Major
+
+    /**
+     * Get the amount of vectors present in the matrix.
+     */
+    fun vectors() = when (major()) {
+        Major.ROW -> height()
+        Major.COLUMN -> width()
+    }
 
     /**
      * Puts all the values of the given row in a vector.

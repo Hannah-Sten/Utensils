@@ -15,14 +15,14 @@ open class GenericMatrix<T> : MutableMatrix<T> {
     }
 
     /**
-     * The rows or columns in the matrix (all the same size) ordered as determined by [major].
+     * The rows or columns in the matrix (all the same size) ordered as determined by [myMajor].
      */
     protected val op: OperationSet<T>
 
     /**
      * How the vectors are stored in the matrix.
      */
-    protected val major: Major
+    protected val myMajor: Major
 
     /**
      * Contains all the mathematical operations on the element type.
@@ -65,7 +65,7 @@ open class GenericMatrix<T> : MutableMatrix<T> {
      */
     constructor(op: OperationSet<T>, major: Major = Major.ROW, elements: MutableList<MutableVector<T>>) {
         this.op = op
-        this.major = major
+        this.myMajor = major
         this.elements = elements
     }
 
@@ -159,19 +159,19 @@ open class GenericMatrix<T> : MutableMatrix<T> {
 
     override fun operations() = op
 
-    override fun major() = major
+    override fun major() = myMajor
 
-    override fun width() = if (elements.isEmpty()) 0 else when (major) {
+    override fun width() = if (elements.isEmpty()) 0 else when (myMajor) {
         Major.ROW -> elements[0].size()
         Major.COLUMN -> elements.size
     }
 
-    override fun height() = if (elements.isEmpty()) 0 else when (major) {
+    override fun height() = if (elements.isEmpty()) 0 else when (myMajor) {
         Major.ROW -> elements.size
         Major.COLUMN -> elements[0].size()
     }
 
-    override fun getRow(row: Int) = when (major) {
+    override fun getRow(row: Int) = when (myMajor) {
         Major.ROW -> elements[row]
         Major.COLUMN -> (0 until width()).map { elements[it][row] }.toVector(op)
     }
@@ -182,7 +182,7 @@ open class GenericMatrix<T> : MutableMatrix<T> {
         return clone
     }
 
-    override fun getColumn(column: Int) = when (major) {
+    override fun getColumn(column: Int) = when (myMajor) {
         Major.ROW -> (0 until height()).map { elements[it][column] }.toVector(op)
         Major.COLUMN -> elements[column]
     }
@@ -197,24 +197,24 @@ open class GenericMatrix<T> : MutableMatrix<T> {
         checkDimensions(this, other)
 
         val vectors = elements.mapIndexed { index, vector -> (vector + other.getVector(index)).toMutableVector() }
-        return GenericMatrix(op, major, vectors.toMutableList())
+        return GenericMatrix(op, myMajor, vectors.toMutableList())
     }
 
     override fun subtract(other: Matrix<T>): Matrix<T> {
         checkDimensions(this, other)
 
         val vectors = elements.mapIndexed { index, vector -> (vector - other.getVector(index)).toMutableVector() }
-        return GenericMatrix(op, major, vectors.toMutableList())
+        return GenericMatrix(op, myMajor, vectors.toMutableList())
     }
 
     override fun scalar(scalar: T): Matrix<T> {
         val vectors = elements.map { (it * scalar).toMutableVector() }
-        return GenericMatrix(op, major, vectors.toMutableList())
+        return GenericMatrix(op, myMajor, vectors.toMutableList())
     }
 
     override fun scalarRow(row: Int, scalar: T): Matrix<T> {
         val vectors = ArrayList(elements)
-        when (major) {
+        when (myMajor) {
             Major.COLUMN -> {
                 vectors.forEach {
                     it[row] = it[row] * scalar
@@ -224,12 +224,12 @@ open class GenericMatrix<T> : MutableMatrix<T> {
                 vectors[row] = (vectors[row] * scalar).toMutableVector()
             }
         }
-        return GenericMatrix(op, major, vectors)
+        return GenericMatrix(op, myMajor, vectors)
     }
 
     override fun scalarColumn(column: Int, scalar: T): Matrix<T> {
         val vectors = ArrayList(elements)
-        when (major) {
+        when (myMajor) {
             Major.COLUMN -> {
                 vectors[column] = (vectors[column] * scalar).toMutableVector()
             }
@@ -239,7 +239,7 @@ open class GenericMatrix<T> : MutableMatrix<T> {
                 }
             }
         }
-        return GenericMatrix(op, major, vectors)
+        return GenericMatrix(op, myMajor, vectors)
     }
 
     override fun multiply(other: Matrix<T>): Matrix<T> {
@@ -387,7 +387,7 @@ open class GenericMatrix<T> : MutableMatrix<T> {
     }
 
     override fun transpose(): Matrix<T> {
-        return when (major) {
+        return when (myMajor) {
             Major.COLUMN -> GenericMatrix(op, Major.ROW, elements.toMutableList())
             Major.ROW -> GenericMatrix(op, Major.COLUMN, elements.toMutableList())
         }
@@ -426,7 +426,7 @@ open class GenericMatrix<T> : MutableMatrix<T> {
         return solve.subMatrix(0, width(), width(), height())
     }
 
-    override fun negate() = when (major) {
+    override fun negate() = when (myMajor) {
         // Switch on major to improve performance.
         Major.ROW -> rows().map { it.negate() }.toMatrix(op)
         Major.COLUMN -> columns().map { it.negate() }.toMatrix(op)
@@ -496,7 +496,7 @@ open class GenericMatrix<T> : MutableMatrix<T> {
     }
 
     override fun swapRowModify(row0: Int, row1: Int): MutableMatrix<T> {
-        when (major) {
+        when (myMajor) {
             Major.ROW -> {
                 val temp = elements[row0]
                 elements[row0] = elements[row1]
@@ -515,7 +515,7 @@ open class GenericMatrix<T> : MutableMatrix<T> {
     }
 
     override fun swapColumnModify(col0: Int, col1: Int): MutableMatrix<T> {
-        when (major) {
+        when (myMajor) {
             Major.COLUMN -> {
                 val temp = elements[col0]
                 elements[col0] = elements[col1]
@@ -603,46 +603,46 @@ open class GenericMatrix<T> : MutableMatrix<T> {
     }
 
     override fun rows(): List<Vector<T>> {
-        return when (major) {
+        return when (myMajor) {
             Major.ROW -> elements.map { it.clone().toMutableVector() }.toList()
             Major.COLUMN -> (0 until width()).map { getRow(it) }
         }
     }
 
     override fun rowsMutable(): List<MutableVector<T>> {
-        return when (major) {
+        return when (myMajor) {
             Major.ROW -> elements.map { it }.toList()
             Major.COLUMN -> (0 until width()).map { getRow(it) }
         }
     }
 
     override fun columns(): List<Vector<T>> {
-        return when (major) {
+        return when (myMajor) {
             Major.COLUMN -> elements.map { it.clone() }.toList()
             Major.ROW -> (0 until width()).map { getColumn(it) }
         }
     }
 
     override fun columnsMutable(): List<MutableVector<T>> {
-        return when (major) {
+        return when (myMajor) {
             Major.COLUMN -> elements.map { it }.toList()
             Major.ROW -> (0 until width()).map { getColumn(it) }
         }
     }
 
     override fun mutableClone(): MutableMatrix<T> {
-        return GenericMatrix(op, major, elements.map { it.clone() }.toMutableList())
+        return GenericMatrix(op, myMajor, elements.map { it.clone() }.toMutableList())
     }
 
     override fun get(row: Int, col: Int): T {
-        return when (major) {
+        return when (myMajor) {
             Major.ROW -> elements[row][col]
             Major.COLUMN -> elements[col][row]
         }
     }
 
     override fun set(row: Int, col: Int, value: T) {
-        when (major) {
+        when (myMajor) {
             Major.ROW -> elements[row][col] = value
             Major.COLUMN -> elements[col][row] = value
         }
@@ -673,14 +673,14 @@ open class GenericMatrix<T> : MutableMatrix<T> {
         if (this === other) return true
         if (other !is GenericMatrix<*>) return false
 
-        if (major != other.major) return false
+        if (myMajor != other.myMajor) return false
         if (elements != other.elements) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        var result = major.hashCode()
+        var result = myMajor.hashCode()
         result = 31 * result + elements.hashCode()
         return result
     }

@@ -152,11 +152,23 @@ interface Vector<T>: Iterable<T> {
         get() = xyzw
 
     /**
+     * The amount of elements in the vector.
+     */
+    val size: Int
+        get() = size()
+
+    /**
      * Get the amount of elements in the vector.
      *
      * @return The amount of elements in the vector.
      */
     fun size(): Int
+
+    /**
+     * The operations of T.
+     */
+    val operations: OperationSet<T>
+        get() = operations()
 
     /**
      * Get the operations of T.
