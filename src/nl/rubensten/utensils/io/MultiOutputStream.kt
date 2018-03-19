@@ -5,7 +5,7 @@ import java.io.OutputStream
 /**
  * @author Ruben Schellekens
  */
-open class MultiOutputStream(private val outputStreams: Collection<OutputStream>) : OutputStream() {
+open class MultiOutputStream(private val outputStreams: Iterable<OutputStream>) : OutputStream() {
 
     constructor(vararg outputStreams: OutputStream) : this(outputStreams.toList())
 
