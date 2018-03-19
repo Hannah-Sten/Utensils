@@ -138,6 +138,11 @@ open class GenericVector<T>(
         return Math.sqrt(op.toDouble(sum))
     }
 
+    override fun slice(startIndexInclusive: Int, endIndexInclusive: Int): Vector<T> {
+        val newElements = elements.subList(startIndexInclusive, endIndexInclusive + 1)
+        return GenericVector(op, newElements)
+    }
+
     override fun normalize(): Vector<T> {
         val elements = nullVector()
         val length = length()

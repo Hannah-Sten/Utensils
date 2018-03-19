@@ -256,6 +256,16 @@ interface Vector<T>: Iterable<T> {
     fun length(): Double
 
     /**
+     * Creates a vector with elements in a given (inclusive) range.
+     */
+    fun slice(startIndexInclusive: Int, endIndexInclusive: Int): Vector<T>
+
+    /**
+     * Creates a vector with elements in a given range.
+     */
+    fun slice(indexRange: IntRange) = slice(indexRange.start, indexRange.endInclusive)
+
+    /**
      * Checks if the two vectors are perpendicular to each other.
      *
      * @param other
@@ -356,6 +366,9 @@ interface Vector<T>: Iterable<T> {
      *         When the index is greater or equal than the size of the vector.
      */
     operator fun get(index: Int): T
+
+    /** See [slice] **/
+    operator fun get(indexRange: IntRange): Vector<T> = slice(indexRange)
 
     /** See [add] **/
     operator fun plus(other: Vector<T>) = add(other)
