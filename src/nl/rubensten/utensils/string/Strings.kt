@@ -199,7 +199,7 @@ fun String.shuffle(random: Random = Random()): String = toCharList().shuffled(ra
  * Creates a new list containing all the characters in the string in order.
  */
 fun String.toCharList(): List<Char> {
-    val result = ArrayList<Char>()
+    val result = ArrayList<Char>(length)
     for (char in this) {
         result += char
     }
