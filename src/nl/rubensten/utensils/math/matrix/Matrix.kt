@@ -1,5 +1,7 @@
 package nl.rubensten.utensils.math.matrix
 
+import nl.rubensten.utensils.general.length
+
 /**
  * An immutable matrix.
  *
@@ -212,6 +214,24 @@ interface Matrix<T> : Iterable<Vector<T>> {
     fun subMatrix(row: Int, column: Int, width: Int, height: Int): Matrix<T>
 
     /**
+     * Cuts a rectangle of elements out of the matrix and puts it in a new matrix.
+     *
+     * You specify two ranges. The `columns` range selects the columns you want and the `rows` range selects the
+     * rows you want. Note that the indices of the rows and columns are 0-indexed.
+     *
+     * @param columns
+     *         The indices of the columns to cut out.
+     * @param rows
+     *         The indices of the rows to cut out.
+     */
+    fun subMatrix(columns: IntRange, rows: IntRange) = subMatrix(
+            rows.start,
+            columns.start,
+            columns.length,
+            rows.length
+    )
+
+    /**
      * Creates a new matrix where the given matrix is glued to the right of this matrix.
      *
      * @param matrix
@@ -373,6 +393,9 @@ interface Matrix<T> : Iterable<Vector<T>> {
      *         When the column or row index goes out of the matrix's bounds.
      */
     operator fun get(row: Int, col: Int): T
+
+    /** See [subMatrix] **/
+    operator fun get(columns: IntRange, rows: IntRange) = subMatrix(columns, rows)
 
     /** See [add] **/
     operator fun plus(other: Matrix<T>) = add(other)
