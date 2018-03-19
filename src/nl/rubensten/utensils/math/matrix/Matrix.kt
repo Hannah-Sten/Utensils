@@ -5,6 +5,10 @@ import nl.rubensten.utensils.general.length
 /**
  * An immutable matrix.
  *
+ * A matrix iterates over its vectors. If you want to iterate over the elements, use the [elements] method.
+ * Whether the vectors are rows or columns is determined by the corresponding [major].
+ * [Major.ROW] means iteration over rows, [Major.COLUMN] means iteration over columns.
+ *
  * Classes should not implement this interface, but [MutableMatrix].
  *
  * @author Ruben Schellekens
@@ -421,6 +425,10 @@ interface Matrix<T> : Iterable<Vector<T>> {
 
 /**
  * A mutable matrix.
+ *
+ * A matrix iterates over its vectors. If you want to iterate over the elements, use the [elements] method.
+ * Whether the vectors are rows or columns is determined by the corresponding [major].
+ * [Major.ROW] means iteration over rows, [Major.COLUMN] means iteration over columns.
  *
  * @author Ruben Schellekens
  */

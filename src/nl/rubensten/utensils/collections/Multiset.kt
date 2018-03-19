@@ -10,6 +10,12 @@ import nl.rubensten.utensils.string.toCharList
  * The total amount of elements (including frequencies) are available through [totalCount].
  * The total amount of distinct keys is available through [size].
  *
+ * A multiset iterates over the _single_ instances of its elements.
+ * This means that each element will be iterated over exactly once.
+ * You can get the amount of the elements using [count].
+ * For example a multiset `[2*x, 16*y, z]` iterates over the elements `[x, y, z]` in an undeterministic order.
+ * If you want to iterate with frequencies, use [valueIterator].
+ *
  * @param E
  *          The type of elements contained in the multisetset.
  *          The multisetset is invariant on its element type.
