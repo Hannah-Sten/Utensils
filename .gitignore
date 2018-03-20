@@ -26,3 +26,6 @@ hs_err_pid*
 ### IntelliJ
 .idea/
 Utensils.iml
+
+### Gradle
+!gradle-wrapper.jar
