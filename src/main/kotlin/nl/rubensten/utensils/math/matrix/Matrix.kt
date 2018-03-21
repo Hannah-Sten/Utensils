@@ -1,7 +1,13 @@
 package nl.rubensten.utensils.math.matrix
 
+import nl.rubensten.utensils.general.length
+
 /**
  * An immutable matrix.
+ *
+ * A matrix iterates over its vectors. If you want to iterate over the elements, use the [elements] method.
+ * Whether the vectors are rows or columns is determined by the corresponding [major].
+ * [Major.ROW] means iteration over rows, [Major.COLUMN] means iteration over columns.
  *
  * Classes should not implement this interface, but [MutableMatrix].
  *
@@ -12,7 +18,19 @@ interface Matrix<T> : Iterable<Vector<T>> {
     /**
      * The amount of columns the matrix has.
      */
+    val width: Int
+        get() = width()
+
+    /**
+     * The amount of columns the matrix has.
+     */
     fun width(): Int
+
+    /**
+     * The amount of rows the matrix has.
+     */
+    val height: Int
+        get() = height()
 
     /**
      * The amount of rows the matrix has.
@@ -20,9 +38,21 @@ interface Matrix<T> : Iterable<Vector<T>> {
     fun height(): Int
 
     /**
+     * The total amount of elements in the matrix.
+     */
+    val size: Int
+        get() = count()
+
+    /**
      * The amount of elements in the Matrix.
      */
     fun count() = width() * height()
+
+    /**
+     * The operations of T.
+     */
+    val operations: OperationSet<T>
+        get() = operations()
 
     /**
      * Get the operations of T.
@@ -32,7 +62,21 @@ interface Matrix<T> : Iterable<Vector<T>> {
     /**
      * The ordening of the matrix.
      */
+    val major: Major
+        get() = major()
+
+    /**
+     * The ordening of the matrix.
+     */
     fun major(): Major
+
+    /**
+     * Get the amount of vectors present in the matrix.
+     */
+    fun vectors() = when (major()) {
+        Major.ROW -> height()
+        Major.COLUMN -> width()
+    }
 
     /**
      * Puts all the values of the given row in a vector.
@@ -212,6 +256,24 @@ interface Matrix<T> : Iterable<Vector<T>> {
     fun subMatrix(row: Int, column: Int, width: Int, height: Int): Matrix<T>
 
     /**
+     * Cuts a rectangle of elements out of the matrix and puts it in a new matrix.
+     *
+     * You specify two ranges. The `columns` range selects the columns you want and the `rows` range selects the
+     * rows you want. Note that the indices of the rows and columns are 0-indexed.
+     *
+     * @param columns
+     *         The indices of the columns to cut out.
+     * @param rows
+     *         The indices of the rows to cut out.
+     */
+    fun subMatrix(columns: IntRange, rows: IntRange) = subMatrix(
+            rows.start,
+            columns.start,
+            columns.length,
+            rows.length
+    )
+
+    /**
      * Creates a new matrix where the given matrix is glued to the right of this matrix.
      *
      * @param matrix
@@ -374,6 +436,9 @@ interface Matrix<T> : Iterable<Vector<T>> {
      */
     operator fun get(row: Int, col: Int): T
 
+    /** See [subMatrix] **/
+    operator fun get(columns: IntRange, rows: IntRange) = subMatrix(columns, rows)
+
     /** See [add] **/
     operator fun plus(other: Matrix<T>) = add(other)
 
@@ -398,6 +463,10 @@ interface Matrix<T> : Iterable<Vector<T>> {
 
 /**
  * A mutable matrix.
+ *
+ * A matrix iterates over its vectors. If you want to iterate over the elements, use the [elements] method.
+ * Whether the vectors are rows or columns is determined by the corresponding [major].
+ * [Major.ROW] means iteration over rows, [Major.COLUMN] means iteration over columns.
  *
  * @author Ruben Schellekens
  */

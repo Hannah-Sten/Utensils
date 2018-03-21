@@ -1,6 +1,7 @@
 package nl.rubensten.utensils.collections
 
 import java.util.*
+import kotlin.math.max
 
 /**
  * Implementation of [MutableMultiset] with a [HashMap] as underlying data structure.
@@ -42,7 +43,7 @@ open class HashMultiset<E> : MutableMultiset<E> {
 
     override fun containsAll(elements: Collection<E>) = elements.all { contains(it) }
 
-    override fun add(element: E, initialCount: Int) {
+    override fun put(element: E, initialCount: Int) {
         require(initialCount >= 0) { "Initial count must be nonnegative, got $initialCount" }
 
         if (element in this) {
@@ -52,6 +53,11 @@ open class HashMultiset<E> : MutableMultiset<E> {
         if (initialCount > 0) {
             elements[element] = initialCount
         }
+    }
+
+    override fun add(element: E, amount: Int) {
+        val newValue = this[element] + amount
+        setCount(element, max(0, newValue))
     }
 
     override fun add(element: E): Boolean {
