@@ -43,7 +43,7 @@ class HungarianAlgorithm<T, W, J>(
     private val op = costMatrix.operations()
 
     /**
-     * The matrix used by the algorithm, can be modified during the execution steps.
+     * The matrix used by the graph, can be modified during the execution steps.
      */
     private lateinit var matrix: MutableMatrix<T>
 
@@ -109,7 +109,7 @@ class HungarianAlgorithm<T, W, J>(
     }
 
     /**
-     * Executes the meat of the algorithm, after eventual preparation steps.
+     * Executes the meat of the graph, after eventual preparation steps.
      */
     private fun executeAlgorithm(): Map<W, J> {
         subtractRowMinima()
@@ -132,7 +132,7 @@ class HungarianAlgorithm<T, W, J>(
      *
      * This value is available only after executing [minimize] or [maximize].
      *
-     * @throws IllegalStateException When the algorithm hasn't been run yet.
+     * @throws IllegalStateException When the graph hasn't been run yet.
      */
     @Throws(IllegalStateException::class)
     fun cost(): T {
@@ -208,7 +208,6 @@ class HungarianAlgorithm<T, W, J>(
         }
 
         fun Pair<Int, Int>.isAssigned() = assignedZeroes.contains(this)
-        fun Pair<Int, Int>.isCrossedOut() = crossedZeroes.contains(this)
 
         // Step 1:
         // Assign as many tasks as possible.
@@ -360,13 +359,18 @@ class HungarianAlgorithm<T, W, J>(
     private fun createResult(): Map<W, J> {
         // Required data structures.
         val result = (0 until size).map<Int, Int?> { null }.toMutableList()
-        val original: MutableList<MutableVector<T>?> = matrix.rows().map { it.toMutableVector() }.toMutableList()
+        val original: MutableList<MutableVector<T>?> = matrix.rows().asSequence().map { it.toMutableVector() }.toMutableList()
         val updatedColumns = HashSet<Int>()
 
         // Handy extention functions for better readability.
-        fun List<Vector<T>?>.columnZeroes(col: Int) = mapIndexed { index, vector -> Pair(index, vector) }
+        fun List<Vector<T>?>.columnZeroes(col: Int) = asSequence()
+                .mapIndexed { index, vector -> Pair(index, vector) }
                 .filter { it.second?.get(col)?.isZero() ?: false }
-        fun Vector<T>.rowZeroes() = mapIndexed { index, elt -> Pair(index, elt) }.filter { it.second.isZero() }
+                .toList()
+        fun Vector<T>.rowZeroes() = asSequence()
+                .mapIndexed { index, elt -> Pair(index, elt) }
+                .filter { it.second.isZero() }
+                .toList()
         fun updateColumns() = updatedColumns.forEach { col -> original.filter { it != null }.forEach { row -> row!![col] = op.unit } }
 
         // Keep on picking rows until all rows are moved to the result array.
@@ -434,39 +438,32 @@ class HungarianAlgorithm<T, W, J>(
      * Calculates the total cost of the optimal assignment given as `result` and stores it in [cost].
      */
     private fun calculateCost(result: List<Int?>) {
-        cost = result.mapIndexed { job, worker -> costMatrix[worker!!, job] }
+        cost = result.asSequence()
+                .mapIndexed { job, worker -> costMatrix[worker!!, job] }
                 .reduce { acc, t -> acc + t }
     }
-
-    /**
-     * Counts the amount of zeroes in the given row. `O(n)`
-     */
-    private fun countRowZeroes(rowIndex: Int) = matrix.getRow(rowIndex).count { it.isZero() }
-
-    /**
-     * Counts the amount of zeroes in the given column. `O(n)`
-     */
-    private fun countColumnZeroes(columnIndex: Int) = matrix.getColumn(columnIndex).count { it.isZero() }
 
     /**
      * Finds all the zeroes in the given row. `O(n)`
      *
      * @return A list of coordinates `(row, column)` that all have a zero at that spot in the matrix.
      */
-    private fun findZeroesInRow(rowIndex: Int) = matrix.getRow(rowIndex)
+    private fun findZeroesInRow(rowIndex: Int) = matrix.getRow(rowIndex).asSequence()
             .mapIndexed { index, value -> Pair(index, value) }
             .filter { it.second.isZero() }
             .map { Pair(rowIndex, it.first) }
+            .toList()
 
     /**
      * Finds all the zeroes in the given column. `O(n)`
      *
      * @return A list of coordinates `(row, column)` that all have a zero at that spot in the matrix.
      */
-    private fun findZeroesInColumn(columnIndex: Int) = matrix.getColumn(columnIndex)
+    private fun findZeroesInColumn(columnIndex: Int) = matrix.getColumn(columnIndex).asSequence()
             .mapIndexed { index, value -> Pair(index, value) }
             .filter { it.second.isZero() }
             .map { Pair(it.first, columnIndex) }
+            .toList()
 
     // Extension functions/operator for OperationSet operations.
     private fun T.toDouble() = op.toDouble(this)

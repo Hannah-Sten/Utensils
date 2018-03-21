@@ -1,7 +1,7 @@
 package nl.rubensten.utensils.math.arithmetic
 
 /**
- * The extended euclidian algorithm for two integers.
+ * The extended euclidian graph for two integers.
  *
  * Looks for `ax + by = gcd(a, b)` where `a` and `b` are the input variables.
  * [gcd] contains the gcd, [x] and [y] contain `x` and `y` as seen in the previous expression.
@@ -26,7 +26,7 @@ open class IntegerEuclids(val a: Long, val b: Long) {
         }
 
     /**
-     * Executes the extended euclidean algorithm.
+     * Executes the extended euclidean graph.
      *
      * @return A triple of form `(x, y, gcd(a,b))` (see class documentation of [IntegerEuclids]).
      */

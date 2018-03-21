@@ -1,7 +1,13 @@
 package nl.rubensten.utensils.math.matrix
 
+import nl.rubensten.utensils.general.length
+
 /**
  * An immutable matrix.
+ *
+ * A matrix iterates over its vectors. If you want to iterate over the elements, use the [elements] method.
+ * Whether the vectors are rows or columns is determined by the corresponding [major].
+ * [Major.ROW] means iteration over rows, [Major.COLUMN] means iteration over columns.
  *
  * Classes should not implement this interface, but [MutableMatrix].
  *
@@ -12,7 +18,19 @@ interface Matrix<T> : Iterable<Vector<T>> {
     /**
      * The amount of columns the matrix has.
      */
+    val width: Int
+        get() = width()
+
+    /**
+     * The amount of columns the matrix has.
+     */
     fun width(): Int
+
+    /**
+     * The amount of rows the matrix has.
+     */
+    val height: Int
+        get() = height()
 
     /**
      * The amount of rows the matrix has.
@@ -20,9 +38,21 @@ interface Matrix<T> : Iterable<Vector<T>> {
     fun height(): Int
 
     /**
+     * The total amount of elements in the matrix.
+     */
+    val size: Int
+        get() = count()
+
+    /**
      * The amount of elements in the Matrix.
      */
     fun count() = width() * height()
+
+    /**
+     * The operations of T.
+     */
+    val operations: OperationSet<T>
+        get() = operations()
 
     /**
      * Get the operations of T.
@@ -32,7 +62,21 @@ interface Matrix<T> : Iterable<Vector<T>> {
     /**
      * The ordening of the matrix.
      */
+    val major: Major
+        get() = major()
+
+    /**
+     * The ordening of the matrix.
+     */
     fun major(): Major
+
+    /**
+     * Get the amount of vectors present in the matrix.
+     */
+    fun vectors() = when (major()) {
+        Major.ROW -> height()
+        Major.COLUMN -> width()
+    }
 
     /**
      * Puts all the values of the given row in a vector.
@@ -212,6 +256,24 @@ interface Matrix<T> : Iterable<Vector<T>> {
     fun subMatrix(row: Int, column: Int, width: Int, height: Int): Matrix<T>
 
     /**
+     * Cuts a rectangle of elements out of the matrix and puts it in a new matrix.
+     *
+     * You specify two ranges. The `columns` range selects the columns you want and the `rows` range selects the
+     * rows you want. Note that the indices of the rows and columns are 0-indexed.
+     *
+     * @param columns
+     *         The indices of the columns to cut out.
+     * @param rows
+     *         The indices of the rows to cut out.
+     */
+    fun subMatrix(columns: IntRange, rows: IntRange) = subMatrix(
+            rows.start,
+            columns.start,
+            columns.length,
+            rows.length
+    )
+
+    /**
      * Creates a new matrix where the given matrix is glued to the right of this matrix.
      *
      * @param matrix
@@ -284,6 +346,13 @@ interface Matrix<T> : Iterable<Vector<T>> {
      *         When the matrix is not square or when the size of the matrix is smaller than 2.
      */
     fun inverse(): Matrix<T>?
+
+    /**
+     * Negates all aelements of the matrix.
+     *
+     * @return A new matrix with all elements negated according to the [OperationSet].
+     */
+    fun negate(): Matrix<T>
 
     /**
      * Get the order of the matrix.
@@ -367,6 +436,9 @@ interface Matrix<T> : Iterable<Vector<T>> {
      */
     operator fun get(row: Int, col: Int): T
 
+    /** See [subMatrix] **/
+    operator fun get(columns: IntRange, rows: IntRange) = subMatrix(columns, rows)
+
     /** See [add] **/
     operator fun plus(other: Matrix<T>) = add(other)
 
@@ -381,10 +453,20 @@ interface Matrix<T> : Iterable<Vector<T>> {
 
     /** See [multiply(Vector)] **/
     operator fun times(other: Vector<T>) = multiply(other)
+
+    /** See [negate] **/
+    operator fun unaryMinus() = negate()
+
+    /** Does nothing with the matrix, just returns `this` **/
+    operator fun unaryPlus() = this
 }
 
 /**
  * A mutable matrix.
+ *
+ * A matrix iterates over its vectors. If you want to iterate over the elements, use the [elements] method.
+ * Whether the vectors are rows or columns is determined by the corresponding [major].
+ * [Major.ROW] means iteration over rows, [Major.COLUMN] means iteration over columns.
  *
  * @author Ruben Schellekens
  */
@@ -475,6 +557,13 @@ interface MutableMatrix<T> : Matrix<T> {
     fun scalarColumnModify(column: Int, scalar: T): MutableMatrix<T>
 
     /**
+     * See [negate], but then modifies the matrix instead of returning a new one.
+     *
+     * @return The modified matrix with all elements negated according to the [OperationSet].
+     */
+    fun negateModify(): MutableMatrix<T>
+
+    /**
      * Creates a copy of the matrix. Results in an immutable matrix.
      */
     fun clone(): Matrix<T> = mutableClone()
@@ -519,3 +608,33 @@ enum class Major {
      */
     ROW
 }
+
+// Convert arrays of vectors to matrices.
+fun Array<out Vector<Byte>>.toMatrix(major: Major = Major.ROW) = ByteMatrix(*this, major = major)
+fun Array<out Vector<Short>>.toMatrix(major: Major = Major.ROW) = ShortMatrix(*this, major = major)
+fun Array<out Vector<Int>>.toMatrix(major: Major = Major.ROW) = IntMatrix(*this, major = major)
+fun Array<out Vector<Long>>.toMatrix(major: Major = Major.ROW) = LongMatrix(*this, major = major)
+fun Array<out Vector<Float>>.toMatrix(major: Major = Major.ROW) = FloatMatrix(*this, major = major)
+fun Array<out Vector<Double>>.toMatrix(major: Major = Major.ROW) = DoubleMatrix(*this, major = major)
+fun Array<out Vector<String>>.toMatrix(major: Major = Major.ROW) = StringMatrix(*this, major = major)
+fun <T> Array<out Vector<T>>.toMatrix(operations: OperationSet<T>, major: Major = Major.ROW) = GenericMatrix(operations, toMutableList(), major = major)
+
+// Convert collections of vectors to matrices.
+fun List<Vector<Byte>>.toMatrix(major: Major = Major.ROW) = ByteMatrix(this, major = major)
+fun List<Vector<Short>>.toMatrix(major: Major = Major.ROW) = ShortMatrix(this, major = major)
+fun List<Vector<Int>>.toMatrix(major: Major = Major.ROW) = IntMatrix(this, major = major)
+fun List<Vector<Long>>.toMatrix(major: Major = Major.ROW) = LongMatrix(this, major = major)
+fun List<Vector<Float>>.toMatrix(major: Major = Major.ROW) = FloatMatrix(this, major = major)
+fun List<Vector<Double>>.toMatrix(major: Major = Major.ROW) = DoubleMatrix(this, major = major)
+fun List<Vector<String>>.toMatrix(major: Major = Major.ROW) = StringMatrix(this, major = major)
+fun <T> List<Vector<T>>.toMatrix(operations: OperationSet<T>, major: Major = Major.ROW) = GenericMatrix(operations, this, major = major)
+
+// Creation functions.
+fun byteMatrixOf(width: Int, vararg bytes: Byte) = ByteMatrix(*bytes, width = width)
+fun shortMatrixOf(width: Int, vararg shorts: Short) = ShortMatrix(*shorts, width = width)
+fun intMatrixOf(width: Int, vararg ints: Int) = IntMatrix(*ints, width = width)
+fun longMatrixOf(width: Int, vararg longs: Long) = LongMatrix(*longs, width = width)
+fun floatMatrixOf(width: Int, vararg floats: Float) = FloatMatrix(*floats, width = width)
+fun doubleMatrixOf(width: Int, vararg doubles: Double) = DoubleMatrix(*doubles, width = width)
+fun stringMatrixOf(width: Int, vararg strings: String) = StringMatrix(*strings, width = width)
+fun <T> matrixOf(operations: OperationSet<T>, width: Int, vararg elements: T) = GenericMatrix(operations, width = width, elements = *elements)

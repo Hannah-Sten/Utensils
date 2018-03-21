@@ -127,6 +127,8 @@ open class GenericVector<T>(
         return result
     }
 
+    override fun negate() = elements.map { op.negate(it) }.toVector(op)
+
     override fun length(): Double {
         var sum = op.zero
         for (element in this) {
@@ -134,6 +136,11 @@ open class GenericVector<T>(
         }
 
         return Math.sqrt(op.toDouble(sum))
+    }
+
+    override fun slice(startIndexInclusive: Int, endIndexInclusive: Int): Vector<T> {
+        val newElements = elements.subList(startIndexInclusive, endIndexInclusive + 1)
+        return GenericVector(op, newElements)
     }
 
     override fun normalize(): Vector<T> {
@@ -156,38 +163,49 @@ open class GenericVector<T>(
         it.isZero()
     }
 
-    override fun addModify(other: Vector<T>) {
+    override fun addModify(other: Vector<T>): MutableVector<T> {
         checkDimensions(size(), other.size()) { "Sizes don't match, got $it" }
 
         for (i in 0 until size()) {
             elements[i] = op.add(elements[i], other[i])
         }
+        return this
     }
 
-    override fun subtractModify(other: Vector<T>) {
+    override fun subtractModify(other: Vector<T>): MutableVector<T> {
         checkDimensions(size(), other.size()) { "Sizes don't match, got $it" }
 
         for (i in 0 until size()) {
             elements[i] = op.subtract(elements[i], other[i])
         }
+        return this
     }
 
-    override fun scalarModify(scalar: T) {
+    override fun scalarModify(scalar: T): MutableVector<T> {
         for (i in 0 until size()) {
             elements[i] = op.multiply(elements[i], scalar)
         }
+        return this
     }
 
-    override fun normalizeModify() {
+    override fun negateModify(): MutableVector<T> {
+        for (i in 0 until size()) {
+            elements[i] = op.negate(elements[i])
+        }
+        return this
+    }
+
+    override fun normalizeModify(): MutableVector<T> {
         val length = length()
         if (length.isZero()) {
-            return
+            return this
         }
 
         val scalar = op.inverse(op.fromDouble(length))
         for (i in 0 until size()) {
             this[i] = op.multiply(this[i], scalar)
         }
+        return this
     }
 
     override fun append(other: T): Vector<T> {

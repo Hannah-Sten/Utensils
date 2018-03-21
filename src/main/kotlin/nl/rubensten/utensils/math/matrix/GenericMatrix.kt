@@ -5,15 +5,24 @@ package nl.rubensten.utensils.math.matrix
  */
 open class GenericMatrix<T> : MutableMatrix<T> {
 
+    companion object {
+
+        /**
+         * Creates an empty matrix, i.e. of size 0.
+         */
+        @JvmStatic
+        fun <T> empty(operations: OperationSet<T>) = GenericMatrix(operations, emptyList())
+    }
+
     /**
-     * The rows or columns in the matrix (all the same size) ordered as determined by [major].
+     * The rows or columns in the matrix (all the same size) ordered as determined by [myMajor].
      */
     protected val op: OperationSet<T>
 
     /**
      * How the vectors are stored in the matrix.
      */
-    protected val major: Major
+    protected val myMajor: Major
 
     /**
      * Contains all the mathematical operations on the element type.
@@ -56,9 +65,8 @@ open class GenericMatrix<T> : MutableMatrix<T> {
      */
     constructor(op: OperationSet<T>, major: Major = Major.ROW, elements: MutableList<MutableVector<T>>) {
         this.op = op
-        this.major = major
+        this.myMajor = major
         this.elements = elements
-        check(elements.isNotEmpty()) { "Matrix must not be empty!" }
     }
 
     /**
@@ -151,19 +159,19 @@ open class GenericMatrix<T> : MutableMatrix<T> {
 
     override fun operations() = op
 
-    override fun major() = major
+    override fun major() = myMajor
 
-    override fun width() = when (major) {
+    override fun width() = if (elements.isEmpty()) 0 else when (myMajor) {
         Major.ROW -> elements[0].size()
         Major.COLUMN -> elements.size
     }
 
-    override fun height() = when (major) {
+    override fun height() = if (elements.isEmpty()) 0 else when (myMajor) {
         Major.ROW -> elements.size
         Major.COLUMN -> elements[0].size()
     }
 
-    override fun getRow(row: Int) = when (major) {
+    override fun getRow(row: Int) = when (myMajor) {
         Major.ROW -> elements[row]
         Major.COLUMN -> (0 until width()).map { elements[it][row] }.toVector(op)
     }
@@ -174,7 +182,7 @@ open class GenericMatrix<T> : MutableMatrix<T> {
         return clone
     }
 
-    override fun getColumn(column: Int) = when (major) {
+    override fun getColumn(column: Int) = when (myMajor) {
         Major.ROW -> (0 until height()).map { elements[it][column] }.toVector(op)
         Major.COLUMN -> elements[column]
     }
@@ -189,24 +197,24 @@ open class GenericMatrix<T> : MutableMatrix<T> {
         checkDimensions(this, other)
 
         val vectors = elements.mapIndexed { index, vector -> (vector + other.getVector(index)).toMutableVector() }
-        return GenericMatrix(op, major, vectors.toMutableList())
+        return GenericMatrix(op, myMajor, vectors.toMutableList())
     }
 
     override fun subtract(other: Matrix<T>): Matrix<T> {
         checkDimensions(this, other)
 
         val vectors = elements.mapIndexed { index, vector -> (vector - other.getVector(index)).toMutableVector() }
-        return GenericMatrix(op, major, vectors.toMutableList())
+        return GenericMatrix(op, myMajor, vectors.toMutableList())
     }
 
     override fun scalar(scalar: T): Matrix<T> {
         val vectors = elements.map { (it * scalar).toMutableVector() }
-        return GenericMatrix(op, major, vectors.toMutableList())
+        return GenericMatrix(op, myMajor, vectors.toMutableList())
     }
 
     override fun scalarRow(row: Int, scalar: T): Matrix<T> {
         val vectors = ArrayList(elements)
-        when (major) {
+        when (myMajor) {
             Major.COLUMN -> {
                 vectors.forEach {
                     it[row] = it[row] * scalar
@@ -216,12 +224,12 @@ open class GenericMatrix<T> : MutableMatrix<T> {
                 vectors[row] = (vectors[row] * scalar).toMutableVector()
             }
         }
-        return GenericMatrix(op, major, vectors)
+        return GenericMatrix(op, myMajor, vectors)
     }
 
     override fun scalarColumn(column: Int, scalar: T): Matrix<T> {
         val vectors = ArrayList(elements)
-        when (major) {
+        when (myMajor) {
             Major.COLUMN -> {
                 vectors[column] = (vectors[column] * scalar).toMutableVector()
             }
@@ -231,7 +239,7 @@ open class GenericMatrix<T> : MutableMatrix<T> {
                 }
             }
         }
-        return GenericMatrix(op, major, vectors)
+        return GenericMatrix(op, myMajor, vectors)
     }
 
     override fun multiply(other: Matrix<T>): Matrix<T> {
@@ -379,7 +387,7 @@ open class GenericMatrix<T> : MutableMatrix<T> {
     }
 
     override fun transpose(): Matrix<T> {
-        return when (major) {
+        return when (myMajor) {
             Major.COLUMN -> GenericMatrix(op, Major.ROW, elements.toMutableList())
             Major.ROW -> GenericMatrix(op, Major.COLUMN, elements.toMutableList())
         }
@@ -416,6 +424,21 @@ open class GenericMatrix<T> : MutableMatrix<T> {
         }
 
         return solve.subMatrix(0, width(), width(), height())
+    }
+
+    override fun negate() = when (myMajor) {
+        // Switch on major to improve performance.
+        Major.ROW -> rows().map { it.negate() }.toMatrix(op)
+        Major.COLUMN -> columns().map { it.negate() }.toMatrix(op)
+    }
+
+    override fun negateModify(): MutableMatrix<T> {
+        for (row in 0 until height()) {
+            for (col in 0 until width()) {
+                this[row, col] = -this[row, col]
+            }
+        }
+        return this
     }
 
     /**
@@ -473,7 +496,7 @@ open class GenericMatrix<T> : MutableMatrix<T> {
     }
 
     override fun swapRowModify(row0: Int, row1: Int): MutableMatrix<T> {
-        when (major) {
+        when (myMajor) {
             Major.ROW -> {
                 val temp = elements[row0]
                 elements[row0] = elements[row1]
@@ -492,7 +515,7 @@ open class GenericMatrix<T> : MutableMatrix<T> {
     }
 
     override fun swapColumnModify(col0: Int, col1: Int): MutableMatrix<T> {
-        when (major) {
+        when (myMajor) {
             Major.COLUMN -> {
                 val temp = elements[col0]
                 elements[col0] = elements[col1]
@@ -580,46 +603,46 @@ open class GenericMatrix<T> : MutableMatrix<T> {
     }
 
     override fun rows(): List<Vector<T>> {
-        return when (major) {
+        return when (myMajor) {
             Major.ROW -> elements.map { it.clone().toMutableVector() }.toList()
             Major.COLUMN -> (0 until width()).map { getRow(it) }
         }
     }
 
     override fun rowsMutable(): List<MutableVector<T>> {
-        return when (major) {
+        return when (myMajor) {
             Major.ROW -> elements.map { it }.toList()
             Major.COLUMN -> (0 until width()).map { getRow(it) }
         }
     }
 
     override fun columns(): List<Vector<T>> {
-        return when (major) {
+        return when (myMajor) {
             Major.COLUMN -> elements.map { it.clone() }.toList()
             Major.ROW -> (0 until width()).map { getColumn(it) }
         }
     }
 
     override fun columnsMutable(): List<MutableVector<T>> {
-        return when (major) {
+        return when (myMajor) {
             Major.COLUMN -> elements.map { it }.toList()
             Major.ROW -> (0 until width()).map { getColumn(it) }
         }
     }
 
     override fun mutableClone(): MutableMatrix<T> {
-        return GenericMatrix(op, major, elements.map { it.clone() }.toMutableList())
+        return GenericMatrix(op, myMajor, elements.map { it.clone() }.toMutableList())
     }
 
     override fun get(row: Int, col: Int): T {
-        return when (major) {
+        return when (myMajor) {
             Major.ROW -> elements[row][col]
             Major.COLUMN -> elements[col][row]
         }
     }
 
     override fun set(row: Int, col: Int, value: T) {
-        when (major) {
+        when (myMajor) {
             Major.ROW -> elements[row][col] = value
             Major.COLUMN -> elements[col][row] = value
         }
@@ -640,27 +663,24 @@ open class GenericMatrix<T> : MutableMatrix<T> {
     private operator fun T.unaryMinus() = op.negate(this)
 
     override fun toString() = buildString {
-        for (row in 0 until height()) {
-            for (col in 0 until width()) {
-                append(get(row, col))
-                append("\t")
-            }
-            append("\n")
-        }
-    }.trim()
+        val maxLength = elements.flatMap { it }.map { it.toString().length }.max() ?: return@buildString
+        val format = ("%${maxLength}s ".repeat(width()).trim() + "\n").repeat(height()).trim()
+        val strings = rows().flatMap { it }.map { it.toString() }.toTypedArray()
+        append(format.format(*strings))
+    }.trimEnd()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is GenericMatrix<*>) return false
 
-        if (major != other.major) return false
+        if (myMajor != other.myMajor) return false
         if (elements != other.elements) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        var result = major.hashCode()
+        var result = myMajor.hashCode()
         result = 31 * result + elements.hashCode()
         return result
     }
@@ -713,6 +733,18 @@ abstract class NumberMatrix<T : Number> : GenericMatrix<T> {
  */
 open class ByteMatrix : NumberMatrix<Byte> {
 
+    companion object {
+
+        /** A 0x0 byte matrix with 0 elements. **/
+        private val emptyByteMatrix = ByteMatrix(0, 0) { _, _ -> 0 }
+
+        /**
+         * Returns a 0x0 byte matrix with 0 elements.
+         */
+        @JvmStatic
+        fun empty(): Matrix<Byte> = emptyByteMatrix
+    }
+
     constructor(major: Major = Major.ROW, vararg vectors: MutableVector<Byte>)
             : super(ByteOperations, major, vectors.toMutableList())
 
@@ -736,6 +768,18 @@ open class ByteMatrix : NumberMatrix<Byte> {
  * @author Ruben Schellekens
  */
 open class ShortMatrix : NumberMatrix<Short> {
+
+    companion object {
+
+        /** A 0x0 short matrix with 0 elements. **/
+        private val emptyShortMatrix = ShortMatrix(0, 0) { _, _ -> 0 }
+
+        /**
+         * Returns a 0x0 short matrix with 0 elements.
+         */
+        @JvmStatic
+        fun empty(): Matrix<Short> = emptyShortMatrix
+    }
 
     constructor(major: Major = Major.ROW, vararg vectors: MutableVector<Short>)
             : super(ShortOperations, major, vectors.toMutableList())
@@ -761,6 +805,18 @@ open class ShortMatrix : NumberMatrix<Short> {
  */
 open class IntMatrix : NumberMatrix<Int> {
 
+    companion object {
+
+        /** A 0x0 int matrix with 0 elements. **/
+        private val emptyIntMatrix = IntMatrix(0, 0) { _, _ -> 0 }
+
+        /**
+         * Returns a 0x0 int matrix with 0 elements.
+         */
+        @JvmStatic
+        fun empty(): Matrix<Int> = emptyIntMatrix
+    }
+
     constructor(major: Major = Major.ROW, vararg vectors: MutableVector<Int>)
             : super(IntOperations, major, vectors.toMutableList())
 
@@ -784,6 +840,18 @@ open class IntMatrix : NumberMatrix<Int> {
  * @author Ruben Schellekens
  */
 open class LongMatrix : NumberMatrix<Long> {
+
+    companion object {
+
+        /** A 0x0 long matrix with 0 elements. **/
+        private val emptyLongMatrix = LongMatrix(0, 0) { _, _ -> 0 }
+
+        /**
+         * Returns a 0x0 long matrix with 0 elements.
+         */
+        @JvmStatic
+        fun empty(): Matrix<Long> = emptyLongMatrix
+    }
 
     constructor(major: Major = Major.ROW, vararg vectors: MutableVector<Long>)
             : super(LongOperations, major, vectors.toMutableList())
@@ -809,6 +877,18 @@ open class LongMatrix : NumberMatrix<Long> {
  */
 open class FloatMatrix : NumberMatrix<Float> {
 
+    companion object {
+
+        /** A 0x0 float matrix with 0 elements. **/
+        private val emptyFloatMatrix = FloatMatrix(0, 0) { _, _ -> 0f }
+
+        /**
+         * Returns a 0x0 float matrix with 0 elements.
+         */
+        @JvmStatic
+        fun empty(): Matrix<Float> = emptyFloatMatrix
+    }
+
     constructor(major: Major = Major.ROW, vararg vectors: MutableVector<Float>)
             : super(FloatOperations, major, vectors.toMutableList())
 
@@ -833,6 +913,18 @@ open class FloatMatrix : NumberMatrix<Float> {
  */
 open class DoubleMatrix : NumberMatrix<Double> {
 
+    companion object {
+
+        /** A 0x0 double matrix with 0 elements. **/
+        private val emptyDoubleMatrix = DoubleMatrix(0, 0) { _, _ -> 0.0 }
+
+        /**
+         * Returns a 0x0 double matrix with 0 elements.
+         */
+        @JvmStatic
+        fun empty(): Matrix<Double> = emptyDoubleMatrix
+    }
+
     constructor(major: Major = Major.ROW, vararg vectors: MutableVector<Double>)
             : super(DoubleOperations, major, vectors.toMutableList())
 
@@ -856,6 +948,18 @@ open class DoubleMatrix : NumberMatrix<Double> {
  * @author Ruben Schellekens
  */
 open class StringMatrix : GenericMatrix<String> {
+
+    companion object {
+
+        /** A 0x0 string matrix with 0 elements. **/
+        private val emptyStringMatrix = StringMatrix(0, 0) { _, _ -> "" }
+
+        /**
+         * Returns a 0x0 string matrix with 0 elements.
+         */
+        @JvmStatic
+        fun empty(): Matrix<String> = emptyStringMatrix
+    }
 
     constructor(major: Major = Major.ROW, vararg vectors: MutableVector<String>)
             : super(StringOperations, major, vectors.toMutableList())

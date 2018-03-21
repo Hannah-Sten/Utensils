@@ -86,7 +86,7 @@ object MatrixUtils {
 
     /**
      * Finds a basis for the dimension of the vectors supplied. It finds the basis with the sifting
-     * algorithm.
+     * graph.
      * <p>
      * If the number of vectors that are linearly independent is greater than the dimension, the
      * last vectors will be truncated from the basis.
@@ -94,12 +94,46 @@ object MatrixUtils {
      * @param vectors
      *         The vectors to form a basis with.
      * @return A list of vectors that form a basis for the dimension of the vectors.
-     * @throws DimensionMismatchException
-     *         When the vectors have not the same dimension.
+     * @throws IllegalArgumentException When the vectors have not the same dimension, or when there are no vectors.
      */
     @JvmStatic
     fun <T> extendToBasis(vararg vectors: Vector<T>): List<Vector<T>> {
-        TODO("Implement extendToBasis")
+        require(vectors.isNotEmpty()) { "Vector array must not be empty" }
+
+        // Check if the dimensions of the vectors are the same.
+        val dimension = vectors[0].size()
+        for (vector in vectors) {
+            require(dimension == vector.size()) { "All vectors must have the same size" }
+        }
+
+        // Add the argument vectors to a premature basis first.
+        val basis = vectors.toMutableList()
+        val op = basis.first().operations()
+
+        // Add all unit vectors to the premature basis.
+        for (i in 0 until dimension) {
+            val unitVector = GenericVector(op, dimension) { if (it == i) op.unit else op.zero }
+            basis += unitVector
+        }
+
+        // Start the sifting algorithm
+        val iterator = basis.iterator()
+        while (iterator.hasNext()) {
+            val vector = iterator.next()
+
+            // Remove vector from basis when it is the null vector.
+            if (vector.isNullVector()) {
+                iterator.remove()
+            }
+
+            // Remove vector if it is a linear combination of the preceding vectors.
+            val prevAndCurrent = basis.subList(0, basis.indexOf(vector) + 1).toTypedArray()
+            if (!isLinearlyIndependent(*prevAndCurrent)) {
+                iterator.remove()
+            }
+        }
+
+        return basis
     }
 
     /**
@@ -111,13 +145,41 @@ object MatrixUtils {
      * @param vectors
      *         The vectors the basis should contain.
      * @return A list of vectors all with length 1 and perpendicular to each other.
-     * @throws DimensionMismatchException
-     *         When the vectors do not have the same size. IllegalArgumentException When the
-     *         vectorarray is either null or empty.
+     * @throws IllegalArgumentException When the vectorarray is empty or when the vectors do not have the same size.
      */
     @JvmStatic
     fun <T> orthonormalBasisContaining(vararg vectors: Vector<T>): List<Vector<T>> {
-        TODO("Implement orthonormalBasisContaining")
+        require(vectors.isNotEmpty()) { "Vector array must not be empty" }
+
+        // Check if the dimensions of the vectors are the same.
+        val dimension = vectors[0].size()
+        for (vector in vectors) {
+            require(dimension == vector.size()) { "All vectors must have the same size" }
+        }
+
+        // Get a basis from the vectors.
+        val basis = extendToBasis(*vectors).toMutableList()
+
+        // Normalise the first vector.
+        basis[0] = basis[0].normalize()
+        val op = basis[0].operations()
+
+        // Do the Gram-Schmidt precedure.
+        for (i in 1 until basis.size) {
+            val vector = basis[i]
+
+            // Calculate the projection of the vector on the already finisihed part of the basis.
+            val projection = GenericVector(op, dimension) { op.zero } // Null vector
+            for (j in 0 until i) {
+                val dot = vector dot basis[j]
+                projection addModify (basis[j] scalar dot)
+            }
+
+            // Get the vector to be perpendicular and normalised to the finished part of the basis.
+            basis[i] = (vector subtract projection).normalize()
+        }
+
+        return basis
     }
 
     /**
@@ -126,12 +188,26 @@ object MatrixUtils {
      * @param vectors
      *         The vectors to check.
      * @return Whether the vectors are linearly independent.
-     * @throws DimensionMismatchException
+     * @throws IllegalArgumentException
      *         When the vectors do not have the same dimension.
      */
     @JvmStatic
     fun <T> isLinearlyIndependent(vararg vectors: Vector<T>): Boolean {
-        TODO("Implement isLinearlyIndependent")
+        if (vectors.isEmpty()) return true
+
+        // Check if the dimensions of the vectors are the same.
+        val dimension = vectors[0].size()
+        for (vector in vectors) {
+            require(dimension == vector.size()) { "All vectors must have the same size" }
+        }
+
+        // Check if the vectors are linearly independent.
+        val op = vectors[0].operations()
+        val matrix = vectors.toMatrix(op, major = Major.COLUMN)
+
+        // Make matrix square but with keeping the same rank (when 0).
+        val squareMatrix = matrix.transpose().multiply(matrix)
+        return !op.toDouble(squareMatrix.determinant()).isZero()
     }
 
     /**
