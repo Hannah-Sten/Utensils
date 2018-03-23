@@ -192,7 +192,7 @@ interface Vector<T>: Iterable<T> {
     /**
      * Adds all the elements from another vector to this one following the addition rules of
      * vectors.
-     * <p>
+     * 
      * This will return a new Vector instance with the modified values.
      *
      * @param other
@@ -204,13 +204,13 @@ interface Vector<T>: Iterable<T> {
     infix fun add(other: Vector<T>): Vector<T>
 
     /**
-     * Substracts all the elements from another vector from this one following the addition rules of
+     * Subtracts all the elements from another vector from this one following the addition rules of
      * vectors.
-     * <p>
+     * 
      * This will return a new vector instance with the modified values.
      *
      * @param other
-     *         The vector to substract from this one.
+     *         The vector to subtract from this one.
      * @return A new vector with the modified values.
      * @throws DimensionMismatchException
      *         When the sizes of both vectors are different.
@@ -230,9 +230,9 @@ interface Vector<T>: Iterable<T> {
 
     /**
      * Calculates the standard cross product of this and another vector.
-     * <p>
-     * Let this vector be called <code>V</code> and let the other matrix be called <code>U</code>,
-     * then this method will return the vector <code>V&times;U</code>. The vectors must have size 3.
+     * 
+     * Let this vector be called `V` and let the other matrix be called `U`,
+     * then this method will return the vector `V`&times;`U`. The vectors must have size 3.
      *
      * @param other
      *         The other vector to take the standard cross product with.
@@ -244,17 +244,17 @@ interface Vector<T>: Iterable<T> {
 
     /**
      * Multiplies all the elements of the vector by a given value.
-     * <p>
+     * 
      * Follows the scalar multiplication rules for vectors.
      *
-     * @param scalar
+     * @param value
      *         The value to multiply all elements with.
      * @return A new vector with the modified values.
      */
     infix fun scalar(value: T): Vector<T>
 
     /**
-     * Negates all aelements of the vector.
+     * Negates all elements of the vector.
      *
      * @return A new vector with all elements negated according to the [OperationSet].
      */
@@ -281,23 +281,23 @@ interface Vector<T>: Iterable<T> {
      * Checks if the two vectors are perpendicular to each other.
      *
      * @param other
-     *         The vector to check if it is perpedicular to this vector.
-     * @return <i>true</i> when the vectors are perpendicular, <i>false</i> if not.
+     *         The vector to check if it is perpendicular to this vector.
+     * @return _true_ when the vectors are perpendicular, _false_ if not.
      */
     fun isPerpendicularTo(other: Vector<T>): Boolean
 
     /**
-     * Checks whether the vector is a null vector (all elements being <i>0.0</i> ) or not.
-     * <p>
+     * Checks whether the vector is a null vector (all elements being _0.0_ ) or not.
+     * 
      * An empty array is considered a null vector.
      *
-     * @return <i>true</i> if the vector is a null vector, <i>false</i> if not.
+     * @return _true_ if the vector is a null vector, _false_ if not.
      */
     fun isNullVector(): Boolean
 
     /**
      * Normalises the vector.
-     * <p>
+     * 
      * When the vector is a null vector, this method will return a null vector.
      *
      * @return The normalised vector, or a null vector when the length is 0.
@@ -368,8 +368,8 @@ interface Vector<T>: Iterable<T> {
 
     /**
      * Get the element at the specified index in the JVector.
-     * <p>
-     * The first element has index <i>0</i>.
+     * 
+     * The first element has index _0_.
      *
      * @param index
      *         The index of the element to fetch.

@@ -98,7 +98,7 @@ class HungarianAlgorithm<T, W, J>(
             }
         }
 
-        // Make nonnegative, i.e. add the negated minimum to all elements.
+        // Make non-negative, i.e. add the negated minimum to all elements.
         for (row in 0 until size) {
             for (col in 0 until size) {
                 matrix[row, col] = matrix[row, col] + maximum!!
@@ -362,7 +362,7 @@ class HungarianAlgorithm<T, W, J>(
         val original: MutableList<MutableVector<T>?> = matrix.rows().asSequence().map { it.toMutableVector() }.toMutableList()
         val updatedColumns = HashSet<Int>()
 
-        // Handy extention functions for better readability.
+        // Handy extension functions for better readability.
         fun List<Vector<T>?>.columnZeroes(col: Int) = asSequence()
                 .mapIndexed { index, vector -> Pair(index, vector) }
                 .filter { it.second?.get(col)?.isZero() ?: false }

@@ -23,7 +23,7 @@ open class HashMultiset<E> : MutableMultiset<E> {
     override fun count(element: E) = elements[element] ?: 0
 
     override fun setCount(element: E, count: Int) {
-        require(count >= 0) { "Value must be nonnegative, got $count" }
+        require(count >= 0) { "Value must be non-negative, got $count" }
 
         if (count == 0) {
             elements.remove(element)
@@ -44,7 +44,7 @@ open class HashMultiset<E> : MutableMultiset<E> {
     override fun containsAll(elements: Collection<E>) = elements.all { contains(it) }
 
     override fun put(element: E, initialCount: Int) {
-        require(initialCount >= 0) { "Initial count must be nonnegative, got $initialCount" }
+        require(initialCount >= 0) { "Initial count must be non-negative, got $initialCount" }
 
         if (element in this) {
             return
@@ -124,6 +124,6 @@ open class HashMultiset<E> : MutableMultiset<E> {
     }
 
     override fun toString(): String {
-        return "[${elements.entries.map { "${it.value}*${it.key}" }.joinToString(", ")}]"
+        return "[${elements.entries.joinToString(", ") { "${it.value}*${it.key}" }}]"
     }
 }

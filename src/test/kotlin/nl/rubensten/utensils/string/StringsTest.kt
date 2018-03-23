@@ -36,7 +36,7 @@ class StringsTest {
             string.count("")
         }
 
-        // Non occuring string
+        // Non occurring string
         val countNone = string.count("dof")
         assertEquals(0, countNone)
     }
@@ -248,7 +248,7 @@ class StringsTest {
             }
         }
 
-        // Check nonnegative length.
+        // Check non-negative length.
         assertFailsWith(IllegalArgumentException::class) {
             String.random(-1, random = random)
         }

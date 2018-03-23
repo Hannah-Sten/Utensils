@@ -89,7 +89,7 @@ fun String.randomCapitals(random: Random = Random()): String = buildString {
 @Throws(IndexOutOfBoundsException::class)
 fun String.splitInTwo(lengthFirstWord: Int): Pair<String, String> {
     require(lengthFirstWord <= length) { "length must be <= string length, got $lengthFirstWord" }
-    require(lengthFirstWord >= 0) { "length must be nonnegative, got $lengthFirstWord" }
+    require(lengthFirstWord >= 0) { "length must be non-negative, got $lengthFirstWord" }
 
     val part0 = substring(0, lengthFirstWord)
     val part1 = substring(lengthFirstWord)
@@ -250,7 +250,7 @@ fun String.substringEnd(range: IntRange): String = substringEnd(range.start, ran
  * Generate a random string of a certain length from a given charset (default charsets can be found in [Charset]).
  *
  * @param length
- *         The amount of characters in the random string, nonnegative.
+ *         The amount of characters in the random string, non-negative.
  * @param charset
  *         The characters the string can contain. Defaults to [Charset.LETTERS_LOWER]. Must not be empty.
  * @return A random string of length `length` consisting of only characters in `charset`.
@@ -259,7 +259,7 @@ fun String.substringEnd(range: IntRange): String = substringEnd(range.start, ran
 @JvmOverloads
 @Throws(IllegalArgumentException::class)
 fun String.Companion.random(length: Int, charset: Charset = Charset.LETTERS_LOWER, random: Random = Random()): String {
-    require(length >= 0) { "Length must be nonnegative, got $length" }
+    require(length >= 0) { "Length must be non-negative, got $length" }
     require(charset.size > 0) { "Charset must not be empty!" }
 
     return buildString(length) {

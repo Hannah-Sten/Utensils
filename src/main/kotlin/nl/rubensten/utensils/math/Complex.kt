@@ -8,7 +8,7 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 
 /**
- * A complex number `a+b<i>i</i>`.
+ * A complex number `a+bi`.
  *
  * @author Ruben Schellekens
  */
@@ -16,25 +16,51 @@ class Complex(val a: Double, val b: Double) : Serializable {
 
     companion object {
 
-        private val serialVersionUID = 96062259058757105L
+        private const val serialVersionUID = 96062259058757105L
 
-        /** 0 **/
+        /**
+         * 0
+         */
         @JvmField val ZERO = Complex(0.0, 0.0)
-        /** 1+0i  */
+
+        /**
+         * 1+0i
+         */
         @JvmField val ONE = Complex(1.0, 0.0)
-        /** 1+1i  */
-        @JvmField val ONE_EIGTH = Complex(1.0, 1.0)
-        /** 0+1i  */
+
+        /**
+         * 1+1i
+         */
+        @JvmField val ONE_EIGHTH = Complex(1.0, 1.0)
+
+        /**
+         * 0+1i
+         */
         @JvmField val I = Complex(0.0, 1.0)
-        /** -1+1i  */
+
+        /**
+         * -1+1i
+         */
         @JvmField val THREE_EIGHTS = Complex(-1.0, 1.0)
-        /** -1+0i  */
+
+        /**
+         * -1+0i
+         */
         @JvmField val HALF = Complex(-1.0, 0.0)
-        /** -1-1i  */
+
+        /**
+         * -1-1i
+         */
         @JvmField val MINUS_THREE_EIGHTS = Complex(-1.0, -1.0)
-        /** 0-i1  */
+
+        /**
+         * 0-i1
+         */
         @JvmField val THREE_QUARTS = Complex(0.0, -1.0)
-        /** 1-1i  */
+
+        /**
+         * 1-1i
+         */
         @JvmField val SEVEN_EIGHTS = Complex(1.0, -1.0)
 
         /**
@@ -61,18 +87,18 @@ class Complex(val a: Double, val b: Double) : Serializable {
                         .toTypedArray()
 
                 val real: String
-                val imag: String
+                val imaginary: String
                 if (startsWithMinus) {
                     real = "-" + elements[1]
-                    imag = "-" + elements[2].replace("i", "")
+                    imaginary = "-" + elements[2].replace("i", "")
                 }
                 else {
                     real = elements[0]
-                    imag = "-" + elements[1].replace("i", "")
+                    imaginary = "-" + elements[1].replace("i", "")
                 }
 
                 toSetA = java.lang.Double.parseDouble(real)
-                toSetB = java.lang.Double.parseDouble(imag)
+                toSetB = java.lang.Double.parseDouble(imaginary)
             }
 
             return Complex(toSetA, toSetB)
@@ -115,7 +141,7 @@ class Complex(val a: Double, val b: Double) : Serializable {
     infix fun divide(scalar: Double) = multiply(1.0 / scalar)
 
     /**
-     * Mutiplies a complex number to this complex number.
+     * Multiplies a complex number to this complex number.
      *
      * @return A new complex number `z=this*c`.
      */
@@ -135,7 +161,7 @@ class Complex(val a: Double, val b: Double) : Serializable {
     }
 
     /**
-     * Substracts a complex number from this complex number.
+     * Subtracts a complex number from this complex number.
      *
      * @return A new complex number `z=this-c`.
      */
@@ -183,7 +209,7 @@ class Complex(val a: Double, val b: Double) : Serializable {
     }
 
     /**
-     * Get the conjucated Complex number (a-bi).
+     * Get the conjugated Complex number (a-bi).
      */
     fun conj() = Complex(a, -b)
 
@@ -283,24 +309,38 @@ class Complex(val a: Double, val b: Double) : Serializable {
     }
 }
 
-/** See [Complex.parse]. **/
+/**
+ * See [Complex.parse].
+ */
 fun String.toComplex() = Complex.parse(this)
 
-/** Complex number `this*i`. **/
+/**
+ * Complex number `this*i`.
+ */
 val Number.i
     get() = Complex(0.0, this.toDouble())
 
-/** Creates imaginary number `this+other*i` **/
+/**
+ * Creates imaginary number `this+other*i`
+ */
 infix fun Number.i(imaginary: Number) = Complex(this.toDouble(), imaginary.toDouble())
 
-/** See [Complex.add] **/
+/**
+ * See [Complex.add]
+ */
 operator fun Number.plus(complex: Complex) = complex.add(toDouble())
 
-/** See [Complex.subtract] **/
+/**
+ * See [Complex.subtract]
+ */
 operator fun Number.minus(complex: Complex) = complex.subtract(toDouble())
 
-/** See [Complex.multiply] **/
+/**
+ * See [Complex.multiply]
+ */
 operator fun Number.times(complex: Complex) = complex.multiply(toDouble())
 
-/** See [Complex.divide] **/
+/**
+ * See [Complex.divide]
+ */
 operator fun Number.div(complex: Complex) = Complex(toDouble(), 0.0) / complex

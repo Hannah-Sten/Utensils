@@ -60,13 +60,13 @@ interface Matrix<T> : Iterable<Vector<T>> {
     fun operations(): OperationSet<T>
 
     /**
-     * The ordening of the matrix.
+     * The ordering of the matrix.
      */
     val major: Major
         get() = major()
 
     /**
-     * The ordening of the matrix.
+     * The ordering of the matrix.
      */
     fun major(): Major
 
@@ -82,7 +82,7 @@ interface Matrix<T> : Iterable<Vector<T>> {
      * Puts all the values of the given row in a vector.
      *
      * @param row
-     *         The row number of the row to fetch. The first row has index <i>0</i>.
+     *         The row index of the row to fetch. The first row has index _0_.
      * @return A vector with the elements in the row. Sorted from left to right.
      * @throws IndexOutOfBoundsException
      *         When the row number is greater or equal to the height.
@@ -92,8 +92,8 @@ interface Matrix<T> : Iterable<Vector<T>> {
     /**
      * Puts all the values of the given column in a vector.
      *
-     * @param col
-     *         The column number of the column to fetch. The first column has index <i>0</i>.
+     * @param column
+     *         The column index of the column to fetch. The first column has index _0_.
      * @return A vector with the elements in the column. Sorted from top to bottom.
      * @throws IndexOutOfBoundsException
      *         When the column number is greater or equal to the width.
@@ -104,9 +104,9 @@ interface Matrix<T> : Iterable<Vector<T>> {
      * Swaps the elements of two rows.
      *
      * @param row0
-     *         The index of the first row (couting from <i>0</i>).
+     *         The index of the first row (counting from _0_).
      * @param row1
-     *         The index of the second row (couting from <i>0</i>)..
+     *         The index of the second row (counting from _0_)..
      * @return A new matrix with the rows swapped.
      * @throws IndexOutOfBoundsException
      *         When there is no row with the given indices.
@@ -117,9 +117,9 @@ interface Matrix<T> : Iterable<Vector<T>> {
      * Swaps the elements of two columns.
      *
      * @param col0
-     *         The index of the first column (couting from <i>0</i>).
+     *         The index of the first column (counting from _0_).
      * @param col1
-     *         The index of the second column (couting from <i>0</i>)..
+     *         The index of the second column (counting from _0_)..
      * @return A new matrix with the columns swapped.
      * @throws IndexOutOfBoundsException
      *         When there is no column with the given indices.
@@ -129,7 +129,7 @@ interface Matrix<T> : Iterable<Vector<T>> {
     /**
      * Adds all the elements from another matrix to this one following the addition rules of
      * matrices.
-     * <p>
+     * 
      * This will return a new JMatrix instance with the modified values.
      *
      * @param other
@@ -141,13 +141,13 @@ interface Matrix<T> : Iterable<Vector<T>> {
     infix fun add(other: Matrix<T>): Matrix<T>
 
     /**
-     * Substracts all the elements of another matrix from this one following the addition rules of
+     * Subtracts all the elements of another matrix from this one following the addition rules of
      * matrices.
-     * <p>
+     * 
      * This will return a new JMatrix instance with the modified values.
      *
      * @param other
-     *         The matrix to substract from this one.
+     *         The matrix to subtract from this one.
      * @return A new matrix with the modified values.
      * @throws DimensionMismatchException
      *         When the dimensions of both matrices are different.
@@ -156,7 +156,7 @@ interface Matrix<T> : Iterable<Vector<T>> {
 
     /**
      * Multiplies all the elements of the matrix by a given value.
-     * <p>
+     * 
      * Follows the scalar multiplication rules for matrices.
      *
      * @param scalar
@@ -171,7 +171,7 @@ interface Matrix<T> : Iterable<Vector<T>> {
      * @param scalar
      *         The number to multiply the elements of the row with.
      * @param row
-     *         The index of the row to multiply (start counting from <i>0</i> ).
+     *         The index of the row to multiply (start counting from _0_ ).
      * @return This (modified) matrix.
      * @throws IndexOutOfBoundsException
      *         When the row index doesn't exist.
@@ -184,7 +184,7 @@ interface Matrix<T> : Iterable<Vector<T>> {
      * @param scalar
      *         The number to multiply the elements of the column with.
      * @param column
-     *         The index of the column to multiply (start counting from <i>0</i>).
+     *         The index of the column to multiply (start counting from _0_).
      * @return This (modified) matrix.
      * @throws IndexOutOfBoundsException
      *         When the column index doesn't exist.
@@ -193,12 +193,12 @@ interface Matrix<T> : Iterable<Vector<T>> {
 
     /**
      * Multiplies this matrix with another matrix using the rules for matrix multiplication.
-     * <p>
+     * 
      * Let this matrix be called <code>A</code> and let the other matrix be called <code>B</code>,
      * then this method will return the matrix <code>A&times;B</code>.
      *
      * @param other
-     *         The matrix to multply this matrix with.
+     *         The matrix to multiply this matrix with.
      * @return The product of this and the other matrix.
      * @throws DimensionMismatchException
      *         When the matrices don't have the right dimension to multiply.
@@ -207,12 +207,12 @@ interface Matrix<T> : Iterable<Vector<T>> {
 
     /**
      * Multiplies this matrix with another vector using the rules for matrix multiplication.
-     * <p>
+     * 
      * Let this matrix be called <code>A</code> and let the vector be called <code>B</code>,
      * then this method will return the matrix <code>A&times;B</code>.
      *
      * @param other
-     *         The matrix to multply this matrix with.
+     *         The matrix to multiply this matrix with.
      * @return The product of this and the other matrix.
      * @throws DimensionMismatchException
      *         When the matrices don't have the right dimension to multiply.
@@ -223,7 +223,7 @@ interface Matrix<T> : Iterable<Vector<T>> {
      * Raises this matrix to a given power.
      *
      * @param exponent
-     *          The power to calculate, must be nonnegative.
+     *          The power to calculate, must be non-negative.
      * @throws DimensionMismatchException
      *          When the matrix is not square.
      * @throws IllegalArgumentException
@@ -233,16 +233,16 @@ interface Matrix<T> : Iterable<Vector<T>> {
 
     /**
      * Cuts a rectangle of elements out of the matrix and puts it in a new matrix.
-     * <p>
+     * 
      * You specify a starting point in the matrix and a size. The new matrix will be cut out of the
      * original matrix starting at the specified point and going <code>width</code> elements to the
      * right and <code>height</code> elements downwards. The end matrix has the given dimensions
      * (including the specified point).
      *
      * @param row
-     *         The row to start the cutting. First row has index <i>0</i>.
+     *         The row to start the cutting. First row has index _0_.
      * @param column
-     *         The column to start the cutting. First column has index <i>0</i>.
+     *         The column to start the cutting. First column has index _0_.
      * @param width
      *         The amount of columns you want the cut matrix to have.
      * @param height
@@ -276,7 +276,7 @@ interface Matrix<T> : Iterable<Vector<T>> {
     /**
      * Creates a new matrix where the given matrix is glued to the right of this matrix.
      *
-     * @param matrix
+     * @param other
      *         The matrix to glue to the right of this matrix.
      * @return A new matrix with the other matrix glued to the right of it.
      * @throws DimensionMismatchException
@@ -287,7 +287,7 @@ interface Matrix<T> : Iterable<Vector<T>> {
     /**
      * Creates a new matrix where the given matrix is glued to the left of this matrix.
      *
-     * @param matrix
+     * @param other
      *         The matrix to glue to the left of this matrix.
      * @return A new matrix with the other matrix glued to the right of it.
      * @throws DimensionMismatchException
@@ -298,7 +298,7 @@ interface Matrix<T> : Iterable<Vector<T>> {
     /**
      * Creates a new matrix where the given matrix is glued to the top of this matrix.
      *
-     * @param matrix
+     * @param other
      *         The matrix to glue to the top of this matrix.
      * @return A new matrix with the other matrix glued to the right of it.
      * @throws DimensionMismatchException
@@ -309,7 +309,7 @@ interface Matrix<T> : Iterable<Vector<T>> {
     /**
      * Creates a new matrix where the given matrix is glued to the bottom of this matrix.
      *
-     * @param matrix
+     * @param other
      *         The matrix to glue to the bottom of this matrix.
      * @return A new matrix with the other matrix glued to the right of it.
      * @throws DimensionMismatchException
@@ -326,7 +326,7 @@ interface Matrix<T> : Iterable<Vector<T>> {
 
     /**
      * Creates a new matrix that is the transposed matrix of this matrix.
-     * <p>
+     * 
      * The transposed matrix will turn all rows to columns and all original columns to rows. This
      * means that the width and height will be flipped.
      *
@@ -336,9 +336,9 @@ interface Matrix<T> : Iterable<Vector<T>> {
 
     /**
      * Calculates the inverse matrix if it exist.
-     * <p>
+     * 
      * This method will not return a matrix when the inverse matrix doesn't exist, i.e. when the
-     * determinant equals <i>0</i>.
+     * determinant equals _0_.
      *
      * @return Optional containing the inverse when it exist, or nothing when the inverse doesn't
      * exist.
@@ -348,7 +348,7 @@ interface Matrix<T> : Iterable<Vector<T>> {
     fun inverse(): Matrix<T>?
 
     /**
-     * Negates all aelements of the matrix.
+     * Negates all elements of the matrix.
      *
      * @return A new matrix with all elements negated according to the [OperationSet].
      */
@@ -369,10 +369,10 @@ interface Matrix<T> : Iterable<Vector<T>> {
 
     /**
      * Checks if the matrix is a square matrix.
-     * <p>
+     * 
      * I.e, if the height equals the width.
      *
-     * @return <i>true</i> if the matrix is square, <i>false</i> if not.
+     * @return _true_ if the matrix is square, _false_ if not.
      */
     fun isSquare() = width() == height()
 
@@ -423,8 +423,8 @@ interface Matrix<T> : Iterable<Vector<T>> {
 
     /**
      * Get the element at the given row and column.
-     * <p>
-     * The row and column indices start with <i>0</i>.
+     * 
+     * The row and column indices start with _0_.
      *
      * @param row
      *         The row of the element (beginning with 0).
@@ -474,13 +474,13 @@ interface MutableMatrix<T> : Matrix<T> {
 
     /**
      * Modifies all the values in a row.
-     * <p>
+     *
      * All the new values will be mapped to the indices of the given row vector.
      *
      * @param row
+     *         The index of the row to modify. The first row has index _0_.
+     * @param values
      *         The vector with the new row values.
-     * @param index
-     *         The row number to modify. First row has index <i>0</i>.
      * @return This (modified) matrix.
      * @throws DimensionMismatchException
      *         When the size of the vector does not match up with the width of the matrix.
@@ -491,14 +491,14 @@ interface MutableMatrix<T> : Matrix<T> {
 
     /**
      * Modifies all the values in a column.
-     * <p>
+     * 
      * All the new values will be mapped to the indices of the given column
      * vector.
      *
      * @param column
+     *         The index of the column to modify. The first column has index _0_.
+     * @param values
      *         The vector with the new column values.
-     * @param index
-     *         The row number to modify. First row has index <i>0</i>.
      * @return This (modified) matrix.
      * @throws DimensionMismatchException
      *         When the size of the vector does not match up with the height of the matrix.
@@ -575,8 +575,8 @@ interface MutableMatrix<T> : Matrix<T> {
 
     /**
      * Set the value of an element at the given row and column.
-     * <p>
-     * The row and column indices start with <i>0</i>.
+     * 
+     * The row and column indices start with _0_.
      *
      * @param row
      *         The row of the element (beginning with 0).
@@ -592,19 +592,19 @@ interface MutableMatrix<T> : Matrix<T> {
 }
 
 /**
- * Constants for the two ways a matrix is ordened.
+ * Constants for the two ways a matrix is ordered.
  *
  * @author Ruben Schellekens
  */
 enum class Major {
 
     /**
-     * Ordening is per column.
+     * Ordering is per column.
      */
     COLUMN,
 
     /**
-     * Orderning is per row.
+     * Ordering is per row.
      */
     ROW
 }

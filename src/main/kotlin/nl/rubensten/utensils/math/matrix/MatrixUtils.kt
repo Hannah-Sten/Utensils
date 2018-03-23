@@ -145,7 +145,7 @@ object MatrixUtils {
      * @param vectors
      *         The vectors the basis should contain.
      * @return A list of vectors all with length 1 and perpendicular to each other.
-     * @throws IllegalArgumentException When the vectorarray is empty or when the vectors do not have the same size.
+     * @throws IllegalArgumentException When the vector array is empty or when the vectors do not have the same size.
      */
     @JvmStatic
     fun <T> orthonormalBasisContaining(vararg vectors: Vector<T>): List<Vector<T>> {
@@ -164,11 +164,11 @@ object MatrixUtils {
         basis[0] = basis[0].normalize()
         val op = basis[0].operations()
 
-        // Do the Gram-Schmidt precedure.
+        // Do the Gram-Schmidt procedure.
         for (i in 1 until basis.size) {
             val vector = basis[i]
 
-            // Calculate the projection of the vector on the already finisihed part of the basis.
+            // Calculate the projection of the vector on the already finished part of the basis.
             val projection = GenericVector(op, dimension) { op.zero } // Null vector
             for (j in 0 until i) {
                 val dot = vector dot basis[j]
@@ -293,7 +293,7 @@ object MatrixUtils {
 fun <T, W, J> Matrix<T>.assignJobs(workers: List<W>, jobs: List<J>) = HungarianAlgorithm(this, workers, jobs).minimize()
 
 /**
- * Calls [MathUtil.isZero] with a default margin of *1E-9*.
+ * Calls [isZero] with a default margin of *1E-9*.
  *
  * @return *true* if `d` is close enough to zero, *false* if not.
  */
@@ -304,8 +304,7 @@ fun Double.isZero() = isZero(1E-9)
  *
  * @param margin
  *          The maximal accepted distance to 0.
- * @return *true* if the double `d` is `margin` close to *0*,
- * *false* if not.
+ * @return *true* if the double `d` is `margin` close to *0*, *false* if not.
  */
 fun Double.isZero(margin: Double) = Math.abs(this) <= margin
 
@@ -345,7 +344,7 @@ fun <T> checkDimensions(matrix: Matrix<T>, other: Matrix<T>) {
 }
 
 /**
- * Checks whether the matrix is square or not, if not it will throw a [DimensionMismatchException]
+ * Checks whether the matrix is square or not, if not it will throw a [DimensionMismatchException].
  */
 @Throws(DimensionMismatchException::class)
 fun <T> checkSquare(matrix: Matrix<T>) {

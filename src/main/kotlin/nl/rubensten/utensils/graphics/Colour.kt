@@ -4,8 +4,7 @@ import nl.rubensten.utensils.math.matrix.FloatVector
 import java.util.*
 
 /**
- * Class containing 100 colour constants in `FloatVector` format (all with no
- * transparency [alpha = 1.0f]).
+ * Class containing 100 colour constants in `FloatVector` format (all without transparency [alpha = 1.0f]).
  *
  * @author Ruben Schellekens
  */

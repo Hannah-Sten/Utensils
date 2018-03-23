@@ -13,12 +13,12 @@ import nl.rubensten.utensils.string.toCharList
  * A multiset iterates over the _single_ instances of its elements.
  * This means that each element will be iterated over exactly once.
  * You can get the amount of the elements using [count].
- * For example a multiset `[2*x, 16*y, z]` iterates over the elements `[x, y, z]` in an undeterministic order.
+ * For example a multiset `[2*x, 16*y, z]` iterates over the elements `[x, y, z]` in a nondeterministic order.
  * If you want to iterate with frequencies, use [valueIterator].
  *
  * @param E
- *          The type of elements contained in the multisetset.
- *          The multisetset is invariant on its element type.
+ *          The type of elements contained in the multiset.
+ *          The multiset is invariant on its element type.
  *
  * @author Ruben Schellekens
  */
@@ -37,7 +37,7 @@ interface Multiset<E> : Collection<E> {
      *
      * @param element
      *          The element to get the frequency of.
-     * @return The frequency of the given element in the multiset. Always nonnegative.
+     * @return The frequency of the given element in the multiset. Always non-negative.
      */
     fun count(element: E): Int
 
@@ -81,7 +81,7 @@ interface Multiset<E> : Collection<E> {
  *
  * @param E
  *          The type of elements contained in the multiset.
- *          The mutable multisetset is invariant on its element type.
+ *          The mutable multiset is invariant on its element type.
  *
  * @author Ruben Schellekens
  */
@@ -110,7 +110,7 @@ interface MutableMultiset<E> : Multiset<E>, MutableCollection<E> {
      * @param amount
      *          The frequency of the element to add to the multiset. A value of 2 will add 2*element to the set.
      *          A negative amount removes that given amount from the multiset.
-     *          When the total frequency of the element gets nonpositive, the element gets removed.
+     *          When the total frequency of the element gets non-positive, the element gets removed.
      */
     fun add(element: E, amount: Int)
 
@@ -120,7 +120,7 @@ interface MutableMultiset<E> : Multiset<E>, MutableCollection<E> {
      * @param element
      *          The element to set the frequency of.
      * @param count
-     *          The new frequency of the element. Must be nonnegative. A value of 0 will remove the element from
+     *          The new frequency of the element. Must be non-negative. A value of 0 will remove the element from
      *          the set.
      * @throws IllegalArgumentException when the new frequency is negative.
      */
@@ -231,7 +231,7 @@ fun <T> Array<T>.toMutableMultiset() = mutableMultisetOf(*this)
  * Uses the contents of a map to construct a multiset.
  *
  * All keys will be assigned frequencies corresponding to their values in the map.
- * All values must be nonnegative.
+ * All values must be non-negative.
  *
  * @throws IllegalArgumentException When a map value is negative.
  */
@@ -248,7 +248,7 @@ fun <T> Map<T, Int>.toMutableMultiset(): MutableMultiset<T> {
  * Uses the contents of a map to construct a read-only multiset.
  *
  * All keys will be assigned frequencies corresponding to their values in the map.
- * All values must be nonnegative.
+ * All values must be non-negative.
  *
  * @throws IllegalArgumentException When a map value is negative.
  */
