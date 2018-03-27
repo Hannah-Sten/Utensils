@@ -419,7 +419,7 @@ open class GenericMatrix<T> : MutableMatrix<T> {
         for (i in 0 until solve.height()) {
             solve.swapToNonZero(i, i)
             val value = solve[i, i]
-            solve.scalarRow(i, value.inverse())
+            solve.scalarRowModify(i, value.inverse())
 
             for (j in 0 until solve.height()) {
                 if (j == i) {
