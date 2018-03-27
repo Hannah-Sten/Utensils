@@ -118,6 +118,16 @@ open class GenericVector<T>(
         return result
     }
 
+    override fun elementWiseProduct(other: Vector<T>): Vector<T> {
+        checkDimensions(size, other.size) { "Sizes don't match, got $it" }
+        return mapElementsIndexed { index, element -> op.multiply(element, other[index]) }
+    }
+
+    override fun elementWiseDivision(other: Vector<T>): Vector<T> {
+        checkDimensions(size, other.size) { "Sizes don't match, got $it" }
+        return mapElementsIndexed { index, element -> op.division(element, other[index]) }
+    }
+
     override fun scalar(value: T): Vector<T> {
         val result = clone()
         for (i in 0 until size()) {
@@ -177,6 +187,24 @@ open class GenericVector<T>(
 
         for (i in 0 until size()) {
             elements[i] = op.subtract(elements[i], other[i])
+        }
+        return this
+    }
+
+    override fun elementWiseProductModify(other: Vector<T>): MutableVector<T> {
+        checkDimensions(size, other.size) { "Sizes don't match, got $it" }
+
+        for (index in indices) {
+            elements[index] = op.multiply(elements[index], other[index])
+        }
+        return this
+    }
+
+    override fun elementWiseDivisionModify(other: Vector<T>): MutableVector<T> {
+        checkDimensions(size, other.size) { "Sizes don't match, got $it" }
+
+        for (index in indices) {
+            elements[index] = op.division(elements[index], other[index])
         }
         return this
     }
