@@ -30,7 +30,9 @@ open class ModularIntegerMatrix : GenericMatrix<ModularInteger> {
     )
 }
 
-/** @author Ruben Schellekens **/
+/**
+ * @author Ruben Schellekens
+ */
 open class ModularIntegerVector(modulus: Long, vararg modInts: ModularInteger) : GenericVector<ModularInteger>(
         ModularIntegerOperations(modulus),
         modInts.toMutableList()

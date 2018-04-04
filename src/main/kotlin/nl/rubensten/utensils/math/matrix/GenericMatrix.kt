@@ -78,8 +78,8 @@ open class GenericMatrix<T> : MutableMatrix<T> {
      *          A list containing all the vectors to put into the matrix.
      * @param major (default [Major.ROW])
      *          How the vectors must be put into the matrix.
-     *          [Major.ROW] means every vector is a seperate row.
-     *          [Major.COLUMN] means every vector is a seperate column.
+     *          [Major.ROW] means every vector is a separate row.
+     *          [Major.COLUMN] means every vector is a separate column.
      */
     constructor(op: OperationSet<T>, elements: List<Vector<T>>, major: Major = Major.ROW) : this(op,
             major, elements.map { it.toMutableVector() }.toMutableList()
@@ -94,8 +94,8 @@ open class GenericMatrix<T> : MutableMatrix<T> {
      *          An array containing all the vectors to put into the matrix.
      * @param major (default [Major.ROW])
      *          How the vectors must be put into the matrix.
-     *          [Major.ROW] means every vector is a seperate row.
-     *          [Major.COLUMN] means every vector is a seperate column.
+     *          [Major.ROW] means every vector is a separate row.
+     *          [Major.COLUMN] means every vector is a separate column.
      */
     constructor(op: OperationSet<T>, vararg elements: Vector<T>, major: Major = Major.ROW) : this(op,
             major, elements.map { it.toMutableVector() }.toMutableList()
@@ -262,7 +262,7 @@ open class GenericMatrix<T> : MutableMatrix<T> {
     }
 
     override fun power(exponent: Int): Matrix<T> {
-        require(exponent >= 0) { "Exponent must be nonnegative, got $exponent" }
+        require(exponent >= 0) { "Exponent must be non-negative, got $exponent" }
         checkSquare(this)
 
         return when (exponent) {

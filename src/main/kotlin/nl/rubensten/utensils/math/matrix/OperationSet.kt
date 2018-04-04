@@ -17,7 +17,9 @@ open class OperationSet<T>(
         inline val compare: (T, T) -> Int
 )
 
-/** @author Ruben Schellekens **/
+/**
+ * @author Ruben Schellekens
+ */
 object NoOperations : OperationSet<Any?>(null, null,
         { _, _ -> },
         { _, _ -> },
@@ -30,7 +32,9 @@ object NoOperations : OperationSet<Any?>(null, null,
         { _, _ -> 0 }
 )
 
-/** @author Ruben Schellekens **/
+/**
+ * @author Ruben Schellekens
+ */
 object ByteOperations : OperationSet<Byte>(0.toByte(), 1.toByte(),
         { i, j -> (i + j).toByte() },
         { i, j -> (i - j).toByte() },
@@ -43,7 +47,9 @@ object ByteOperations : OperationSet<Byte>(0.toByte(), 1.toByte(),
         { i, j -> i.compareTo(j) }
 )
 
-/** @author Ruben Schellekens **/
+/**
+ * @author Ruben Schellekens
+ */
 object ShortOperations : OperationSet<Short>(0.toShort(), 1.toShort(),
         { i, j -> (i + j).toShort() },
         { i, j -> (i - j).toShort() },
@@ -56,7 +62,9 @@ object ShortOperations : OperationSet<Short>(0.toShort(), 1.toShort(),
         { i, j -> i.compareTo(j) }
 )
 
-/** @author Ruben Schellekens **/
+/**
+ * @author Ruben Schellekens
+ */
 object IntOperations : OperationSet<Int>(0, 1,
         { i, j -> i + j },
         { i, j -> i - j },
@@ -69,7 +77,9 @@ object IntOperations : OperationSet<Int>(0, 1,
         { i, j -> i.compareTo(j) }
 )
 
-/** @author Ruben Schellekens **/
+/**
+ * @author Ruben Schellekens
+ */
 object LongOperations : OperationSet<Long>(0L, 1L,
         { i, j -> i + j },
         { i, j -> i - j },
@@ -82,7 +92,9 @@ object LongOperations : OperationSet<Long>(0L, 1L,
         { i, j -> i.compareTo(j) }
 )
 
-/** @author Ruben Schellekens **/
+/**
+ * @author Ruben Schellekens
+ */
 object FloatOperations : OperationSet<Float>(0f, 1f,
         { i, j -> i + j },
         { i, j -> i - j },
@@ -95,7 +107,9 @@ object FloatOperations : OperationSet<Float>(0f, 1f,
         { i, j -> i.compareTo(j) }
 )
 
-/** @author Ruben Schellekens **/
+/**
+ * @author Ruben Schellekens
+ */
 object DoubleOperations : OperationSet<Double>(0.0, 1.0,
         { i, j -> i + j },
         { i, j -> i - j },
@@ -108,7 +122,9 @@ object DoubleOperations : OperationSet<Double>(0.0, 1.0,
         { i, j -> i.compareTo(j) }
 )
 
-/** @author Ruben Schellekens **/
+/**
+ * @author Ruben Schellekens
+ */
 object StringOperations : OperationSet<String>("", "",
         { a, b -> a + b },
         { a, b -> a.removeSuffix(b) },

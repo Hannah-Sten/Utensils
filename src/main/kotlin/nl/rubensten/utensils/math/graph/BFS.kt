@@ -69,7 +69,7 @@ class BFS<N>  {
      * Get the shortest path from the starting node to the ending node.
      *
      * This method requires that the BFS ran in goal-oriented mode. This means that the BFS will
-     * actively search for a path ([BFS.BFS] constructor used).
+     * actively search for a path ([BFS] constructor used).
      *
      * Also, [BFS.execute] must have been called, otherwise the graph didn't even
      * have a chance of calculating it.

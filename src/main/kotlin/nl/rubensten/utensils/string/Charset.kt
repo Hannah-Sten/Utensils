@@ -132,7 +132,5 @@ open class Charset(
     /** See [join]. **/
     operator fun plus(other: Charset) = join(other)
 
-    override fun toString(): String {
-        return string
-    }
+    override fun toString() = string
 }

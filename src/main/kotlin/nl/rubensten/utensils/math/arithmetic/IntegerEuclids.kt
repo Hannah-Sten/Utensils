@@ -1,7 +1,7 @@
 package nl.rubensten.utensils.math.arithmetic
 
 /**
- * The extended euclidian graph for two integers.
+ * The extended euclidean graph for two integers.
  *
  * Looks for `ax + by = gcd(a, b)` where `a` and `b` are the input variables.
  * [gcd] contains the gcd, [x] and [y] contain `x` and `y` as seen in the previous expression.

@@ -27,14 +27,18 @@ open class ComplexMatrix : GenericMatrix<Complex> {
             : super(ComplexOperations, builder)
 }
 
-/** @author Ruben Schellekens **/
+/**
+ * @author Ruben Schellekens
+ */
 open class ComplexVector(vararg complex: Complex) : GenericVector<Complex>(ComplexOperations, complex.toMutableList()) {
 
     constructor(ints: Collection<Complex>) : this(*ints.toTypedArray())
     constructor(size: Int, populator: (Int) -> Complex) : this(*(0 until size).map(populator).toTypedArray())
 }
 
-/** @author Ruben Schellekens **/
+/**
+ * @author Ruben Schellekens
+ */
 object ComplexOperations : OperationSet<Complex>(Complex.ZERO, Complex.ONE,
         { i, j -> i + j },
         { i, j -> i - j },
