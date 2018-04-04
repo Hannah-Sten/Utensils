@@ -1,11 +1,24 @@
 package nl.rubensten.utensils.util
 
+import nl.rubensten.utensils.util.UserSettings.autoWrite
+import nl.rubensten.utensils.util.UserSettings.folderName
+import nl.rubensten.utensils.util.UserSettings.write
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileWriter
 import java.util.*
 
 /**
+ * A simple way to have global user settings for your program.
+ *
+ * The file where the settings are stored is called `user.settings` and is located in the [folderName] folder in the
+ * user's home directory on the system. This is `.utensils` by default, but can be changed with
+ * `UserSettings.folderName = ".myfoldername"`.
+ *
+ * By default, every time you add a new value the properties file gets saved to the `user.settings` file.
+ * To disable this, set [autoWrite] to `false`. This does mean that you are responsible for saving yourself which
+ * you can do using [write].
+ *
  * @author Ruben Schellekens
  */
 object UserSettings {
