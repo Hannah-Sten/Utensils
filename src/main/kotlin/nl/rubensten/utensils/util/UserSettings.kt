@@ -12,7 +12,7 @@ import java.util.*
  * A simple way to have global user settings for your program.
  *
  * The file where the settings are stored is called `user.settings` and is located in the [folderName] folder in the
- * user's home directory on the system. This is `.utensils` by default, but can be changed with
+ * user's home directory on the system. You can set the directory name like this:
  * `UserSettings.folderName = ".myfoldername"`.
  *
  * By default, every time you add a new value the properties file gets saved to the `user.settings` file.
@@ -28,7 +28,7 @@ object UserSettings {
      *
      * Does not automatically include a '.', so you have to provide one yourself if you want to.
      */
-    public var folderName = ".utensils"
+    public lateinit var folderName: String
 
     /**
      * The path of the directory where the settings file is stored in.
@@ -61,6 +61,9 @@ object UserSettings {
     private fun initialise() {
         // Make sure UserSettings only gets initialised once.
         if (initialised) return
+
+        // Check if there is a folder name given.
+        check(::folderName.isInitialized) { "The folder name has not been initialised!" }
 
         createSettingsDirectory()
 
