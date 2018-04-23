@@ -152,6 +152,12 @@ interface Vector<T>: Iterable<T> {
         get() = xyzw
 
     /**
+     * Integer range containing valid indices of the vector.
+     */
+    val indices: IntRange
+        get() = 0..(size - 1)
+
+    /**
      * The amount of elements in the vector.
      */
     val size: Int
@@ -181,6 +187,13 @@ interface Vector<T>: Iterable<T> {
      * @return An array of vectors that form a basis for the dimension of this vector.
      */
     fun extendToBasis() = MatrixUtils.extendToBasis(this)
+
+    /**
+     * Calls [MatrixUtils.orthonormalBasisContaining] with only this vector as parameter.
+     *
+     * @return A list of vectors all with length 1 and perpendicular to each other.
+     */
+    fun orthonormalBasisContaining() = MatrixUtils.orthonormalBasisContaining(this)
 
     /**
      * Calculates the perpendicular projection to other vectors.
@@ -241,6 +254,30 @@ interface Vector<T>: Iterable<T> {
      *         When either this or the other vector has a size not equal to 3.
      */
     infix fun cross(other: Vector<T>): Vector<T>
+
+    /**
+     * Calculates the element wise product of two vectors.
+     *
+     * @param other
+     *         The vector to multiply with.
+     * @return A vector where every element is the product of the elements of the input vectors at the same index.
+     *         E.g. ```[1, 2, 3] elementWiseProduct [4, 5, 6]``` results in the vector ```[4, 10, 18]```.
+     * @throws DimensionMismatchException
+     *         When the vectors do not have the same size.
+     */
+    infix fun elementWiseProduct(other: Vector<T>): Vector<T>
+
+    /**
+     * Calculates the element wise division of two vectors.
+     *
+     * @param other
+     *         The vector to divide by.
+     * @return A vector where every element is the division of the elements of the input vectors at the same index.
+     *         E.g. ```[8, 16, 32] elementWiseDivision [1, 2, 4]``` results in the vector ```[8, 8, 8]```.
+     * @throws DimensionMismatchException
+     *         When the vectors do not have the same size.
+     */
+    infix fun elementWiseDivision(other: Vector<T>): Vector<T>
 
     /**
      * Multiplies all the elements of the vector by a given value.
@@ -421,6 +458,20 @@ interface MutableVector<T> : Vector<T> {
      * @return This (modified) vector.
      */
     infix fun subtractModify(other: Vector<T>): MutableVector<T>
+
+    /**
+     * See [elementWiseProduct], but then modifies the vector instead of returning a new one.
+     *
+     * @return This (modified) vector.
+     */
+    infix fun elementWiseProductModify(other: Vector<T>): MutableVector<T>
+
+    /**
+     * See [elementWiseDivision], but then modifies the vector instead of returning a new one.
+     *
+     * @return This (modified) vector.
+     */
+    infix fun elementWiseDivisionModify(other: Vector<T>): MutableVector<T>
 
     /**
      * See [scalar], but the modifies the vector instead of returning a new one.

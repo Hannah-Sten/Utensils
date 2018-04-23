@@ -22,6 +22,12 @@ interface Matrix<T> : Iterable<Vector<T>> {
         get() = width()
 
     /**
+     * Integer range containing valid column indices.
+     */
+    val columnIndices: IntRange
+        get() = 0..(width - 1)
+
+    /**
      * The amount of columns the matrix has.
      */
     fun width(): Int
@@ -31,6 +37,12 @@ interface Matrix<T> : Iterable<Vector<T>> {
      */
     val height: Int
         get() = height()
+
+    /**
+     * Integer range containing valid row indices.
+     */
+    val rowIndices: IntRange
+        get() = 0..(height - 1)
 
     /**
      * The amount of rows the matrix has.
@@ -218,6 +230,30 @@ interface Matrix<T> : Iterable<Vector<T>> {
      *         When the matrices don't have the right dimension to multiply.
      */
     infix fun multiply(other: Vector<T>): Vector<T>
+
+    /**
+     * Calculates the element wise product of two matrices.
+     *
+     * @param other
+     *         The matrix to multiply with.
+     * @return A matrix where every element is the product of the elements of the input matrices at the same indices.
+     *         E.g. ```[1, 2, 3] elementWiseProduct [4, 5, 6]``` results in the matrix ```[4, 10, 18]```.
+     * @throws DimensionMismatchException
+     *         When the matrices do not have the same dimensions.
+     */
+    infix fun elementWiseProduct(other: Matrix<T>): Matrix<T>
+
+    /**
+     * Calculates the element wise division of two matrices.
+     *
+     * @param other
+     *         The matrix to divide by.
+     * @return A matrix where every element is the division of the elements of the input matrices at the same indices.
+     *         E.g. ```[8, 16, 32] elementWiseDivision [1, 2, 4]``` results in the matrix ```[8, 8, 8]```.
+     * @throws DimensionMismatchException
+     *         When the matrices do not have the same dimensions.
+     */
+    infix fun elementWiseDivision(other: Matrix<T>): Matrix<T>
 
     /**
      * Raises this matrix to a given power.
@@ -510,51 +546,65 @@ interface MutableMatrix<T> : Matrix<T> {
     /**
      * See [swapRow], but then modifies the matrix instead of returning a new one.
      *
-     * @return `this`
+     * @return `this` (modified) matrix.
      */
     fun swapRowModify(row0: Int, row1: Int): MutableMatrix<T>
 
     /**
      * See [swapColumn], but then modifies the matrix instead of returning a new one.
      *
-     * @return `this`
+     * @return `this` (modified) matrix.
      */
     fun swapColumnModify(col0: Int, col1: Int): MutableMatrix<T>
 
     /**
      * See [add], but then modifies the matrix instead of returning a new one.
      *
-     * @return `this`
+     * @return `this` (modified) matrix.
      */
     fun addModify(other: Matrix<T>): MutableMatrix<T>
 
     /**
      * See [subtract], but then modifies the matrix instead of returning a new one.
      *
-     * @return `this`
+     * @return `this` (modified) matrix.
      */
     fun subtractModify(other: Matrix<T>): MutableMatrix<T>
 
     /**
      * See [scalar], but then modifies the matrix instead of returning a new one.
      *
-     * @return `this`
+     * @return `this` (modified) matrix.
      */
     fun scalarModify(scalar: T): MutableMatrix<T>
 
     /**
      * See [scalarRow], but then modifies the matrix instead of returning a new one.
      *
-     * @return `this`
+     * @return `this` (modified) matrix.
      */
     fun scalarRowModify(row: Int, scalar: T): MutableMatrix<T>
 
     /**
      * See [scalarColumn], but then modifies the matrix instead of returning a new one.
      *
-     * @return `this`
+     * @return `this` (modified) matrix.
      */
     fun scalarColumnModify(column: Int, scalar: T): MutableMatrix<T>
+
+    /**
+     * See [elementWiseProduct], but then modifies the matrix instead of returning a new one.
+     *
+     * @return `this` (modified) matrix.
+     */
+    infix fun elementWiseProductModify(other: Matrix<T>): MutableMatrix<T>
+
+    /**
+     * See [elementWiseDivision], but then modifies the matrix instead of returning a new one.
+     *
+     * @return `this` (modified) matrix.
+     */
+    infix fun elementWiseDivisionModify(other: Matrix<T>): MutableMatrix<T>
 
     /**
      * See [negate], but then modifies the matrix instead of returning a new one.

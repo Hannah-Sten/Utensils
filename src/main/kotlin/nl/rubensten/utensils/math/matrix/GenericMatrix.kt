@@ -261,6 +261,16 @@ open class GenericMatrix<T> : MutableMatrix<T> {
         return multiply(other.toMatrix()).getColumn(0)
     }
 
+    override fun elementWiseProduct(other: Matrix<T>): Matrix<T> {
+        checkDimensions(this, other)
+        return mutableClone().elementWiseProductModify(other)
+    }
+
+    override fun elementWiseDivision(other: Matrix<T>): Matrix<T> {
+        checkDimensions(this, other)
+        return mutableClone().elementWiseDivisionModify(other)
+    }
+
     override fun power(exponent: Int): Matrix<T> {
         require(exponent >= 0) { "Exponent must be non-negative, got $exponent" }
         checkSquare(this)
@@ -409,7 +419,7 @@ open class GenericMatrix<T> : MutableMatrix<T> {
         for (i in 0 until solve.height()) {
             solve.swapToNonZero(i, i)
             val value = solve[i, i]
-            solve.scalarRow(i, value.inverse())
+            solve.scalarRowModify(i, value.inverse())
 
             for (j in 0 until solve.height()) {
                 if (j == i) {
@@ -574,6 +584,28 @@ open class GenericMatrix<T> : MutableMatrix<T> {
     override fun scalarColumnModify(column: Int, scalar: T): MutableMatrix<T> {
         for (row in 0 until height()) {
             this[row, column] *= scalar
+        }
+        return this
+    }
+
+    override fun elementWiseProductModify(other: Matrix<T>): MutableMatrix<T> {
+        checkDimensions(this, other)
+
+        for (row in 0 until height) {
+            for (col in 0 until width) {
+                this[row, col] = this[row, col] * other[row, col]
+            }
+        }
+        return this
+    }
+
+    override fun elementWiseDivisionModify(other: Matrix<T>): MutableMatrix<T> {
+        checkDimensions(this, other)
+
+        for (row in rowIndices) {
+            for (col in columnIndices) {
+                this[row, col] = op.division(this[row, col], other[row, col])
+            }
         }
         return this
     }
