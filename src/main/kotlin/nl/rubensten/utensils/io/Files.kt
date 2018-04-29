@@ -50,3 +50,10 @@ fun File.checksum(algorithm: String = "SHA-256"): String {
     inputStream.close()
     return mdbytes.toHexString()
 }
+
+/**
+ * The inverse of [File.exists].
+ *
+ * @return `true` when [File.exists] returns `false` and vice versa.
+ */
+fun File.doesNotExist() = !exists()
