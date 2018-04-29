@@ -12,146 +12,6 @@ import nl.rubensten.utensils.collections.Quadruple
 interface Vector<T>: Iterable<T> {
 
     /**
-     * The first element (0) of the vector.
-     *
-     * @throws IndexOutOfBoundsException
-     *         When there are no elements in the vector.
-     */
-    val x: T
-        @Throws(IndexOutOfBoundsException::class)
-        get() = this[0]
-
-    /**
-     * The second element (1) of the vector.
-     *
-     * @throws IndexOutOfBoundsException
-     *         When there is only 1 element in the vector.
-     */
-    val y: T
-        @Throws(IndexOutOfBoundsException::class)
-        get() = this[1]
-
-    /**
-     * The third element (2) of the vector.
-     *
-     * @throws IndexOutOfBoundsException
-     *         When there are only 2 elements in the vector.
-     */
-    val z: T
-        @Throws(IndexOutOfBoundsException::class)
-        get() = this[2]
-
-    /**
-     * The fourth element (3) of the vector.
-     *
-     * @throws IndexOutOfBoundsException
-     *         When there are only 3 elements in the vector.
-     */
-    val w: T
-        @Throws(IndexOutOfBoundsException::class)
-        get() = this[3]
-
-    /**
-     * Get the first and second element (0 and 1) of the vector.
-     *
-     * @throws IndexOutOfBoundsException
-     *         When there is at most 1 element in the vector.
-     */
-    val xy: Pair<T, T>
-        @Throws(IndexOutOfBoundsException::class)
-        get() = Pair(x, y)
-
-    /**
-     * Get the first and third element (0 and 2) of the vector.
-     *
-     * @throws IndexOutOfBoundsException
-     *         When there are at most 2 elements in the vector.
-     */
-    val xz: Pair<T, T>
-        @Throws(IndexOutOfBoundsException::class)
-        get() = Pair(x, z)
-
-    /**
-     * Get the first and fourth element (0 and 3) of the vector.
-     *
-     * @throws IndexOutOfBoundsException
-     *         When there are at most 3 elements in the vector.
-     */
-    val xw: Pair<T, T>
-        @Throws(IndexOutOfBoundsException::class)
-        get() = Pair(x, w)
-
-    /**
-     * Get the second and third element (1 and 2) of the vector.
-     *
-     * @throws IndexOutOfBoundsException
-     *         When there are at most 2 elements in the vector.
-     */
-    val yz: Pair<T, T>
-        @Throws(IndexOutOfBoundsException::class)
-        get() = Pair(y, z)
-
-    /**
-     * Get the second and fourth element (1 and 3) of the vector.
-     *
-     * @throws IndexOutOfBoundsException
-     *         When there are at most 3 elements in the vector.
-     */
-    val yw: Pair<T, T>
-        @Throws(IndexOutOfBoundsException::class)
-        get() = Pair(y, w)
-
-    /**
-     * Get the third and fourth element (2 and 3) of the vector.
-     *
-     * @throws IndexOutOfBoundsException
-     *         When there are at most 3 elements in the vector.
-     */
-    val zw: Pair<T, T>
-        @Throws(IndexOutOfBoundsException::class)
-        get() = Pair(z, w)
-
-    /**
-     * Get the first, second and third element (0, 1, and 2) of the vector.
-     *
-     * @throws IndexOutOfBoundsException
-     *         When there are at most 2 elements in the vector.
-     */
-    val xyz: Triple<T, T, T>
-        @Throws(IndexOutOfBoundsException::class)
-        get() = Triple(x, y, z)
-
-    /**
-     * Get the first, second and third element (0, 1, and 2) of the vector.
-     *
-     * @throws IndexOutOfBoundsException
-     *         When there are at most 2 elements in the vector.
-     */
-    val rgb: Triple<T, T, T>
-        @Throws(IndexOutOfBoundsException::class)
-        get() = xyz
-
-    /**
-     * Get the first, second, third and fourth element (0, 1, 2, and 3) of the vector.
-     *
-     * @throws IndexOutOfBoundsException
-     *         When there are at most 3 elements in the vector.
-     */
-    val xyzw: Quadruple<T, T, T, T>
-        @Throws(IndexOutOfBoundsException::class)
-        get() = Quadruple(x, y, z, w)
-
-    /**
-     * Get the first, second, third and fourth element (0, 1, 2, and 3) of the vector.
-     *
-     * @throws IndexOutOfBoundsException
-     *         When there are at most 3 elements in the vector.
-     */
-    val rgba: Quadruple<T, T, T, T>
-        @Throws(IndexOutOfBoundsException::class)
-        get() = xyzw
-
-    /**
      * Integer range containing valid indices of the vector.
      */
     val indices: IntRange
@@ -549,3 +409,189 @@ fun floatVectorOf(vararg floats: Float) = FloatVector(*floats)
 fun doubleVectorOf(vararg doubles: Double) = DoubleVector(*doubles)
 fun stringVectorOf(vararg strings: String) = StringVector(*strings)
 fun <T> vectorOf(operations: OperationSet<T>, vararg elements: T) = GenericVector(operations, *elements)
+
+// Easy accessing
+
+/**
+ * The first element (0) of the vector.
+ *
+ * @throws IndexOutOfBoundsException
+ *         When there are no elements in the vector.
+ */
+val <T> Vector<T>.x: T
+    @Throws(IndexOutOfBoundsException::class)
+    get() = this[0]
+
+/**
+ * The second element (1) of the vector.
+ *
+ * @throws IndexOutOfBoundsException
+ *         When there is only 1 element in the vector.
+ */
+val <T> Vector<T>.y: T
+    @Throws(IndexOutOfBoundsException::class)
+    get() = this[1]
+
+/**
+ * The third element (2) of the vector.
+ *
+ * @throws IndexOutOfBoundsException
+ *         When there are only 2 elements in the vector.
+ */
+val <T> Vector<T>.z: T
+    @Throws(IndexOutOfBoundsException::class)
+    get() = this[2]
+
+/**
+ * The fourth element (3) of the vector.
+ *
+ * @throws IndexOutOfBoundsException
+ *         When there are only 3 elements in the vector.
+ */
+val <T> Vector<T>.w: T
+    @Throws(IndexOutOfBoundsException::class)
+    get() = this[3]
+
+/**
+ * Get the first and second element (0 and 1) of the vector.
+ *
+ * @throws IndexOutOfBoundsException
+ *         When there is at most 1 element in the vector.
+ */
+val <T> Vector<T>.xy: Pair<T, T>
+    @Throws(IndexOutOfBoundsException::class)
+    get() = Pair(x, y)
+
+/**
+ * Get the first and third element (0 and 2) of the vector.
+ *
+ * @throws IndexOutOfBoundsException
+ *         When there are at most 2 elements in the vector.
+ */
+val <T> Vector<T>.xz: Pair<T, T>
+    @Throws(IndexOutOfBoundsException::class)
+    get() = Pair(x, z)
+
+/**
+ * Get the first and fourth element (0 and 3) of the vector.
+ *
+ * @throws IndexOutOfBoundsException
+ *         When there are at most 3 elements in the vector.
+ */
+val <T> Vector<T>.xw: Pair<T, T>
+    @Throws(IndexOutOfBoundsException::class)
+    get() = Pair(x, w)
+
+/**
+ * Get the second and third element (1 and 2) of the vector.
+ *
+ * @throws IndexOutOfBoundsException
+ *         When there are at most 2 elements in the vector.
+ */
+val <T> Vector<T>.yz: Pair<T, T>
+    @Throws(IndexOutOfBoundsException::class)
+    get() = Pair(y, z)
+
+/**
+ * Get the second and fourth element (1 and 3) of the vector.
+ *
+ * @throws IndexOutOfBoundsException
+ *         When there are at most 3 elements in the vector.
+ */
+val <T> Vector<T>.yw: Pair<T, T>
+    @Throws(IndexOutOfBoundsException::class)
+    get() = Pair(y, w)
+
+/**
+ * Get the third and fourth element (2 and 3) of the vector.
+ *
+ * @throws IndexOutOfBoundsException
+ *         When there are at most 3 elements in the vector.
+ */
+val <T> Vector<T>.zw: Pair<T, T>
+    @Throws(IndexOutOfBoundsException::class)
+    get() = Pair(z, w)
+
+/**
+ * Get the first, second and third element (0, 1, and 2) of the vector.
+ *
+ * @throws IndexOutOfBoundsException
+ *         When there are at most 2 elements in the vector.
+ */
+val <T> Vector<T>.xyz: Triple<T, T, T>
+    @Throws(IndexOutOfBoundsException::class)
+    get() = Triple(x, y, z)
+
+/**
+ * Get the first, second and third element (0, 1, and 2) of the vector.
+ *
+ * @throws IndexOutOfBoundsException
+ *         When there are at most 2 elements in the vector.
+ */
+val <T> Vector<T>.rgb: Triple<T, T, T>
+    @Throws(IndexOutOfBoundsException::class)
+    get() = xyz
+
+/**
+ * Get the first, second, third and fourth element (0, 1, 2, and 3) of the vector.
+ *
+ * @throws IndexOutOfBoundsException
+ *         When there are at most 3 elements in the vector.
+ */
+val <T> Vector<T>.xyzw: Quadruple<T, T, T, T>
+    @Throws(IndexOutOfBoundsException::class)
+    get() = Quadruple(x, y, z, w)
+
+/**
+ * Get the first, second, third and fourth element (0, 1, 2, and 3) of the vector.
+ *
+ * @throws IndexOutOfBoundsException
+ *         When there are at most 3 elements in the vector.
+ */
+val <T> Vector<T>.rgba: Quadruple<T, T, T, T>
+    @Throws(IndexOutOfBoundsException::class)
+    get() = xyzw
+
+/**
+ * The first element (0) of the vector.
+ *
+ * @throws IndexOutOfBoundsException
+ *         When there are no elements in the vector.
+ */
+var <T> MutableVector<T>.x: T
+    @Throws(IndexOutOfBoundsException::class)
+    get() = this[0]
+    set(value) { this[0] = value }
+
+/**
+ * The second element (1) of the vector.
+ *
+ * @throws IndexOutOfBoundsException
+ *         When there is only 1 element in the vector.
+ */
+var <T> MutableVector<T>.y: T
+    @Throws(IndexOutOfBoundsException::class)
+    get() = this[1]
+    set(value) { this[1] = value }
+
+/**
+ * The third element (2) of the vector.
+ *
+ * @throws IndexOutOfBoundsException
+ *         When there are only 2 elements in the vector.
+ */
+var <T> MutableVector<T>.z: T
+    @Throws(IndexOutOfBoundsException::class)
+    get() = this[2]
+    set(value) { this[2] = value }
+
+/**
+ * The fourth element (3) of the vector.
+ *
+ * @throws IndexOutOfBoundsException
+ *         When there are only 3 elements in the vector.
+ */
+var <T> MutableVector<T>.w: T
+    @Throws(IndexOutOfBoundsException::class)
+    get() = this[3]
+    set(value) { this[3] = value }
