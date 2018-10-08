@@ -1,5 +1,7 @@
 package nl.rubensten.utensils.math.matrix
 
+import kotlin.math.sqrt
+
 /**
  * Returns a new matrix where each element is mapped to another element.
  * The transformation function also contains the row and column index of the elements.
@@ -77,3 +79,21 @@ inline fun <T> Vector<T>.mapElements(transform: (element: T) -> T): Vector<T> = 
 inline fun <T> Vector<T>.mapElementsIndexed(transform: (index: Int, element: T) -> T): Vector<T> = mapIndexed { index, element ->
     transform(index, element)
 }.toVector(operations)
+
+/**
+ * Calculates the euclidean between two vectors.
+ *
+ * @throws IllegalArgumentException
+ *
+ */
+fun <T> Vector<T>.distanceTo(other: Vector<T>): Double {
+    checkDimensions(size, other.size) { "Vectors must have the same size" }
+
+    var squaredSum = 0.0
+    for (i in 0 until size) {
+        val difference = operations.subtract(this[i], other[i])
+        val square = operations.multiply(difference, difference)
+        squaredSum += operations.toDouble(square)
+    }
+    return sqrt(squaredSum)
+}
