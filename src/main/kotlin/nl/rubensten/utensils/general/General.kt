@@ -31,3 +31,18 @@ fun Any?.printlnln(prefix: Any? = "") {
  * Prints `this` in a formatted string (`%s` to represent `this`).
  */
 fun Any?.printf(format: String) = format.format(this).print()
+
+/**
+ * Just returns [Unit].
+ */
+public fun Any?.thenUnit() = Unit
+
+/**
+ * Just returns `null`.
+ */
+public fun Any?.thenNull() = null
+
+/**
+ * Does nothing and returns [Unit].
+ */
+public fun pass() = Unit
