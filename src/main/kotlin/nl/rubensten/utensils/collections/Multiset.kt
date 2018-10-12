@@ -164,6 +164,7 @@ internal class EmptyMultiset<E> : Multiset<E> {
  * @author JetBrains
  */
 internal object EmptyIterator : ListIterator<Nothing> {
+
     override fun hasNext(): Boolean = false
     override fun hasPrevious(): Boolean = false
     override fun nextIndex(): Int = 0

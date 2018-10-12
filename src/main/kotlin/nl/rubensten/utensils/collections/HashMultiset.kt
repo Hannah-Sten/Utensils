@@ -97,12 +97,16 @@ open class HashMultiset<E> : MutableMultiset<E> {
 
     override fun retainAll(elements: Collection<E>): Boolean {
         var changed = false
-        this.elements.keys.asSequence()
-                .filter { it !in elements }
-                .forEach {
-                    changed = true
-                    this.elements.remove(it)
-                }
+
+        val iterator = this.elements.keys.iterator()
+        while (iterator.hasNext()) {
+            val key = iterator.next()
+            if (key !in elements) {
+                changed = true
+                iterator.remove()
+            }
+        }
+
         return changed
     }
 
