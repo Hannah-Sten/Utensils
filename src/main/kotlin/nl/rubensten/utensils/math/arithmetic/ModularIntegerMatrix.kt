@@ -24,8 +24,8 @@ open class ModularIntegerMatrix : GenericMatrix<ModularInteger> {
 
     constructor(modulus: Long, elements: MatrixConstruction<Long>.() -> MatrixConstruction<Long>) : super(
             ModularIntegerOperations(modulus),
-            MatrixConstruction<Long>().elements().rows.map {
-                ModularIntegerVector(modulus, it.map { it mod modulus })
+            MatrixConstruction<Long>().elements().rows.map { rows ->
+                ModularIntegerVector(modulus, rows.map { it mod modulus })
             }
     )
 }

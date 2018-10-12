@@ -74,16 +74,16 @@ class Complex(val a: Double, val b: Double) : Serializable {
             try {
                 val elements = complexString.replace(" ".toRegex(), "")
                         .split("\\+".toRegex())
-                        .dropLastWhile({ it.isEmpty() })
+                        .dropLastWhile { it.isEmpty() }
                         .toTypedArray()
                 toSetA = java.lang.Double.parseDouble(elements[0])
                 toSetB = java.lang.Double.parseDouble(elements[1].replace("i", ""))
             }
             catch (e: NumberFormatException) {
-                val startsWithMinus = complexString.trim({ it <= ' ' }).startsWith("-")
+                val startsWithMinus = complexString.trim { it <= ' ' }.startsWith("-")
                 val elements = complexString.replace(" ".toRegex(), "")
                         .split("-".toRegex())
-                        .dropLastWhile({ it.isEmpty() })
+                        .dropLastWhile { it.isEmpty() }
                         .toTypedArray()
 
                 val real: String

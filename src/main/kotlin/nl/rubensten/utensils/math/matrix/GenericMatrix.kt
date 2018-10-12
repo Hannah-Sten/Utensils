@@ -82,7 +82,7 @@ open class GenericMatrix<T> : MutableMatrix<T> {
      *          [Major.COLUMN] means every vector is a separate column.
      */
     constructor(op: OperationSet<T>, elements: List<Vector<T>>, major: Major = Major.ROW) : this(op,
-            major, elements.map { it.toMutableVector() }.toMutableList()
+            major, elements.asSequence().map { it.toMutableVector() }.toMutableList()
     )
 
     /**
@@ -636,34 +636,34 @@ open class GenericMatrix<T> : MutableMatrix<T> {
 
     override fun rows(): List<Vector<T>> {
         return when (myMajor) {
-            Major.ROW -> elements.map { it.clone().toMutableVector() }.toList()
+            Major.ROW -> elements.asSequence().map { it.clone().toMutableVector() }.toList()
             Major.COLUMN -> (0 until width()).map { getRow(it) }
         }
     }
 
     override fun rowsMutable(): List<MutableVector<T>> {
         return when (myMajor) {
-            Major.ROW -> elements.map { it }.toList()
+            Major.ROW -> elements.asSequence().map { it }.toList()
             Major.COLUMN -> (0 until width()).map { getRow(it) }
         }
     }
 
     override fun columns(): List<Vector<T>> {
         return when (myMajor) {
-            Major.COLUMN -> elements.map { it.clone() }.toList()
+            Major.COLUMN -> elements.asSequence().map { it.clone() }.toList()
             Major.ROW -> (0 until width()).map { getColumn(it) }
         }
     }
 
     override fun columnsMutable(): List<MutableVector<T>> {
         return when (myMajor) {
-            Major.COLUMN -> elements.map { it }.toList()
+            Major.COLUMN -> elements.asSequence().map { it }.toList()
             Major.ROW -> (0 until width()).map { getColumn(it) }
         }
     }
 
     override fun mutableClone(): MutableMatrix<T> {
-        return GenericMatrix(op, myMajor, elements.map { it.clone() }.toMutableList())
+        return GenericMatrix(op, myMajor, elements.asSequence().map { it.clone() }.toMutableList())
     }
 
     override fun get(row: Int, col: Int): T {
@@ -695,7 +695,7 @@ open class GenericMatrix<T> : MutableMatrix<T> {
     private operator fun T.unaryMinus() = op.negate(this)
 
     override fun toString() = buildString {
-        val maxLength = elements.flatMap { it }.map { it.toString().length }.max() ?: return@buildString
+        val maxLength = elements.flatMap { it }.asSequence().map { it.toString().length }.max() ?: return@buildString
         val format = ("%${maxLength}s ".repeat(width()).trim() + "\n").repeat(height()).trim()
         val strings = rows().flatMap { it }.map { it.toString() }.toTypedArray()
         append(format.format(*strings))
