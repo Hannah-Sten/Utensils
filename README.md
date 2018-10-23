@@ -14,6 +14,6 @@ allprojects {
 ```
 ```
 dependencies {
-    compile 'com.github.Ruben-Sten:Utensils:master-SNAPSHOT'
+    compile 'com.github.Ruben-Sten:Utensils:-SNAPSHOT'
 }
   ```
