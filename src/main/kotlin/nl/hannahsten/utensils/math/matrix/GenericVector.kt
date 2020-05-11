@@ -1,5 +1,9 @@
 package nl.hannahsten.utensils.math.matrix
 
+import kotlin.math.roundToInt
+import kotlin.math.roundToLong
+import kotlin.math.sqrt
+
 /**
  * @param T
  *          The type of object contained in the vector.
@@ -145,7 +149,7 @@ open class GenericVector<T>(
             sum = op.add(sum, op.multiply(element, element))
         }
 
-        return Math.sqrt(op.toDouble(sum))
+        return sqrt(op.toDouble(sum))
     }
 
     override fun slice(startIndexInclusive: Int, endIndexInclusive: Int): Vector<T> {
@@ -278,16 +282,16 @@ open class GenericVector<T>(
 abstract class NumberVector<T : Number>(operations: OperationSet<T>, numbers: MutableList<T>) : GenericVector<T>(operations, numbers) {
 
     /** Creates a new vector with all elements converted to bytes. **/
-    fun toByteVector() = ByteVector(*ByteArray(elements.size) { Math.round(elements[it].toFloat()).toByte() })
+    fun toByteVector() = ByteVector(*ByteArray(elements.size) { elements[it].toFloat().roundToLong().toByte() })
 
     /** Creates a new vector with all elements converted to shorts. **/
-    fun toShortVector() = ShortVector(*ShortArray(elements.size) { Math.round(elements[it].toFloat()).toShort() })
+    fun toShortVector() = ShortVector(*ShortArray(elements.size) { elements[it].toFloat().roundToLong().toShort() })
 
     /** Creates a new vector with all elements converted to ints. **/
-    fun toIntVector() = IntVector(*IntArray(elements.size) { Math.round(elements[it].toFloat()) })
+    fun toIntVector() = IntVector(*IntArray(elements.size) { elements[it].toFloat().roundToInt() })
 
     /** Creates a new vector with all elements converted to longs. **/
-    fun toLongVector() = LongVector(*LongArray(elements.size) { Math.round(elements[it].toDouble()) })
+    fun toLongVector() = LongVector(*LongArray(elements.size) { elements[it].toDouble().roundToLong() })
 
     /** Creates a new vector with all elements converted to floats. **/
     fun toFloatVector() = FloatVector(*FloatArray(elements.size) { elements[it].toFloat() })

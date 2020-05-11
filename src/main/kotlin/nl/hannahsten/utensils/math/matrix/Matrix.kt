@@ -25,7 +25,7 @@ interface Matrix<T> : Iterable<Vector<T>> {
      * Integer range containing valid column indices.
      */
     val columnIndices: IntRange
-        get() = 0..(width - 1)
+        get() = 0 until width
 
     /**
      * The amount of columns the matrix has.
@@ -42,7 +42,7 @@ interface Matrix<T> : Iterable<Vector<T>> {
      * Integer range containing valid row indices.
      */
     val rowIndices: IntRange
-        get() = 0..(height - 1)
+        get() = 0 until height
 
     /**
      * The amount of rows the matrix has.
@@ -303,8 +303,8 @@ interface Matrix<T> : Iterable<Vector<T>> {
      *         The indices of the rows to cut out.
      */
     fun subMatrix(columns: IntRange, rows: IntRange) = subMatrix(
-            rows.start,
-            columns.start,
+            rows.first,
+            columns.first,
             columns.length,
             rows.length
     )

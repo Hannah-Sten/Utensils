@@ -1,6 +1,9 @@
 package nl.hannahsten.utensils.math.matrix
 
 import nl.hannahsten.utensils.collections.Quadruple
+import kotlin.math.atan2
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 /**
  * An immutable vector with a certain amount of rows.
@@ -15,7 +18,7 @@ interface Vector<T>: Iterable<T> {
      * Integer range containing valid indices of the vector.
      */
     val indices: IntRange
-        get() = 0..(size - 1)
+        get() = 0 until size
 
     /**
      * The amount of elements in the vector.
@@ -172,7 +175,7 @@ interface Vector<T>: Iterable<T> {
     /**
      * Creates a vector with elements in a given range.
      */
-    fun slice(indexRange: IntRange) = slice(indexRange.start, indexRange.endInclusive)
+    fun slice(indexRange: IntRange) = slice(indexRange.first, indexRange.last)
 
     /**
      * Checks if the two vectors are perpendicular to each other.
@@ -244,7 +247,7 @@ interface Vector<T>: Iterable<T> {
         val op = operations()
         val x = op.toDouble(normalised[0])
         val y = op.toDouble(normalised[1])
-        return Math.atan2(y, x)
+        return atan2(y, x)
     }
 
     /**
@@ -260,7 +263,7 @@ interface Vector<T>: Iterable<T> {
         val x = op.toDouble(normalised[0])
         val y = op.toDouble(normalised[1])
         val z = op.toDouble(normalised[2])
-        return Math.PI * 0.5 - Math.atan2(z ,Math.sqrt(Math.pow(x, 2.0) + Math.pow(y, 2.0)))
+        return Math.PI * 0.5 - atan2(z ,sqrt(x.pow(2.0) + y.pow(2.0)))
     }
 
     /**

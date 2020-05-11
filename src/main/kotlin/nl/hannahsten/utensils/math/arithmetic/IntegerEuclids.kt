@@ -1,5 +1,8 @@
 package nl.hannahsten.utensils.math.arithmetic
 
+import kotlin.math.abs
+import kotlin.math.floor
+
 /**
  * The extended euclidean graph for two integers.
  *
@@ -11,19 +14,13 @@ package nl.hannahsten.utensils.math.arithmetic
 open class IntegerEuclids(val a: Long, val b: Long) {
 
     var x: Long? = null
-        private set(value) {
-            field = value
-        }
+        private set
 
     var y: Long? = null
-        private set(value) {
-            field = value
-        }
+        private set
 
     var gcd: Long? = null
-        private set(value) {
-            field = value
-        }
+        private set
 
     /**
      * Executes the extended euclidean graph.
@@ -34,8 +31,8 @@ open class IntegerEuclids(val a: Long, val b: Long) {
         // Implementation of Algorithm 2.2 of the lecture notes.
 
         // Step 1: Init
-        var aPrime = Math.abs(a)
-        var bPrime = Math.abs(b)
+        var aPrime = abs(a)
+        var bPrime = abs(b)
         var x1 = 1L
         var x2 = 0L
         var y1 = 0L
@@ -43,7 +40,7 @@ open class IntegerEuclids(val a: Long, val b: Long) {
 
         // Step 2: Loop
         while (bPrime > 0) {
-            val q = Math.floor(aPrime.toDouble() / bPrime.toDouble()).toLong()
+            val q = floor(aPrime.toDouble() / bPrime.toDouble()).toLong()
             val r = aPrime - q * bPrime
             aPrime = bPrime
             bPrime = r

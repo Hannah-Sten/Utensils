@@ -8,7 +8,7 @@ import java.util.*
  * Iterates (`size nCr 2`) times.
  */
 fun <T> Collection<T>.forEachPair(iterator: (Pair<T, T>) -> Unit) {
-    val queue = ArrayDeque<T>(this)
+    val queue = ArrayDeque(this)
     while (queue.size >= 2) {
         val first = queue.removeFirst()
         queue.forEach {
@@ -25,7 +25,7 @@ fun <T> Collection<T>.forEachPair(iterator: (Pair<T, T>) -> Unit) {
 fun <T> Collection<T>.forEachTuple(size: Int, iterator: (Set<T>) -> Unit) {
     require(size >= 2) { "Size must be > 2, got $size" }
 
-    val queue = ArrayDeque<T>(this)
+    val queue = ArrayDeque(this)
     while (queue.size >= 2) {
         val first = queue.removeFirst()
         if (size == 2) {

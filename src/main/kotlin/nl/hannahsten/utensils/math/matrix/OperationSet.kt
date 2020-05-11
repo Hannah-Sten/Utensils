@@ -25,10 +25,10 @@ object NoOperations : OperationSet<Any?>(null, null,
         { _, _ -> },
         { _, _ -> },
         { _, _ -> },
-        { _ -> },
-        { _ -> },
-        { _ -> 0.0 },
-        { _ -> null },
+        { },
+        { },
+        { 0.0 },
+        { null },
         { _, _ -> 0 }
 )
 

@@ -375,7 +375,7 @@ open class GenericMatrix<T> : MutableMatrix<T> {
             val elements = ArrayList<MutableVector<T>>()
 
             // Cover all columns, except the current one
-            for (x in 0 until columns.size) {
+            for (x in columns.indices) {
                 if (x == col) {
                     continue
                 }
@@ -695,9 +695,9 @@ open class GenericMatrix<T> : MutableMatrix<T> {
     private operator fun T.unaryMinus() = op.negate(this)
 
     override fun toString() = buildString {
-        val maxLength = elements.flatMap { it }.asSequence().map { it.toString().length }.max() ?: return@buildString
+        val maxLength = elements.flatten().asSequence().map { it.toString().length }.max() ?: return@buildString
         val format = ("%${maxLength}s ".repeat(width()).trim() + "\n").repeat(height()).trim()
-        val strings = rows().flatMap { it }.map { it.toString() }.toTypedArray()
+        val strings = rows().flatten().map { it.toString() }.toTypedArray()
         append(format.format(*strings))
     }.trimEnd()
 

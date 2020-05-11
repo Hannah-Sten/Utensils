@@ -1,6 +1,9 @@
 package nl.hannahsten.utensils.math.matrix
 
 import nl.hannahsten.utensils.math.optimization.HungarianAlgorithm
+import kotlin.math.abs
+import kotlin.math.cos
+import kotlin.math.sin
 
 /**
  * @author Hannah Schellekens, Sten Wessel
@@ -252,8 +255,8 @@ object MatrixUtils {
      */
     @JvmStatic
     fun fromPolar(radius: Double, angle: Double) = DoubleVector(
-            radius * Math.cos(angle),
-            radius * Math.sin(angle)
+            radius * cos(angle),
+            radius * sin(angle)
     )
 
     /**
@@ -269,9 +272,9 @@ object MatrixUtils {
      */
     @JvmStatic
     fun fromSpherical(radius: Double, inclination: Double, azimuth: Double) = DoubleVector(
-            radius * Math.cos(azimuth) * Math.cos(inclination),
-            radius * Math.sin(azimuth) * Math.cos(inclination),
-            radius * Math.sin(inclination)
+            radius * cos(azimuth) * cos(inclination),
+            radius * sin(azimuth) * cos(inclination),
+            radius * sin(inclination)
     )
 }
 
@@ -306,7 +309,7 @@ fun Double.isZero() = isZero(1E-9)
  *          The maximal accepted distance to 0.
  * @return *true* if the double `d` is `margin` close to *0*, *false* if not.
  */
-fun Double.isZero(margin: Double) = Math.abs(this) <= margin
+fun Double.isZero(margin: Double) = abs(this) <= margin
 
 /**
  * Creates an int range starting with `this` of `length` elements.

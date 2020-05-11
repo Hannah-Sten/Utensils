@@ -371,7 +371,7 @@ class HungarianAlgorithm<T, W, J>(
                 .mapIndexed { index, elt -> Pair(index, elt) }
                 .filter { it.second.isZero() }
                 .toList()
-        fun updateColumns() = updatedColumns.forEach { col -> original.filter { it != null }.forEach { row -> row!![col] = op.unit } }
+        fun updateColumns() = updatedColumns.forEach { col -> original.filterNotNull().forEach { row -> row[col] = op.unit } }
 
         // Keep on picking rows until all rows are moved to the result array.
         outer@ while (result.any { it == null }) {
