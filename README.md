@@ -1,4 +1,4 @@
-![Build status](https://travis-ci.org/Ruben-Sten/Utensils.svg?branch=master)
+![Build status](https://travis-ci.org/Hannah-Sten/Utensils.svg?branch=master)
 
 # Utensils
 
@@ -14,6 +14,6 @@ allprojects {
 ```
 ```
 dependencies {
-    compile 'com.github.Ruben-Sten:Utensils:master-SNAPSHOT'
+    compile 'com.github.Hannah-Sten:Utensils:master-SNAPSHOT'
 }
   ```

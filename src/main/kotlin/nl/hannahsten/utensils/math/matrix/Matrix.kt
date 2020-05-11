@@ -1,0 +1,690 @@
+package nl.hannahsten.utensils.math.matrix
+
+import nl.hannahsten.utensils.general.length
+
+/**
+ * An immutable matrix.
+ *
+ * A matrix iterates over its vectors. If you want to iterate over the elements, use the [elements] method.
+ * Whether the vectors are rows or columns is determined by the corresponding [major].
+ * [Major.ROW] means iteration over rows, [Major.COLUMN] means iteration over columns.
+ *
+ * Classes should not implement this interface, but [MutableMatrix].
+ *
+ * @author Hannah Schellekens
+ */
+interface Matrix<T> : Iterable<Vector<T>> {
+
+    /**
+     * The amount of columns the matrix has.
+     */
+    val width: Int
+        get() = width()
+
+    /**
+     * Integer range containing valid column indices.
+     */
+    val columnIndices: IntRange
+        get() = 0..(width - 1)
+
+    /**
+     * The amount of columns the matrix has.
+     */
+    fun width(): Int
+
+    /**
+     * The amount of rows the matrix has.
+     */
+    val height: Int
+        get() = height()
+
+    /**
+     * Integer range containing valid row indices.
+     */
+    val rowIndices: IntRange
+        get() = 0..(height - 1)
+
+    /**
+     * The amount of rows the matrix has.
+     */
+    fun height(): Int
+
+    /**
+     * The total amount of elements in the matrix.
+     */
+    val size: Int
+        get() = count()
+
+    /**
+     * The amount of elements in the Matrix.
+     */
+    fun count() = width() * height()
+
+    /**
+     * The operations of T.
+     */
+    val operations: OperationSet<T>
+        get() = operations()
+
+    /**
+     * Get the operations of T.
+     */
+    fun operations(): OperationSet<T>
+
+    /**
+     * The ordering of the matrix.
+     */
+    val major: Major
+        get() = major()
+
+    /**
+     * The ordering of the matrix.
+     */
+    fun major(): Major
+
+    /**
+     * Get the amount of vectors present in the matrix.
+     */
+    fun vectors() = when (major()) {
+        Major.ROW -> height()
+        Major.COLUMN -> width()
+    }
+
+    /**
+     * Puts all the values of the given row in a vector.
+     *
+     * @param row
+     *         The row index of the row to fetch. The first row has index _0_.
+     * @return A vector with the elements in the row. Sorted from left to right.
+     * @throws IndexOutOfBoundsException
+     *         When the row number is greater or equal to the height.
+     */
+    fun getRow(row: Int): Vector<T>
+
+    /**
+     * Puts all the values of the given column in a vector.
+     *
+     * @param column
+     *         The column index of the column to fetch. The first column has index _0_.
+     * @return A vector with the elements in the column. Sorted from top to bottom.
+     * @throws IndexOutOfBoundsException
+     *         When the column number is greater or equal to the width.
+     */
+    fun getColumn(column: Int): Vector<T>
+
+    /**
+     * Swaps the elements of two rows.
+     *
+     * @param row0
+     *         The index of the first row (counting from _0_).
+     * @param row1
+     *         The index of the second row (counting from _0_)..
+     * @return A new matrix with the rows swapped.
+     * @throws IndexOutOfBoundsException
+     *         When there is no row with the given indices.
+     */
+    fun swapRow(row0: Int, row1: Int): Matrix<T>
+
+    /**
+     * Swaps the elements of two columns.
+     *
+     * @param col0
+     *         The index of the first column (counting from _0_).
+     * @param col1
+     *         The index of the second column (counting from _0_)..
+     * @return A new matrix with the columns swapped.
+     * @throws IndexOutOfBoundsException
+     *         When there is no column with the given indices.
+     */
+    fun swapColumn(col0: Int, col1: Int): Matrix<T>
+
+    /**
+     * Adds all the elements from another matrix to this one following the addition rules of
+     * matrices.
+     * 
+     * This will return a new JMatrix instance with the modified values.
+     *
+     * @param other
+     *         The matrix to add to this one.
+     * @return A new matrix with the modified values.
+     * @throws DimensionMismatchException
+     *         When the dimensions of both matrices are different.
+     */
+    infix fun add(other: Matrix<T>): Matrix<T>
+
+    /**
+     * Subtracts all the elements of another matrix from this one following the addition rules of
+     * matrices.
+     * 
+     * This will return a new JMatrix instance with the modified values.
+     *
+     * @param other
+     *         The matrix to subtract from this one.
+     * @return A new matrix with the modified values.
+     * @throws DimensionMismatchException
+     *         When the dimensions of both matrices are different.
+     */
+    infix fun subtract(other: Matrix<T>): Matrix<T>
+
+    /**
+     * Multiplies all the elements of the matrix by a given value.
+     * 
+     * Follows the scalar multiplication rules for matrices.
+     *
+     * @param scalar
+     *         The value to multiply all elements with.
+     * @return A new matrix with the modified values.
+     */
+    infix fun scalar(scalar: T): Matrix<T>
+
+    /**
+     * Multiplies all the elements of the given row with <code>scalar</code>.
+     *
+     * @param scalar
+     *         The number to multiply the elements of the row with.
+     * @param row
+     *         The index of the row to multiply (start counting from _0_ ).
+     * @return This (modified) matrix.
+     * @throws IndexOutOfBoundsException
+     *         When the row index doesn't exist.
+     */
+    fun scalarRow(row: Int, scalar: T): Matrix<T>
+
+    /**
+     * Multiplies all the elements of the given column with <code>scalar</code>.
+     *
+     * @param scalar
+     *         The number to multiply the elements of the column with.
+     * @param column
+     *         The index of the column to multiply (start counting from _0_).
+     * @return This (modified) matrix.
+     * @throws IndexOutOfBoundsException
+     *         When the column index doesn't exist.
+     */
+    fun scalarColumn(column: Int, scalar: T): Matrix<T>
+
+    /**
+     * Multiplies this matrix with another matrix using the rules for matrix multiplication.
+     * 
+     * Let this matrix be called <code>A</code> and let the other matrix be called <code>B</code>,
+     * then this method will return the matrix <code>A&times;B</code>.
+     *
+     * @param other
+     *         The matrix to multiply this matrix with.
+     * @return The product of this and the other matrix.
+     * @throws DimensionMismatchException
+     *         When the matrices don't have the right dimension to multiply.
+     */
+    infix fun multiply(other: Matrix<T>): Matrix<T>
+
+    /**
+     * Multiplies this matrix with another vector using the rules for matrix multiplication.
+     * 
+     * Let this matrix be called <code>A</code> and let the vector be called <code>B</code>,
+     * then this method will return the matrix <code>A&times;B</code>.
+     *
+     * @param other
+     *         The matrix to multiply this matrix with.
+     * @return The product of this and the other matrix.
+     * @throws DimensionMismatchException
+     *         When the matrices don't have the right dimension to multiply.
+     */
+    infix fun multiply(other: Vector<T>): Vector<T>
+
+    /**
+     * Calculates the element wise product of two matrices.
+     *
+     * @param other
+     *         The matrix to multiply with.
+     * @return A matrix where every element is the product of the elements of the input matrices at the same indices.
+     *         E.g. ```[1, 2, 3] elementWiseProduct [4, 5, 6]``` results in the matrix ```[4, 10, 18]```.
+     * @throws DimensionMismatchException
+     *         When the matrices do not have the same dimensions.
+     */
+    infix fun elementWiseProduct(other: Matrix<T>): Matrix<T>
+
+    /**
+     * Calculates the element wise division of two matrices.
+     *
+     * @param other
+     *         The matrix to divide by.
+     * @return A matrix where every element is the division of the elements of the input matrices at the same indices.
+     *         E.g. ```[8, 16, 32] elementWiseDivision [1, 2, 4]``` results in the matrix ```[8, 8, 8]```.
+     * @throws DimensionMismatchException
+     *         When the matrices do not have the same dimensions.
+     */
+    infix fun elementWiseDivision(other: Matrix<T>): Matrix<T>
+
+    /**
+     * Raises this matrix to a given power.
+     *
+     * @param exponent
+     *          The power to calculate, must be non-negative.
+     * @throws DimensionMismatchException
+     *          When the matrix is not square.
+     * @throws IllegalArgumentException
+     *          When the exponent is smaller than zero.
+     */
+    infix fun power(exponent: Int): Matrix<T>
+
+    /**
+     * Cuts a rectangle of elements out of the matrix and puts it in a new matrix.
+     * 
+     * You specify a starting point in the matrix and a size. The new matrix will be cut out of the
+     * original matrix starting at the specified point and going <code>width</code> elements to the
+     * right and <code>height</code> elements downwards. The end matrix has the given dimensions
+     * (including the specified point).
+     *
+     * @param row
+     *         The row to start the cutting. First row has index _0_.
+     * @param column
+     *         The column to start the cutting. First column has index _0_.
+     * @param width
+     *         The amount of columns you want the cut matrix to have.
+     * @param height
+     *         The amount of rows you want the cut matrix to have.
+     * @return A new matrix with the cut out elements.
+     * @throws IndexOutOfBoundsException
+     *         When the specified region goes outside of the matrix's bounds.
+     * @throws IllegalArgumentException
+     *         When the width or height is negative.
+     */
+    fun subMatrix(row: Int, column: Int, width: Int, height: Int): Matrix<T>
+
+    /**
+     * Cuts a rectangle of elements out of the matrix and puts it in a new matrix.
+     *
+     * You specify two ranges. The `columns` range selects the columns you want and the `rows` range selects the
+     * rows you want. Note that the indices of the rows and columns are 0-indexed.
+     *
+     * @param columns
+     *         The indices of the columns to cut out.
+     * @param rows
+     *         The indices of the rows to cut out.
+     */
+    fun subMatrix(columns: IntRange, rows: IntRange) = subMatrix(
+            rows.start,
+            columns.start,
+            columns.length,
+            rows.length
+    )
+
+    /**
+     * Creates a new matrix where the given matrix is glued to the right of this matrix.
+     *
+     * @param other
+     *         The matrix to glue to the right of this matrix.
+     * @return A new matrix with the other matrix glued to the right of it.
+     * @throws DimensionMismatchException
+     *         When the height of the other matrix doesn't match up with the height of this matrix.
+     */
+    infix fun glueRight(other: Matrix<T>): Matrix<T>
+
+    /**
+     * Creates a new matrix where the given matrix is glued to the left of this matrix.
+     *
+     * @param other
+     *         The matrix to glue to the left of this matrix.
+     * @return A new matrix with the other matrix glued to the right of it.
+     * @throws DimensionMismatchException
+     *         When the height of the other matrix doesn't match up with the height of this matrix.
+     */
+    infix fun glueLeft(other: Matrix<T>): Matrix<T>
+
+    /**
+     * Creates a new matrix where the given matrix is glued to the top of this matrix.
+     *
+     * @param other
+     *         The matrix to glue to the top of this matrix.
+     * @return A new matrix with the other matrix glued to the right of it.
+     * @throws DimensionMismatchException
+     *         When the height of the other matrix doesn't match up with the height of this matrix.
+     */
+    infix fun glueTop(other: Matrix<T>): Matrix<T>
+
+    /**
+     * Creates a new matrix where the given matrix is glued to the bottom of this matrix.
+     *
+     * @param other
+     *         The matrix to glue to the bottom of this matrix.
+     * @return A new matrix with the other matrix glued to the right of it.
+     * @throws DimensionMismatchException
+     *         When the height of the other matrix doesn't match up with the height of this matrix.
+     */
+    infix fun glueBottom(other: Matrix<T>): Matrix<T>
+
+    /**
+     * Calculates the determinant of a matrix.
+     *
+     * @return The determinant of the matrix.
+     */
+    fun determinant(): T
+
+    /**
+     * Creates a new matrix that is the transposed matrix of this matrix.
+     * 
+     * The transposed matrix will turn all rows to columns and all original columns to rows. This
+     * means that the width and height will be flipped.
+     *
+     * @return The (new instance) transposed matrix.
+     */
+    fun transpose(): Matrix<T>
+
+    /**
+     * Calculates the inverse matrix if it exist.
+     * 
+     * This method will not return a matrix when the inverse matrix doesn't exist, i.e. when the
+     * determinant equals _0_.
+     *
+     * @return Optional containing the inverse when it exist, or nothing when the inverse doesn't
+     * exist.
+     * @throws IllegalStateException
+     *         When the matrix is not square or when the size of the matrix is smaller than 2.
+     */
+    fun inverse(): Matrix<T>?
+
+    /**
+     * Negates all elements of the matrix.
+     *
+     * @return A new matrix with all elements negated according to the [OperationSet].
+     */
+    fun negate(): Matrix<T>
+
+    /**
+     * Get the order of the matrix.
+     *
+     * I.e. the value of `n` for which `A^n = I`.
+     *
+     * @param maxIterations
+     *          The maximum amount of values for `n` that get checked (`maxIterations <= n`).
+     * @return The order `n` such that `A^n = I`.
+     * @throws IllegalStateException When the maximum amount of iterations has been exceeded.
+     */
+    @Throws(IllegalStateException::class)
+    fun order(maxIterations: Int = Integer.MAX_VALUE): Int
+
+    /**
+     * Checks if the matrix is a square matrix.
+     * 
+     * I.e, if the height equals the width.
+     *
+     * @return _true_ if the matrix is square, _false_ if not.
+     */
+    fun isSquare() = width() == height()
+
+    /**
+     * Checks whether the matrix is the identity matrix or not.
+     *
+     * @return `true` when the matrix is the identity matrix, `false` otherwise.
+     */
+    fun isIdentity(): Boolean
+
+    /**
+     * Turns the matrix into a mutable matrix.
+     */
+    fun toMutableMatrix() = this as MutableMatrix<T>
+
+    /**
+     * Get either the row or the column at the given index depending on the major.
+     */
+    fun getVector(index: Int) = when (major()) {
+        Major.ROW -> getRow(index)
+        Major.COLUMN -> getColumn(index)
+    }
+
+    /**
+     * Get all elements in the matrix.
+     */
+    fun elements(): Iterable<T>
+
+    /**
+     * Get a list of all the rows in the matrix.
+     */
+    fun rows(): List<Vector<T>>
+
+    /**
+     * Get a list of all the rows in the matrix made mutable.
+     */
+    fun rowsMutable(): List<MutableVector<T>>
+
+    /**
+     * Get a list of all vectors in the matrix.
+     */
+    fun columns(): List<Vector<T>>
+
+    /**
+     * Get a list of all vectors in the matrix made mutable.
+     */
+    fun columnsMutable(): List<MutableVector<T>>
+
+    /**
+     * Get the element at the given row and column.
+     * 
+     * The row and column indices start with _0_.
+     *
+     * @param row
+     *         The row of the element (beginning with 0).
+     * @param col
+     *         The column of the element (beginning with 0).
+     * @return The value at the given position.
+     * @throws IndexOutOfBoundsException
+     *         When the column or row index goes out of the matrix's bounds.
+     */
+    operator fun get(row: Int, col: Int): T
+
+    /** See [subMatrix] **/
+    operator fun get(columns: IntRange, rows: IntRange) = subMatrix(columns, rows)
+
+    /** See [add] **/
+    operator fun plus(other: Matrix<T>) = add(other)
+
+    /** See [subtract] **/
+    operator fun minus(other: Matrix<T>) = subtract(other)
+
+    /** See [scalar] **/
+    operator fun times(scalar: T) = scalar(scalar)
+
+    /** See [multiply(Matrix)] **/
+    operator fun times(other: Matrix<T>) = multiply(other)
+
+    /** See [multiply(Vector)] **/
+    operator fun times(other: Vector<T>) = multiply(other)
+
+    /** See [negate] **/
+    operator fun unaryMinus() = negate()
+
+    /** Does nothing with the matrix, just returns `this` **/
+    operator fun unaryPlus() = this
+}
+
+/**
+ * A mutable matrix.
+ *
+ * A matrix iterates over its vectors. If you want to iterate over the elements, use the [elements] method.
+ * Whether the vectors are rows or columns is determined by the corresponding [major].
+ * [Major.ROW] means iteration over rows, [Major.COLUMN] means iteration over columns.
+ *
+ * @author Hannah Schellekens
+ */
+interface MutableMatrix<T> : Matrix<T> {
+
+    /**
+     * Modifies all the values in a row.
+     *
+     * All the new values will be mapped to the indices of the given row vector.
+     *
+     * @param row
+     *         The index of the row to modify. The first row has index _0_.
+     * @param values
+     *         The vector with the new row values.
+     * @return This (modified) matrix.
+     * @throws DimensionMismatchException
+     *         When the size of the vector does not match up with the width of the matrix.
+     * @throws IndexOutOfBoundsException
+     *         When the given row index does not exist in the matrix.
+     */
+    fun setRow(row: Int, values: Vector<T>)
+
+    /**
+     * Modifies all the values in a column.
+     * 
+     * All the new values will be mapped to the indices of the given column
+     * vector.
+     *
+     * @param column
+     *         The index of the column to modify. The first column has index _0_.
+     * @param values
+     *         The vector with the new column values.
+     * @return This (modified) matrix.
+     * @throws DimensionMismatchException
+     *         When the size of the vector does not match up with the height of the matrix.
+     * @throws IndexOutOfBoundsException
+     *         When the given column index does not exist in the matrix.
+     */
+    fun setColumn(column: Int, values: Vector<T>)
+
+    /**
+     * See [swapRow], but then modifies the matrix instead of returning a new one.
+     *
+     * @return `this` (modified) matrix.
+     */
+    fun swapRowModify(row0: Int, row1: Int): MutableMatrix<T>
+
+    /**
+     * See [swapColumn], but then modifies the matrix instead of returning a new one.
+     *
+     * @return `this` (modified) matrix.
+     */
+    fun swapColumnModify(col0: Int, col1: Int): MutableMatrix<T>
+
+    /**
+     * See [add], but then modifies the matrix instead of returning a new one.
+     *
+     * @return `this` (modified) matrix.
+     */
+    fun addModify(other: Matrix<T>): MutableMatrix<T>
+
+    /**
+     * See [subtract], but then modifies the matrix instead of returning a new one.
+     *
+     * @return `this` (modified) matrix.
+     */
+    fun subtractModify(other: Matrix<T>): MutableMatrix<T>
+
+    /**
+     * See [scalar], but then modifies the matrix instead of returning a new one.
+     *
+     * @return `this` (modified) matrix.
+     */
+    fun scalarModify(scalar: T): MutableMatrix<T>
+
+    /**
+     * See [scalarRow], but then modifies the matrix instead of returning a new one.
+     *
+     * @return `this` (modified) matrix.
+     */
+    fun scalarRowModify(row: Int, scalar: T): MutableMatrix<T>
+
+    /**
+     * See [scalarColumn], but then modifies the matrix instead of returning a new one.
+     *
+     * @return `this` (modified) matrix.
+     */
+    fun scalarColumnModify(column: Int, scalar: T): MutableMatrix<T>
+
+    /**
+     * See [elementWiseProduct], but then modifies the matrix instead of returning a new one.
+     *
+     * @return `this` (modified) matrix.
+     */
+    infix fun elementWiseProductModify(other: Matrix<T>): MutableMatrix<T>
+
+    /**
+     * See [elementWiseDivision], but then modifies the matrix instead of returning a new one.
+     *
+     * @return `this` (modified) matrix.
+     */
+    infix fun elementWiseDivisionModify(other: Matrix<T>): MutableMatrix<T>
+
+    /**
+     * See [negate], but then modifies the matrix instead of returning a new one.
+     *
+     * @return The modified matrix with all elements negated according to the [OperationSet].
+     */
+    fun negateModify(): MutableMatrix<T>
+
+    /**
+     * Creates a copy of the matrix. Results in an immutable matrix.
+     */
+    fun clone(): Matrix<T> = mutableClone()
+
+    /**
+     * Creates a copy of the matrix. Results in a mutable matrix.
+     */
+    fun mutableClone(): MutableMatrix<T>
+
+    /**
+     * Set the value of an element at the given row and column.
+     * 
+     * The row and column indices start with _0_.
+     *
+     * @param row
+     *         The row of the element (beginning with 0).
+     * @param col
+     *         The column of the element (beginning with 0).
+     * @param value
+     *         The value the element should have.
+     * @return The old value at the given position.
+     * @throws IndexOutOfBoundsException
+     *         When the column or row index goes out of the matrix's bounds.
+     */
+    operator fun set(row: Int, col: Int, value: T)
+}
+
+/**
+ * Constants for the two ways a matrix is ordered.
+ *
+ * @author Hannah Schellekens
+ */
+enum class Major {
+
+    /**
+     * Ordering is per column.
+     */
+    COLUMN,
+
+    /**
+     * Ordering is per row.
+     */
+    ROW
+}
+
+// Convert arrays of vectors to matrices.
+fun Array<out Vector<Byte>>.toMatrix(major: Major = Major.ROW) = ByteMatrix(*this, major = major)
+fun Array<out Vector<Short>>.toMatrix(major: Major = Major.ROW) = ShortMatrix(*this, major = major)
+fun Array<out Vector<Int>>.toMatrix(major: Major = Major.ROW) = IntMatrix(*this, major = major)
+fun Array<out Vector<Long>>.toMatrix(major: Major = Major.ROW) = LongMatrix(*this, major = major)
+fun Array<out Vector<Float>>.toMatrix(major: Major = Major.ROW) = FloatMatrix(*this, major = major)
+fun Array<out Vector<Double>>.toMatrix(major: Major = Major.ROW) = DoubleMatrix(*this, major = major)
+fun Array<out Vector<String>>.toMatrix(major: Major = Major.ROW) = StringMatrix(*this, major = major)
+fun <T> Array<out Vector<T>>.toMatrix(operations: OperationSet<T>, major: Major = Major.ROW) = GenericMatrix(operations, toMutableList(), major = major)
+
+// Convert collections of vectors to matrices.
+fun List<Vector<Byte>>.toMatrix(major: Major = Major.ROW) = ByteMatrix(this, major = major)
+fun List<Vector<Short>>.toMatrix(major: Major = Major.ROW) = ShortMatrix(this, major = major)
+fun List<Vector<Int>>.toMatrix(major: Major = Major.ROW) = IntMatrix(this, major = major)
+fun List<Vector<Long>>.toMatrix(major: Major = Major.ROW) = LongMatrix(this, major = major)
+fun List<Vector<Float>>.toMatrix(major: Major = Major.ROW) = FloatMatrix(this, major = major)
+fun List<Vector<Double>>.toMatrix(major: Major = Major.ROW) = DoubleMatrix(this, major = major)
+fun List<Vector<String>>.toMatrix(major: Major = Major.ROW) = StringMatrix(this, major = major)
+fun <T> List<Vector<T>>.toMatrix(operations: OperationSet<T>, major: Major = Major.ROW) = GenericMatrix(operations, this, major = major)
+
+// Creation functions.
+fun byteMatrixOf(width: Int, vararg bytes: Byte) = ByteMatrix(*bytes, width = width)
+fun shortMatrixOf(width: Int, vararg shorts: Short) = ShortMatrix(*shorts, width = width)
+fun intMatrixOf(width: Int, vararg ints: Int) = IntMatrix(*ints, width = width)
+fun longMatrixOf(width: Int, vararg longs: Long) = LongMatrix(*longs, width = width)
+fun floatMatrixOf(width: Int, vararg floats: Float) = FloatMatrix(*floats, width = width)
+fun doubleMatrixOf(width: Int, vararg doubles: Double) = DoubleMatrix(*doubles, width = width)
+fun stringMatrixOf(width: Int, vararg strings: String) = StringMatrix(*strings, width = width)
+fun <T> matrixOf(operations: OperationSet<T>, width: Int, vararg elements: T) = GenericMatrix(operations, width = width, elements = *elements)
