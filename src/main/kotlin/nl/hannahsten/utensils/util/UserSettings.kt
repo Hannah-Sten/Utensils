@@ -3,10 +3,10 @@ package nl.hannahsten.utensils.util
 import nl.hannahsten.utensils.util.UserSettings.autoWrite
 import nl.hannahsten.utensils.util.UserSettings.folderName
 import nl.hannahsten.utensils.util.UserSettings.write
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileWriter
+import java.io.*
+import java.nio.charset.Charset
 import java.util.*
+import javax.print.DocFlavor
 
 /**
  * A simple way to have global user settings for your program.
@@ -19,6 +19,8 @@ import java.util.*
  * To disable this, set [autoWrite] to `false`. This does mean that you are responsible for saving yourself which
  * you can do using [write].
  *
+ * You can modify the save format by changing [format]. This must be done before the settings are created or loaded.
+ *
  * @author Hannah Schellekens
  */
 object UserSettings {
@@ -29,6 +31,11 @@ object UserSettings {
      * Does not automatically include a '.', so you have to provide one yourself if you want to.
      */
     public lateinit var folderName: String
+
+    /**
+     * The properties file format the user settings are stored in.
+     */
+    public var format: Format = Format.XML
 
     /**
      * The path of the directory where the settings file is stored in.
@@ -106,15 +113,15 @@ object UserSettings {
     private fun loadPropertiesFile() {
         val input = FileInputStream(filePath)
         input.use {
-            properties.load(input)
+            format.readFunction(properties, input)
         }
     }
 
     private fun writePropertiesFile() {
         createSettingsDirectory()
-        val output = FileWriter(filePath)
+        val output = FileOutputStream(filePath)
         output.use {
-            properties.store(output, null)
+            format.writeFunction(properties, output)
         }
     }
 
@@ -127,4 +134,22 @@ object UserSettings {
 
     operator fun get(key: String) = load(key)
     operator fun set(key: String, value: String) = store(key, value)
+
+    /**
+     * @author Hannah Schellekens
+     */
+    enum class Format(
+            val writeFunction: (Properties, OutputStream) -> Unit,
+            val readFunction: (Properties, InputStream) -> Unit
+    ) {
+
+        KEY_VALUE(
+                { properties, out -> properties.store(out, null) },
+                { properties, input -> properties.load(input) }
+        ),
+        XML(
+                { properties, out -> properties.storeToXML(out, null, Charsets.UTF_8.name()) },
+                { properties, input -> properties.loadFromXML(input) }
+        );
+    }
 }
